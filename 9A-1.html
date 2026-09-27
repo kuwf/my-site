@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Identity Quest · Unit 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Baloo+Bhaijaan+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#2E2A5E;--bg:#FFF6EA;--mut:#7A7699;--pu:#7C5CFC;--pud:#5B3FD1;--pk:#FF5C8A;--pkd:#D63E6C;--te:#00A88E;--ted:#00806B;--gr:#58B368;--grd:#3E8A47;--bl:#3E8EDE;--bld:#2A6FB4;--go:#F0A400;--god:#C07E00;--rd:#FF6B6B;--ok:#22B573;--sh:0 10px 26px rgba(46,42,94,.1)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Baloo 2','Baloo Bhaijaan 2',sans-serif;font-size:17px;background:var(--bg);color:var(--ink);overflow-x:hidden;min-height:100vh}
+button{font-family:inherit;cursor:pointer;user-select:none}
+.ar{font-family:'Baloo Bhaijaan 2',sans-serif;color:#E8590C;line-height:1.85}
+.arw{font-family:'Baloo Bhaijaan 2',sans-serif}
+.ic{width:22px;height:22px;flex-shrink:0}
+.bl{position:fixed;width:430px;height:430px;border-radius:45% 55% 50% 50%;opacity:.12;animation:bf 16s ease-in-out infinite;pointer-events:none}
+.b1{background:#7C5CFC;top:-140px;left:-120px}.b2{background:#FF5C8A;top:30%;right:-180px;animation-delay:3s}.b3{background:#00A88E;bottom:-160px;left:-100px;animation-delay:6s}.b4{background:#FF9838;width:300px;height:300px;bottom:18%;right:8%;animation-delay:1.5s}
+@keyframes bf{0%,100%{transform:none}50%{transform:translate(24px,-26px) rotate(10deg)}}
+.sc{display:none;position:relative;z-index:1;min-height:100vh}
+.sc.on{display:block;animation:si .4s ease}
+@keyframes si{from{opacity:0;transform:translateY(14px)}to{opacity:1}}
+@keyframes pin{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-11px) rotate(5deg)}}
+@keyframes shk{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes pls{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+@keyframes glow{0%,100%{box-shadow:0 6px 0 rgba(46,42,94,.13),0 0 0 0 rgba(124,92,252,.4)}50%{box-shadow:0 6px 0 rgba(46,42,94,.13),0 0 0 12px rgba(124,92,252,0)}}
+@keyframes np{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes sp{0%{transform:scale(0) rotate(-40deg)}70%{transform:scale(1.3)}100%{transform:scale(1)}}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 22px 70px}
+.bt{display:inline-flex;align-items:center;gap:10px;border:3px solid var(--ink);border-radius:18px;background:var(--bc,var(--pu));color:#fff;font-weight:800;font-size:17px;padding:13px 32px;box-shadow:0 6px 0 var(--bs,var(--pud));transition:.12s}
+.bt:hover{transform:translateY(-2px)}.bt:active{transform:translateY(4px);box-shadow:0 1px 0 var(--bs)}
+.bt:disabled{opacity:.4;transform:none;cursor:default}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 18px}
+.lp{width:106px;height:106px;color:var(--pu);animation:bob 3s infinite}
+.lk{letter-spacing:5px;font-size:14px;font-weight:700;color:var(--mut);margin-top:14px}
+.lt{font-size:clamp(50px,9.5vw,94px);font-weight:800;line-height:1.02;background:linear-gradient(92deg,#7C5CFC,#FF5C8A 48%,#FF9838);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ls{font-size:23px;font-weight:700;color:var(--mut)}.lar{font-size:23px}
+.bgs{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:28px}
+.bg{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:11px 20px;font-weight:800;font-size:15.5px;display:flex;align-items:center;gap:8px;box-shadow:0 5px 0 rgba(46,42,94,.15)}
+.bg .ic{width:18px;height:18px}
+.src{margin-top:32px;font-size:13px;color:var(--mut);font-weight:600}
+.nrow{display:flex;align-items:center;gap:18px;max-width:680px;margin:30px auto 0}
+.noor{width:136px;flex-shrink:0;animation:bob 4s infinite}
+.bub{position:relative;background:#fff;border:3px solid var(--ink);border-radius:20px;padding:15px 20px;box-shadow:var(--sh);flex:1}
+.bub:before{content:'';position:absolute;left:-11px;top:50%;width:15px;height:15px;background:#fff;border-left:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:translateY(-50%) rotate(45deg)}
+.bub p{font-weight:700;font-size:17px}.bub .ar{display:block;font-size:15.5px}
+.mh{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.mt{font-size:34px;font-weight:800}
+.pl{display:inline-flex;align-items:center;gap:7px;background:#fff;border:3px solid var(--ink);border-radius:50px;padding:7px 18px;font-weight:800;font-size:15px;box-shadow:0 4px 0 rgba(46,42,94,.12)}
+.pl .ic{width:17px;height:17px}
+.strip{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 4px}
+.slot{width:38px;height:42px;border-radius:10px;border:3px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;background:#EFEAF9;color:#B9B2D6}
+.slot.got{background:var(--c);color:#fff;box-shadow:0 3px 0 var(--cd);animation:pin .4s both}
+.lvl{position:relative;margin-top:24px;display:flex;flex-direction:column;gap:18px}
+.lvl:before{content:'';position:absolute;left:33px;top:26px;bottom:26px;border-left:4px dotted rgba(46,42,94,.16)}
+.lv{position:relative;display:flex;align-items:center;gap:18px;text-align:left;background:#fff;border:3px solid var(--ink);border-radius:22px;padding:16px 20px 16px 14px;box-shadow:0 6px 0 rgba(46,42,94,.13);transition:.15s;width:100%}
+.lv:hover:not(:disabled){transform:translateY(-3px)}
+.lv:disabled{opacity:.5;filter:grayscale(.7);cursor:default}
+.lv.next{animation:glow 2s infinite}
+.ln{width:48px;height:48px;border-radius:50%;background:var(--c);color:#fff;border:3px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;flex-shrink:0;box-shadow:0 3px 0 var(--cd);z-index:1}
+.li2{width:58px;height:58px;border-radius:17px;background:var(--c);color:#fff;border:3px solid var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.li2 .ic{width:27px;height:27px}
+.lin{flex:1;min-width:0}.lin b{font-size:20px;display:block}.lin .ar{font-size:15.5px}
+.lsr{display:flex;gap:4px}.lsr .ic{width:21px;height:21px;color:#E4DEFA}.lsr .ic.f{color:var(--go)}
+.lck{position:absolute;top:-12px;right:-10px;width:38px;height:38px;border-radius:12px;background:var(--mut);color:#fff;border:3px solid var(--ink);display:flex;align-items:center;justify-content:center}
+.rst{background:none;border:none;color:var(--mut);font-size:14px;font-weight:700;text-decoration:underline;margin-top:24px;display:block;margin-inline:auto}
+.hud{position:sticky;top:0;z-index:50;background:rgba(255,246,234,.94);backdrop-filter:blur(8px);border-bottom:3px solid rgba(46,42,94,.08);padding:12px 18px;display:flex;align-items:center;gap:14px}
+.hb{width:50px;height:50px;border-radius:15px;border:3px solid var(--ink);background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 rgba(46,42,94,.14);transition:.12s;flex-shrink:0}
+.hb:active{transform:translateY(3px)}
+.ht{flex:1;min-width:0}.ht b{font-size:19px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ht .ar{font-size:14px}
+.lb{max-width:1010px;margin:0 auto;padding:26px 22px 165px}
+.sh{text-align:center;margin-bottom:20px}
+.kk{display:inline-flex;align-items:center;gap:7px;padding:7px 18px;border-radius:50px;font-size:13px;font-weight:800;letter-spacing:2px;color:#fff;background:var(--lc,var(--pu));border:2.5px solid var(--ink)}
+.sh h2{font-size:clamp(25px,4.2vw,35px);font-weight:800;margin-top:10px}.sh .ar{font-size:18px}
+.foot{position:fixed;bottom:0;left:0;right:0;z-index:60;background:linear-gradient(to top,var(--bg) 70%,rgba(255,246,234,0));padding:16px 20px 20px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.dots{display:flex;gap:9px}
+.dt{width:14px;height:14px;border-radius:50%;background:#fff;border:2.5px solid rgba(46,42,94,.25)}
+.dt.d{background:var(--lc,var(--pu));border-color:var(--ink)}.dt.c{background:var(--ink);transform:scale(1.25)}
+#nxt.rdy{animation:np 1.1s infinite}
+.card{background:#fff;border-radius:22px;padding:24px 26px;box-shadow:var(--sh);border-top:6px solid var(--lc,var(--pu));animation:pin .45s both}
+.q{background:linear-gradient(135deg,var(--pu),var(--pud));color:#fff;border-radius:22px;padding:28px;text-align:center;border:3px solid var(--ink);box-shadow:0 7px 0 var(--pud)}
+.q p{font-size:21px;font-weight:700;font-style:italic;line-height:1.55}.q .ar{display:block;color:#FFD9A8;font-size:18px;margin-top:8px}
+.mn{text-align:center;font-size:15px;color:var(--mut);font-weight:600;margin-top:14px}.mn .ar{display:block;font-size:14.5px}
+.lead{text-align:center;font-size:18.5px;font-weight:700;line-height:1.6}
+.leadar{text-align:center;font-size:16.5px;margin-bottom:18px}
+.pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.pc{background:#fff;border-radius:20px;padding:20px;box-shadow:var(--sh);border-top:6px solid var(--pc)}
+.ph{display:flex;align-items:center;gap:13px;margin-bottom:12px}
+.pa{width:52px;height:52px;border-radius:16px;background:var(--pc);color:#fff;font-weight:800;font-size:23px;display:flex;align-items:center;justify-content:center;border:3px solid var(--ink);flex-shrink:0}
+.ph h4{font-size:19px}.pl2{font-size:13.5px;color:var(--mut);font-weight:600}
+.pt{font-size:16px;line-height:1.8}
+.hl{color:var(--te);font-weight:800}
+.vg{display:grid;grid-template-columns:repeat(auto-fit,minmax(295px,1fr));gap:18px}
+.vc{background:#fff;border-radius:20px;padding:20px 22px;box-shadow:var(--sh);border-top:6px solid var(--vcc);animation:pin .4s both}
+.vt{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.vw{font-size:25px;font-weight:800;color:var(--vcc)}
+.ab{width:50px;height:50px;border-radius:15px;border:3px solid var(--ink);background:#fff;color:var(--vcc);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 rgba(46,42,94,.16);transition:.12s;flex-shrink:0}
+.ab:hover{background:var(--vcc);color:#fff}.ab:active{transform:translateY(3px)}
+.va{font-size:19px;margin-top:2px}.vm{font-size:14px;color:var(--mut);font-style:italic;font-weight:600}
+.vx{margin-top:12px;background:#F6F3FC;border-radius:12px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.vx span{font-size:14.5px;font-style:italic;font-weight:600;line-height:1.55}
+.mb{width:40px;height:40px;border-radius:50%;border:3px solid var(--ink);background:#fff;color:var(--te);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 0 rgba(46,42,94,.16)}
+.mb:hover{background:var(--te);color:#fff}
+.mb.hear{width:auto;border-radius:50px;padding:0 18px;gap:8px;font-weight:800;font-size:15px;margin-top:14px}
+.play{animation:pls .7s infinite}
+.chips{display:flex;flex-wrap:wrap;gap:13px;justify-content:center}
+.chip{border:3px solid var(--ink);background:#fff;border-radius:16px;padding:12px 22px;box-shadow:0 4px 0 rgba(46,42,94,.14);transition:.12s;text-align:center}
+.chip:hover{transform:translateY(-3px);background:var(--cc);color:#fff}.chip:hover .ar{color:#FFE9D6}
+.chip b{font-size:17.5px;display:block}.chip .ar{display:block;font-size:14px}
+.team{border-radius:18px;padding:16px 22px;margin-bottom:14px;border:3px solid var(--ink);color:#fff;box-shadow:0 5px 0 rgba(46,42,94,.18);animation:pin .4s both}
+.team h4{font-size:19px}.team .arw{font-size:15px;color:#FFF3E4;display:block}.team p{font-weight:700;font-size:17px;margin-top:4px}
+.qc{background:#fff;border-radius:22px;border:3px solid var(--ink);box-shadow:0 7px 0 rgba(46,42,94,.14);padding:24px 26px;animation:pin .35s both}
+.qt{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.qn{width:42px;height:42px;border-radius:13px;background:var(--lc,var(--pu));color:#fff;border:3px solid var(--ink);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 3px 0 rgba(46,42,94,.2)}
+.qg{font-weight:800;font-size:14.5px;color:var(--mut)}
+.qx{font-size:19.5px;font-weight:700;line-height:1.55}.qx .bs{color:var(--mut);font-size:15.5px}
+.ops{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+.ops.done .op{pointer-events:none;opacity:.5}
+.op{border:3px solid var(--ink);border-radius:15px;background:#FBF9FF;font-weight:800;font-size:17px;padding:12px 26px;box-shadow:0 4px 0 rgba(46,42,94,.15);transition:.12s;display:inline-flex;align-items:center;gap:9px}
+.op:hover{transform:translateY(-2px);background:#F1ECFF}
+.op.ok{background:#DFF7E9;border-color:var(--ok);color:#157A4C;opacity:1!important;animation:pin .3s}
+.op.no{background:#FDE5E3;border-color:var(--rd);color:#C0392B;opacity:1!important;animation:shk .4s}
+.ops.two{flex-direction:column}
+.op.portal{width:100%;justify-content:flex-start;font-size:18px;padding:15px 22px}
+.op.portal .ic{width:26px;height:26px}
+.op.p0{background:#EAF4FE;color:var(--bld)}.op.p1{background:#FDE9F3;color:var(--pkd)}
+.op.p0.ok,.op.p1.ok{background:#DFF7E9;color:#157A4C}
+.hint{display:none;margin-top:16px;background:#FFF8E9;border:3px dashed var(--go);border-radius:14px;padding:13px 16px;font-size:15.5px}
+.hint.on{display:block;animation:pin .3s}
+.okl{color:#157A4C;font-weight:800;display:flex;align-items:center;gap:7px}
+.nol{color:#C0392B;font-weight:800;display:flex;align-items:center;gap:7px}
+.hn{font-weight:600;color:#5A5478;margin-top:4px;font-size:15px}.hint .ar{display:block;font-size:14.5px}
+.pzr{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:8px}
+.pp{position:relative;border:3px solid var(--ink);background:#fff;border-radius:18px;padding:18px 26px;font-weight:800;font-size:17.5px;box-shadow:0 6px 0 rgba(46,42,94,.16);transition:.15s;min-width:172px}
+.pp .ar{display:block;font-size:15px;color:var(--mut)}
+.pp:before{content:'';position:absolute;top:-11px;left:50%;transform:translateX(-50%);width:22px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--ink);border-bottom:none}
+.pp:hover{transform:translateY(-4px) rotate(-1.5deg)}
+.pp.lit{background:var(--c);color:#fff;transform:scale(1.06) rotate(1.5deg)}.pp.lit .ar{color:#FFE9D6}.pp.lit:before{background:var(--c)}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:660px;margin:8px auto 0}
+.mc{display:flex;flex-direction:column;gap:13px}
+.mi{border:3px solid var(--ink);border-radius:15px;background:#fff;font-weight:800;font-size:20px;padding:15px;box-shadow:0 4px 0 rgba(46,42,94,.15);transition:.12s}
+.mi:hover{transform:translateY(-2px)}
+.mi.sel{background:#F1ECFF;border-color:var(--pu);transform:scale(1.04)}
+.mi.bad{animation:shk .4s;background:#FDE5E3;border-color:var(--rd)}
+.mi.lock{background:#DFF7E9;border-color:var(--ok);color:#157A4C;pointer-events:none;animation:pin .3s}
+.oz{background:#fff;border-radius:22px;border:3px solid var(--ink);box-shadow:0 7px 0 rgba(46,42,94,.14);padding:24px 26px}
+.ol{min-height:64px;background:#F6F3FC;border:3px dashed #CFC7EE;border-radius:14px;display:flex;flex-wrap:wrap;gap:9px;align-items:center;padding:11px 14px;margin-top:14px}
+.bw{background:var(--lc,var(--pu));color:#fff;border:2.5px solid var(--ink);border-radius:10px;padding:5px 14px;font-weight:800;font-size:16.5px;animation:pin .25s}
+.ocs{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+.oc{border:3px solid var(--ink);border-radius:13px;background:#fff;font-weight:800;font-size:17px;padding:11px 22px;box-shadow:0 4px 0 rgba(46,42,94,.15);transition:.12s}
+.oc:hover{transform:translateY(-2px)}
+.oc.used{opacity:.22;pointer-events:none;box-shadow:none}
+.oc.bad{animation:shk .4s;background:#FDE5E3;border-color:var(--rd)}
+.oz.done .ocs{opacity:.35;pointer-events:none}
+.tc{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.tp{background:#fff;border-radius:20px;border:3px solid var(--ink);box-shadow:0 6px 0 rgba(46,42,94,.13);overflow:hidden;animation:pin .4s both}
+.th{padding:15px 20px;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.th h3{font-size:21px}.th .arw{font-size:15.5px}
+.tb{padding:18px 20px}
+.us{border-radius:13px;padding:12px 15px;margin-bottom:12px}
+.us b{font-size:16px;display:block}.us .ar{display:block;font-size:14px}.us .ex{font-size:15px;font-weight:700;margin-top:5px}
+.fm{background:var(--ink);color:#fff;border-radius:12px;padding:11px 14px;text-align:center;font-weight:700;font-size:15px;margin-bottom:12px}
+.fm b{color:#FDCB6E}.fm .arw{display:block;font-size:13px;color:#D9D4EE}
+.sgs{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.sgt{font-size:12px;font-weight:800;color:var(--mut);letter-spacing:1px}
+.sg{background:#F1ECFF;border-radius:50px;padding:4px 13px;font-size:13.5px;font-weight:700;color:var(--pu)}
+.cb{background:#fff;border-radius:20px;border:3px dashed var(--go);box-shadow:var(--sh);padding:18px 22px;text-align:center;margin-top:18px;animation:pin .4s both}
+.cbt{font-size:13px;font-weight:800;letter-spacing:1.5px;color:var(--god)}
+.cbs{font-size:18px;font-weight:700;line-height:1.7}.cbp{color:var(--pkd)}.cbb{color:var(--bld)}
+.cb .ar{display:block;font-size:14.5px;margin-top:6px}
+.warn{background:#FDE9F3;border:3px dashed var(--pk);border-radius:18px;padding:16px 22px;animation:pin .4s both}
+.warn p{font-size:16px}.warn b{color:var(--pkd)}.warn .ar{display:block;font-size:14.5px}
+.vch{display:flex;flex-wrap:wrap;gap:11px;justify-content:center;margin:16px 0}
+.vc2{background:#fff;border:3px solid var(--ink);border-radius:13px;padding:9px 17px;text-align:center;box-shadow:0 4px 0 rgba(46,42,94,.13)}
+.vc2 b{font-size:16.5px;display:block}.vc2 .arw{font-size:13.5px;color:#E8590C;display:block}
+.xxg{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.xx{border-radius:14px;padding:13px 16px;font-weight:800;font-size:16px;display:flex;align-items:center;gap:9px}
+.xx.g{background:#DFF7E9;color:#157A4C}.xx.b{background:#FDE5E3;color:#C0392B;text-decoration:line-through}
+.fsb{height:15px;border-radius:50px;background:linear-gradient(90deg,#0B8457,#F39C12,#C0392B);margin:16px 12px 5px;border:3px solid var(--ink)}
+.fsl{display:flex;justify-content:space-between;padding:0 12px;font-weight:800;font-size:14.5px;color:var(--mut)}
+.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.rc{background:#fff;border-radius:18px;padding:18px;box-shadow:var(--sh);border-top:6px solid var(--rcc);animation:pin .4s both}
+.rn{width:34px;height:34px;border-radius:11px;background:var(--rcc);color:#fff;border:3px solid var(--ink);font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.rt{font-weight:800;font-size:17px;color:var(--rcc)}.rc .ar{font-size:14px}
+.rx{background:#F6F3FC;border-radius:11px;padding:9px 12px;font-size:15px;font-weight:700;margin-top:9px;line-height:1.55}
+.qvg{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.qvc{background:#fff;border-radius:20px;padding:24px;text-align:center;border:3px solid var(--ink);box-shadow:0 6px 0 rgba(46,42,94,.13);animation:pin .4s both}
+.qvc h3{font-size:36px;font-weight:800}.qvc.v h3{color:var(--pkd)}.qvc.q{color:var(--ink)}.qvc.q h3{color:var(--pu)}
+.qvc .ar{font-size:15.5px}
+.qvb{height:14px;border-radius:8px;display:block;border:2.5px solid var(--ink)}
+.qvb.bv{width:95%;background:linear-gradient(90deg,var(--pk),#FF9CBB)}
+.qvb.bq{width:42%;background:linear-gradient(90deg,var(--pu),#B79CFF)}
+.qvcap{font-size:13px;color:var(--mut);font-weight:700;display:block;margin-top:5px}
+.qvx{background:#F6F3FC;border-radius:12px;padding:10px 14px;font-size:16px;font-weight:700;margin-top:12px}
+.orw{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.occ{background:#FFF8E9;border:3px solid var(--go);border-radius:14px;padding:11px 20px;font-weight:800;font-size:17px}
+.occ small{display:block;font-size:12.5px;color:var(--mut)}
+.mail{max-width:760px;margin:0 auto;background:#fff;border-radius:22px;border:3px solid var(--ink);box-shadow:0 7px 0 rgba(46,42,94,.14);overflow:hidden}
+.mtp{display:flex;align-items:center;gap:12px;padding:14px 18px;background:#F6F3FC;border-bottom:3px solid #E8E2F8;flex-wrap:wrap}
+.mav{width:48px;height:48px;border-radius:50%;background:var(--pu);color:#fff;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center;border:3px solid var(--ink)}
+.mfr{font-size:15px;font-weight:700}
+.mbd{padding:22px 26px;font-size:16.5px;line-height:1.9}.mbd p+p{margin-top:10px}
+.mk{font-weight:800;padding:1px 7px;border-radius:7px}
+.mk.v{background:#FDE9F3;color:var(--pkd)}.mk.q{background:#F1EAFB;color:var(--pu)}
+.lgd{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.lgx{background:#fff;border:3px solid var(--ink);border-radius:50px;padding:6px 20px;font-weight:800;font-size:15px;box-shadow:0 4px 0 rgba(46,42,94,.12)}
+.lgx .ar{font-size:13.5px}
+.ov{position:fixed;inset:0;background:rgba(46,42,94,.55);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.ov.on{display:flex}
+.ovc{background:#fff;border-radius:26px;border:3px solid var(--ink);box-shadow:0 10px 0 rgba(46,42,94,.3);max-width:460px;width:100%;padding:30px 28px;text-align:center;animation:pin .4s}
+.ovk{letter-spacing:3px;font-size:14px;font-weight:800;color:var(--mut)}.ovc>.ar{font-size:17px}
+.bst{display:flex;gap:10px;justify-content:center;margin:16px 0}
+.bst svg{width:58px;height:58px;color:#E9E4F8}
+.bst svg.f{color:var(--go);animation:sp .5s both}
+.ptile{width:86px;height:94px;margin:8px auto;border-radius:18px;background:var(--c);border:3px solid var(--ink);box-shadow:0 5px 0 var(--cd);display:flex;align-items:center;justify-content:center;color:#fff;font-size:42px;font-weight:800;position:relative;animation:pin .5s .3s both}
+.ptile:before{content:'';position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:26px;height:15px;border-radius:50%;background:var(--c);border:3px solid var(--ink);border-bottom:none}
+.plx{font-weight:800;font-size:16.5px}.pxp{color:var(--pu);font-weight:800;font-size:15.5px;margin-top:6px}
+.obtn{display:flex;gap:12px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+.endT{width:134px;height:134px;margin:0 auto;border-radius:36px;background:linear-gradient(135deg,#F5B841,#F0932B);border:3px solid var(--ink);box-shadow:0 8px 0 var(--god);display:flex;align-items:center;justify-content:center;color:#fff;animation:bob 3s infinite}
+.endT .ic{width:64px;height:64px}
+.bigt{font-size:42px;font-weight:800;text-align:center;margin-top:14px}.bigtar{font-size:22px;text-align:center}
+.tiler{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin:26px 0 8px}
+.tiler .ptile{width:66px;height:72px;font-size:32px;margin:0;animation:pin .4s both}
+.tiler .ptile:nth-child(2){animation-delay:.1s}.tiler .ptile:nth-child(3){animation-delay:.17s}.tiler .ptile:nth-child(4){animation-delay:.24s}.tiler .ptile:nth-child(5){animation-delay:.31s}.tiler .ptile:nth-child(6){animation-delay:.38s}.tiler .ptile:nth-child(7){animation-delay:.45s}.tiler .ptile:nth-child(8){animation-delay:.52s}
+.talk{background:#fff;border-radius:22px;padding:26px;max-width:680px;margin:22px auto 0;box-shadow:var(--sh);border-top:6px solid var(--pk);text-align:center}
+.talkh{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--pkd);font-weight:800;font-size:20px}
+.talkq{font-weight:800;font-size:18px;margin-top:8px}.talk .ar{font-size:16px}
+.talkm{font-size:15px;font-style:italic;color:var(--mut);font-weight:600;margin-top:8px}
+.uls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.ulc{background:#FDE9F3;color:var(--pkd);border-radius:50px;padding:6px 16px;font-weight:800;font-size:14.5px}
+.ff{display:flex;gap:14px;align-items:flex-start;background:#fff;border-radius:20px;padding:20px;max-width:680px;margin:16px auto 0;box-shadow:var(--sh);text-align:left}
+.ffi{width:50px;height:50px;border-radius:14px;background:#EAF4FE;color:var(--bld);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:3px solid var(--ink)}
+.ffi .ic{width:24px;height:24px}
+.ff p{font-size:15px;font-weight:600;line-height:1.6}.ff .ar{display:block;font-size:14px}
+.fin{font-size:28px;font-weight:800;text-align:center;color:var(--pu);margin-top:28px}.fin .ar{display:block;font-size:19px}
+.conf{position:fixed;width:11px;height:11px;border-radius:3px;z-index:999;pointer-events:none;animation:cf .9s forwards}
+@keyframes cf{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(var(--r)) scale(.2);opacity:0}}
+.fxp{position:fixed;z-index:998;font-weight:800;color:#1FA45B;font-size:23px;pointer-events:none;animation:fx 1s forwards;text-shadow:0 2px 0 #fff}
+@keyframes fx{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-56px);opacity:0}}
+@media(max-width:840px){.tc,.qvg,.rg{grid-template-columns:1fr}.noor{width:106px}.mg{max-width:none}}
+@media(max-width:620px){.wrap{padding:20px 14px 60px}.ht b{font-size:16px}.op{font-size:16px}.pp{min-width:136px}.mbd{font-size:15.5px}.pt{font-size:15px}}
+/* ===== SIZE TUNE ===== */
+body{font-size:16px}
+.wrap{max-width:960px}
+.lb{max-width:920px;padding:22px 20px 148px}
+.hud{padding:10px 14px}
+.hb{width:44px;height:44px}
+.foot{padding:12px 16px 16px}
+.bt{font-size:15.5px;padding:11px 26px}
+.noor{width:108px}
+.lt{font-size:clamp(44px,8vw,80px)}
+.lp{width:88px;height:88px}
+.sh h2{font-size:clamp(22px,3.5vw,29px)}
+.sh .ar{font-size:16px}
+.bub p{font-size:15.5px}
+.bub .ar{font-size:14px}
+.q p{font-size:19px}
+.q .ar{font-size:16.5px}
+.lead{font-size:16.5px}
+.card,.qc{padding:20px 22px}
+.qx{font-size:17.5px}
+.op{font-size:15.5px;padding:10px 22px}
+.op.portal{font-size:16px}
+.vw{font-size:22px}
+.va{font-size:17px}
+.vx span{font-size:13.5px}
+.chip{padding:10px 18px}
+.chip b{font-size:16px}
+.chip .ar{font-size:13px}
+.team h4{font-size:18px}
+.team p{font-size:16px}
+.pt{font-size:15px}
+.pp{font-size:16px;min-width:150px;padding:14px 20px}
+.mi{font-size:18px}
+.oc{font-size:15.5px}
+.us b{font-size:15px}
+.us .ex{font-size:14px}
+.us .ar,.fm .arw{font-size:13px}
+.fm{font-size:14px}
+.sg{font-size:12.5px}
+.cbs{font-size:16.5px}
+.rx{font-size:14px}
+.rt{font-size:16px}
+.rc .ar{font-size:13px}
+.qvc h3{font-size:30px}
+.qvx{font-size:15px}
+.occ{font-size:15.5px}
+.mbd{font-size:15.5px}
+.mfr{font-size:14px}
+.talkq{font-size:17px}
+.bigt{font-size:36px}
+.endT{width:112px;height:112px}
+.endT .ic{width:52px;height:52px}
+.ptile{width:78px;height:86px;font-size:38px}
+.tiler .ptile{width:60px;height:66px;font-size:28px}
+.mn{font-size:14px}
+.hint{font-size:14.5px}
+</style>
+</head>
+<body>
+<div class="bl b1"></div><div class="bl b2"></div><div class="bl b3"></div><div class="bl b4"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="i-puzzle" viewBox="0 0 100 100"><path d="M20 20H40C40 10 60 10 60 20H80V40C90 40 90 60 80 60V80H60C60 90 40 90 40 80H20V60C10 60 10 40 20 40Z" fill="currentColor"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9 2.9-6z" fill="currentColor"/></symbol>
+<symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 3h10v6a5 5 0 0 1-10 0V3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 5H4v1.5A3.5 3.5 0 0 0 7.5 10M17 5h3v1.5A3.5 3.5 0 0 1 16.5 10M12 14v4M8 21h8M9.5 18h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="i-speaker" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5H4z" fill="currentColor"/><path d="M15.5 8.5a4.5 4.5 0 0 1 0 7M18 6a8 8 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="i-mute" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5H4z" fill="currentColor"/><path d="M16 9l6 6M22 9l-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5L10 18 19.5 6.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 5.5L19.5 12 13 18.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2.5 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="17" cy="9" r="2.6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16.5 14.6c2.8.2 5 2.2 5 5.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="M9.5 14.5l5-5M7 12l-2.2 2.2a3.8 3.8 0 0 0 5.4 5.4L12.4 17M17 12l2.2-2.2a3.8 3.8 0 0 0-5.4-5.4L11.6 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-gauge" viewBox="0 0 24 24"><path d="M4 17a8.5 8.5 0 1 1 16 0M12 17l4-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17" r="1.6" fill="currentColor"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L5 13.5h5L9.5 22 19 10h-5.5L13 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 20v-9zM9.5 21.5v-6h5v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="15.5" r="1.6" fill="currentColor"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+<symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6.5 7.3 6.5 11.5a6.5 6.5 0 0 1-13 0C5.5 10.3 12 3 12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+<symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 14.5a2 2 0 0 1-2 2H8l-5 4v-15a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v9z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+<symbol id="i-noor" viewBox="0 0 120 112"><path d="M30 56v-8a30 30 0 0 1 60 0v8" fill="none" stroke="#2E2A5E" stroke-width="7" stroke-linecap="round"/><rect x="19" y="50" width="16" height="25" rx="7" fill="#FF5C8A" stroke="#2E2A5E" stroke-width="3.5"/><rect x="85" y="50" width="16" height="25" rx="7" fill="#FF5C8A" stroke="#2E2A5E" stroke-width="3.5"/><circle cx="60" cy="60" r="35" fill="#7C5CFC" stroke="#2E2A5E" stroke-width="3.5"/><circle cx="60" cy="65" r="27" fill="#FFE3C9" stroke="#2E2A5E" stroke-width="3.5"/><path d="M33 62q3-24 27-24t27 24q-9-11-18-7-6-9-17-4-11-3-19 11z" fill="#7C5CFC" stroke="#2E2A5E" stroke-width="3" stroke-linejoin="round"/><circle cx="51" cy="67" r="2.8" fill="#2E2A5E"/><circle cx="69" cy="67" r="2.8" fill="#2E2A5E"/><path d="M53 76q7 6 14 0" stroke="#2E2A5E" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="44" cy="73" r="3.4" fill="#FFB3A0"/><circle cx="76" cy="73" r="3.4" fill="#FFB3A0"/></symbol>
+</svg>
+
+<div class="sc on" id="s-start">
+<div class="hero">
+<svg class="lp" viewBox="0 0 100 100"><use href="#i-puzzle"/></svg>
+<p class="lk">UNIT 1 · GOLD EXPERIENCE</p>
+<h1 class="lt">Identity<br>Quest</h1>
+<p class="ls">Be who you are.</p>
+<p class="lar ar" dir="rtl">رِحْلَةُ الهُوِيَّة — كُنْ نَفْسَك</p>
+<div class="nrow"><svg class="noor" viewBox="0 0 120 112"><use href="#i-noor"/></svg><div class="bub"><p>Hi! I am Noor. Finish the levels, collect the 8 puzzle pieces… and discover the secret word!</p><p class="ar" dir="rtl">مَرْحَبًا! أنا نُور — أَكْمِلِ المَراحِلَ واجْمَعِ القِطَعَ الثَّمانِ لِتَكْتَشِفَ الكَلِمَةَ السِّرِّيَّة!</p></div></div>
+<button class="bt" id="playBtn" style="--bc:var(--gr);--bs:var(--grd);font-size:20px;padding:16px 46px;margin-top:32px">PLAY<svg class="ic"><use href="#i-arrow"/></svg></button>
+<div class="bgs"><span class="bg"><svg class="ic" style="color:var(--pu)"><use href="#i-puzzle"/></svg>8 levels</span><span class="bg"><svg class="ic" style="color:var(--go)"><use href="#i-star"/></svg>24 stars</span><span class="bg"><svg class="ic" style="color:var(--te)"><use href="#i-speaker"/></svg>Tap to listen</span></div>
+<p class="src">Based on Gold Experience Oman 9A · Unit 1: Identity</p>
+</div>
+</div>
+
+<div class="sc" id="s-map">
+<div class="wrap">
+<div class="mh"><div><h1 class="mt">Identity Quest</h1><p class="ar" dir="rtl" style="font-size:16px">اخْتَرْ مَرْحَلَتَكَ التّالِيَة!</p></div>
+<div><span class="pl"><svg class="ic" style="color:var(--pu)"><use href="#i-bolt"/></svg><b class="xpv">0</b>&nbsp;XP</span> <span class="pl"><svg class="ic" style="color:var(--go)"><use href="#i-star"/></svg><b id="starT">0</b>&nbsp;/ 24</span></div></div>
+<div class="strip"></div>
+<div class="lvl" id="lvList"></div>
+<button class="rst" id="resetBtn">Reset progress · إعادَةُ التَّقَدُّم مِنَ البِدايَة</button>
+</div>
+</div>
+
+<div class="sc" id="s-lvl">
+<header class="hud">
+<button class="hb" id="homeBtn"><svg class="ic"><use href="#i-home"/></svg></button>
+<div class="ht"><b id="hT"></b><span class="ar" id="hAr" dir="rtl"></span></div>
+<span class="pl"><svg class="ic" style="color:var(--pu);width:16px;height:16px"><use href="#i-bolt"/></svg><b class="xpv">0</b></span>
+<button class="hb" id="sndBtn"><svg class="ic"><use href="#i-speaker"/></svg></button>
+</header>
+<main class="lb" id="lbody"></main>
+<footer class="foot"><div class="dots" id="dots"></div><button class="bt rdy" id="nxt">Continue<svg class="ic"><use href="#i-arrow"/></svg></button></footer>
+</div>
+
+<div class="sc" id="s-end">
+<div class="wrap" style="text-align:center">
+<div class="endT"><svg class="ic"><use href="#i-trophy"/></svg></div>
+<h2 class="bigt">Quest Complete!</h2>
+<p class="bigtar ar" dir="rtl">أَكْمَلْتَ رِحْلَةَ الهُوِيَّة!</p>
+<div class="tiler" id="endTiles"></div>
+<p style="font-weight:800;font-size:19px">The secret word is your <b style="color:var(--pu)">IDENTITY</b>.</p>
+<p class="ar" dir="rtl" style="font-size:16px">الكَلِمَةُ السِّرِّيَّةُ هي هُوِيَّتُك — كُلُّ قِطْعَةٍ جَمَعْتَها هي جُزْءٌ مِنْها</p>
+<div style="display:flex;gap:12px;justify-content:center;margin:16px 0"><span class="pl"><svg class="ic" style="color:var(--pu)"><use href="#i-bolt"/></svg><b class="xpv">0</b>&nbsp;XP</span><span class="pl"><svg class="ic" style="color:var(--go)"><use href="#i-star"/></svg><b id="endStars">0</b>&nbsp;stars</span></div>
+<div class="talk"><p class="talkh"><svg class="ic"><use href="#i-chat"/></svg>Talk time</p><p class="talkq">What three words describe YOUR personality? Why?</p><p class="ar" dir="rtl">ما ثَلاثُ كَلِماتٍ تَصِفُ شَخْصِيَّتَك؟ ولِماذا؟</p><p class="talkm">I think I am quite sociable, because I love meeting new people.</p><div class="uls"><span class="ulc">because</span><span class="ulc">as</span><span class="ulc">one reason is that…</span><span class="ulc">for example</span></div></div>
+<div class="ff"><div class="ffi"><svg class="ic"><use href="#i-pin"/></svg></div><div><p>A megacity is a city with more than ten million people living in it.</p><p class="ar" dir="rtl">المَدينَةُ الضَّخْمَة هي مَدينَةٌ يَعِيشُ فيها أكْثَرُ مِنْ عَشَرَةِ مَلايِين مِنَ النّاس</p></div></div>
+<div class="ff"><div class="ffi" style="background:#E1F7F2;color:var(--ted)"><svg class="ic"><use href="#i-drop"/></svg></div><div><p>Fun fact: water flows underground in some mountain areas in Oman — just by gravity!</p><p class="ar" dir="rtl">يَجْري الماءُ تَحْتَ الأرْضِ في بَعْضِ المِناطِقِ الجَبَلِيَّةِ في عُمان — بِفِعْلِ الجاذِبِيَّةِ فَقَط!</p></div></div>
+<p class="fin">Be who you are.<span class="ar" dir="rtl">كُنْ نَفْسَك</span></p>
+<div style="display:flex;gap:12px;justify-content:center;margin-top:26px"><button class="bt" id="endMap" style="--bc:#fff;--bs:#D9D4EE;color:var(--ink)">Map</button><button class="bt" id="endReset" style="--bc:var(--pk);--bs:var(--pkd)">Play again</button></div>
+</div>
+</div>
+
+<div class="ov" id="rov"><div class="ovc" id="rovc"></div></div>
+
+<script>
+(function(){
+"use strict";
+var LET="IDENTITY";
+var LC=["#FF5C8A","#00A88E","#58B368","#7C5CFC","#3E8EDE","#FF9838","#F0A400","#2E2A5E"];
+var LD=["#D63E6C","#00806B","#3E8A47","#5B3FD1","#2A6FB4","#D67A1F","#C07E00","#1B1843"];
+var ICN=["puzzle","users","star","link","clock","gauge","bolt","trophy"];
+function dS(){return{xp:0,un:1,st:{},pc:0,mu:false}}
+var S=dS();
+try{var v=localStorage.getItem("idq3");if(v)S=Object.assign(dS(),JSON.parse(v));}catch(e){}
+function sv(){try{localStorage.setItem("idq3",JSON.stringify(S));}catch(e){}}
+var $=function(s){return document.querySelector(s)};
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+
+var LV=[
+{t:"The Puzzle of Me",ar:"لُغْزُ هُوِيَّتي",hi:"Hi! I am Noor. Let us build YOUR identity puzzle!",ha:"مَرْحَبًا! أنا نُور — لِنَبْنِ بازْلَ هُوِيَّتِك!",st:[
+{p:"teach",h:"What is identity?",a:"ما هي الهُوِيَّة؟",x:'<div class="q"><p>Identity is like a puzzle: you need all of the pieces to complete the picture.</p><p class="ar" dir="rtl">الهُوِيَّةُ مِثْلُ البازْل: تَحْتاجُ إلى كُلِّ القِطَعِ لِتَكْتَمِلَ الصُّورَة</p></div><p class="mn">Every level gives you one puzzle piece. The 8 pieces hide a secret word!<span class="ar" dir="rtl">كُلُّ مَرْحَلَةٍ تُعْطِيكَ قِطْعَة — والقِطَعُ الثَّمانِ تُخْفي كَلِمَةً سِرِّيَّة!</span></p>'},
+{p:"teach",h:"The photo board",a:"لَوْحَةُ الصُّوَر",x:'<div class="card"><p class="lead">Students make photo boards. A photo board shows who you are: where you live, your family, your hobbies and interests, and your dreams!</p><p class="ar" dir="rtl" style="text-align:center;font-size:16px">لَوْحَةُ الصُّوَرِ تُظْهِرُ مَنْ أنت: أيْنَ تَسْكُن، عائِلَتُك، هِواياتُك ومَيْلُك، وأحْلامُك</p></div>'},
+{p:"pieces",h:"Build your puzzle!",a:"ابْنِ بازْلَك!",ld:"Tap the pieces to light up your puzzle. Which piece is the biggest for YOU?",la:"اضْغَطِ القِطَعَ لِتُضِيءَ البازْل — أيُّ قِطْعَةٍ هي الأكْبَرُ عِنْدَك؟",cols:["#FF5C8A","#00A88E","#F0A400","#3E8EDE","#7C5CFC"],items:[["My family","عائلَتي"],["My hobbies","هِواياتي"],["My personality","شَخْصِيَّتي"],["Where I live","أيْنَ أسْكُن"],["My dreams","أحْلامي"]]},
+{p:"quiz",h:"Quick check",a:"تَحَقُّقٌ سَرِيع",qs:[
+{q:"A photo board shows…",o:["Who you are","Only your school","The weather"],c:0,h:"It shows your life, family, hobbies and dreams.",ha:"تُظْهِرُ حَياتَكَ وعائِلَتَكَ وهِواياتِكَ وأحْلامَك"},
+{q:"Identity is like a…",o:["a song","a puzzle","a car"],c:1,h:"You need all the pieces!",ha:"تَحْتاجُ كُلَّ القِطَعِ لِتَكْتَمِلَ الصُّورَة"}]}]},
+{t:"Meet the Friends",ar:"تَعَرَّفْ عَلى الأَصْدِقاء",hi:"Six students made photo boards. Read carefully — I will ask you about them!",ha:"سِتَّةُ طُلّابٍ صَنَعُوا لَوْحاتِ صُوَر — اقْرَأْ بِانْتِباهٍ لأنّي سَأَسْأَلُكَ عَنْهُم!",st:[
+{p:"prof",h:"Six photo boards",a:"سِتُّ لَوْحاتِ صُوَر",ps:[
+{n:"Osama",l:"Muscat, Oman",c:"#FF5C8A",t:"I live with my family in Muscat – our <b class=hl>capital city</b>. I love football and I am having karate lessons <b class=hl>at the moment</b>. I <b class=hl>hang out with</b> my friends at the weekend."},
+{n:"Hana",l:"a very small village",c:"#00A88E",t:"I come from a very small village, where everyone is very <b class=hl>friendly</b>. I like cooking and I get ideas for <b class=hl>recipes</b> online. Travelling is really exciting!"},
+{n:"Basil",l:"a village near the mountains",c:"#F0A400",t:"I live in a village near the mountains with my parents and sisters. We spend a lot of time together <b class=hl>outdoors</b>. I am very <b class=hl>cheerful</b> — I want to be a film star!"},
+{n:"Riley",l:"by the coast, this summer",c:"#3E8EDE",t:"I am <b class=hl>living</b> with my grandparents by the <b class=hl>coast</b> this summer, and I am enjoying the sea! But I go back home every weekend. I am very <b class=hl>sporty</b>."},
+{n:"Cody",l:"Warsaw, Poland",c:"#7C5CFC",t:"I live with my parents in an apartment in Warsaw. I spend a lot of time <b class=hl>gaming</b> with friends online. I am also <b class=hl>keen on</b> sport — but only watching it!"},
+{n:"Kim",l:"a big city",c:"#FF9838",t:"I live in a city with my parents and my brother. We are very <b class=hl>musical</b> and we all play instruments. I love hairstyles and clothes, and I <b class=hl>make videos</b> with my ideas."}]},
+{p:"chips",h:"New words",a:"كَلِماتٌ جَدِيدَة — اضْغَطْ لِلنُّطْق",c:"var(--te)",w:[["capital city","عاصِمَة"],["cheerful","مَرِح"],["recipe","وَصْفَةُ طَبْخ"],["outdoors","في الهَواءِ الطَّلَق"],["coast","السّاحِل"],["hang out with","يَقْضي الوَقْتَ مَع"],["keen on","مُولَعٌ بِـ"],["musical","مُوسِيقِيّ"]]},
+{p:"quiz",h:"Do you remember them?",a:"هَلْ تَذْكَرُهُم؟",qs:[
+{q:"Who lives in Muscat, the capital city?",o:["Hana","Osama","Kim"],c:1,h:"Osama lives with his family in Muscat.",ha:"أُسامَة يَسْكُنُ مَعَ عائِلَتِهِ في مَسْقَط"},
+{q:"Who wants to be a film star?",o:["Basil","Cody","Riley"],c:0,h:"Basil is cheerful and wants to be a film star.",ha:"باسِل مَرِحٌ ويُريدُ أنْ يُصْبِحَ نَجْمَ سينَما"},
+{q:"Who likes cooking and gets recipe ideas online?",o:["Kim","Osama","Hana"],c:2,h:"Hana likes cooking for her family.",ha:"هَنَة تُحِبُّ الطَّبْخَ لعائِلَتِها"},
+{q:"Who is living by the coast this summer?",o:["Basil","Riley","Cody"],c:1,h:"This summer = temporary.",ha:"هٰذا الصَّيْف = أمْرٌ مُؤَقَّت"},
+{q:"Who is keen on sport — but only watching it?",o:["Cody","Osama","Riley"],c:0,h:"Cody is keen on sport, but only watching!",ha:"كودي مُولَعٌ بالرِّياضَةِ مُشاهَدَةً فَقَط"},
+{q:"Who makes videos about hairstyles and clothes?",o:["Hana","Basil","Kim"],c:2,h:"Kim loves hairstyles and clothes.",ha:"كيم تُحِبُّ تَسْريحاتِ الشَّعْرِ والمَلابِس"}]}]},
+{t:"Personality Powers",ar:"قُوّاتُ الشَّخْصِيَّة",hi:"Time for superpowers — personality adjectives! Listen and repeat after me.",ha:"وقْتُ القُوّاتِ الخارِقَة — صِفاتُ الشَّخْصِيَّة! اسْتَمِعْ وكَرِّرْ بَعْدِي",st:[
+{p:"teach",h:"Three teams",a:"ثَلاثَةُ فِرَق",x:'<div class="team" style="background:var(--gr)"><h4>Green team — the nice ones</h4><span class="arw" dir="rtl">الفَريقُ الأَخْضَر — صِفاتٌ جَمِيلَة</span><p>clever · confident · funny · sociable · sporty</p></div><div class="team" style="background:var(--rd)"><h4>Red team — not so nice</h4><span class="arw" dir="rtl">الفَريقُ الأحْمَر — غَيْرُ لَطِيفَة</span><p>lazy · unpleasant · noisy · rude</p></div><div class="team" style="background:var(--go)"><h4>Yellow team — in the middle</h4><span class="arw" dir="rtl">الفَريقُ الأصْفَر — في الوَسَط</span><p>calm · serious · shy</p></div>'},
+{p:"vocab",h:"Green team",a:"الفَريقُ الأَخْضَر",c:"var(--gr)",w:[["clever","ذَكِيّ","is intelligent","My cousin always gets good marks — he is very clever."],["confident","واثِقٌ مِنْ نَفْسِه","believes he or she can do things well","She is confident she can pass the exam."],["funny","مُضْحِك","makes people laugh","My brother tells jokes — he is so funny!"],["sociable","اجْتِماعِيّ","enjoys spending time with other people","Asma is sociable — she loves being with friends!"],["sporty","رِيَاضِيّ","likes ball games and team games","Our family is sporty — we often go swimming."]]},
+{p:"vocab",h:"Red team",a:"الفَريقُ الأحْمَر",c:"var(--rd)",w:[["lazy","كَسُول","does not like working","They never help at home — they are lazy!"],["unpleasant","غَيْرُ لَطِيف","unkind to other people","Do not be unpleasant to your friends."],["noisy","صاخِب","makes loud sounds in an annoying way","The children next door are very noisy."],["rude","وَقِح","is not polite","She never says please or thank you — she is rude."]]},
+{p:"vocab",h:"Yellow team",a:"الفَريقُ الأصْفَر",c:"var(--go)",w:[["calm","هادِئ","relaxed and not angry","My dad is always very calm. He never gets annoyed."],["serious","جادّ","thinks a lot and does not laugh much","Why are you always so serious? Smile!"],["shy","خَجُول","often nervous with new people","She is shy, so making friends is not easy."]]},
+{p:"quiz",h:"Who am I?",a:"مَنْ أنا؟ خَمِّنِ الصِّفَة!",qs:[
+{q:"I always get good marks in my exams. I am…",o:["lazy","clever","shy"],c:1,h:"Clever = intelligent.",ha:"clever = ذَكِيّ"},
+{q:"I make people laugh! I am…",o:["funny","serious","calm"],c:0,h:"Funny = makes people laugh.",ha:"funny = مُضْحِك"},
+{q:"I do not like working. I am…",o:["clever","sociable","lazy"],c:2,h:"Lazy = does not like working.",ha:"lazy = كَسُول"},
+{q:"I love spending time with other people. I am…",o:["sociable","shy","rude"],c:0,h:"Sociable = enjoys being with people.",ha:"sociable = اجْتِماعِيّ"},
+{q:"I never say please or thank you. I am…",o:["noisy","rude","confident"],c:1,h:"Rude = not polite.",ha:"rude = وَقِح"},
+{q:"I am relaxed and I never get angry. I am…",o:["calm","noisy","lazy"],c:0,h:"Calm = relaxed and not angry.",ha:"calm = هادِئ"}]}]},
+{t:"Word Partners",ar:"شُرَكاءُ الكَلِمات",hi:"Some adjectives always walk with a preposition — like partners holding hands!",ha:"بَعْضُ الصِّفاتِ تَسيرُ دائِمًا مَعَ حَرْفِ جَرٍّ — مِثْلَ شَرِيكَيْنِ يَدٌ بِيَد!",st:[
+{p:"teach",h:"The golden rule",a:"القاعِدَةُ الذَّهَبِيَّة",x:'<div class="q" style="background:linear-gradient(135deg,#8E44AD,#6C3483);box-shadow:0 7px 0 #55276B"><p style="font-style:normal">adjective + preposition + noun</p><p class="ar" dir="rtl">صِفَة + حَرْفُ جَرّ + اسْم</p></div><div class="card" style="margin-top:16px"><p class="lead">She is interested <b style="color:var(--pu)">in</b> languages. · I am fed up <b style="color:var(--pu)">with</b> this song. · Frank is brilliant <b style="color:var(--pu)">at</b> cooking.</p><p class="ar" dir="rtl" style="text-align:center;font-size:15.5px">احْفَظِ الصِّفَةَ وحَرْفَ الجَرِّ مَعاً دائِمًا — فهُما شَرِيكانِ لا يَفْتَرِقان!</p></div>'},
+{p:"chips",h:"Meet the partners",a:"اِعْرِفِ الشُّرَكاء — اضْغَطْ لِلنُّطْق",c:"var(--pu)",w:[["good at","بارِعٌ في"],["brilliant at","مُتْقِنٌ لِـ"],["bad at","ضَعِيفٌ في"],["terrible at","سَيِّئٌ جِدّاً في"],["interested in","مُهْتَمٌّ بِـ"],["keen on","مُولَعٌ بِـ"],["excited about","مُتَحَمِّسٌ لِـ"],["fed up with","ضاجِرٌ مِن"],["afraid of","خائِفٌ مِن"],["bored with","مَلَّ مِن"]]},
+{p:"match",h:"Matching game",a:"لُعْبَةُ التَّوْفِيق",lf:["good","interested","keen","afraid","excited"],rt:["at","in","on","of","about"]},
+{p:"quiz",h:"Fill the gap!",a:"أَكْمِلِ الفَراغ",qs:[
+{q:"I am very interested ___ the museums.",o:["on","in","at"],c:1,h:"interested in — always!",ha:"interested in — دائِمًا"},
+{q:"Frank is brilliant ___ cooking.",o:["at","in","of"],c:0,h:"brilliant at + a skill.",ha:"brilliant at مَعَ المَهارات"},
+{q:"I am fed up ___ this song!",o:["of","on","with"],c:2,h:"fed up with.",ha:"fed up with = ضاجِرٌ مِن"}]}]},
+{t:"Now or Always?",ar:"الآنَ أمْ دائِمًا؟",hi:"Two magic doors: blue for habits, pink for actions happening now. Choose wisely!",ha:"بابانِ سِحْرِيّان: الأزْرَقُ لِلْعاداتِ، والوَرْدِيُّ لِما يَحْدُثُ الآن — اخْتَرْ بِحِكْمَة!",st:[
+{p:"teach",h:"The blue door — Present Simple",a:"البابُ الأزْرَق — المُضارِعُ البَسِيط",x:'<div class="tc"><div class="tp"><div class="th" style="background:linear-gradient(135deg,#3E8EDE,#2A6FB4)"><h3>Present Simple</h3><span class="arw" dir="rtl">المُضارِعُ البَسِيط</span></div><div class="tb"><p class="fm">I / you / we / they + <b>verb</b> · he / she / it + <b>verb-s</b><span class="arw" dir="rtl">مَعَ he / she / it نُضِيفُ حَرْفَ s</span></p><div class="us" style="background:#EAF4FE"><b>Permanent states · حَالاتٌ دائِمَة</b><p class="ex">I <b style="color:var(--bld)">live</b> in a village in the mountains.</p></div><div class="us" style="background:#EAF4FE"><b>Habits and repeated actions · عاداتٌ مُتَكَرِّرَة</b><p class="ex">I <b style="color:var(--bld)">hang out</b> with them at the weekend.</p></div><div class="sgs"><span class="sgt">SIGNALS</span><span class="sg">every day</span><span class="sg">always</span><span class="sg">usually</span><span class="sg">at the weekend</span></div></div></div></div>'},
+{p:"teach",h:"The pink door — Present Continuous",a:"البابُ الوَرْدِيّ — المُضارِعُ المُسْتَمِرّ",x:'<div class="tc"><div class="tp"><div class="th" style="background:linear-gradient(135deg,#FF5C8A,#D63E6C)"><h3>Present Continuous</h3><span class="arw" dir="rtl">المُضارِعُ المُسْتَمِرّ</span></div><div class="tb"><p class="fm">am / is / are + <b>verb-ing</b><span class="arw" dir="rtl">فِعْلُ الكَوْن + الفِعْل + ing</span></p><div class="us" style="background:#FDE9F3"><b>Happening NOW · يَحْدُثُ الآن</b><p class="ex">I <b style="color:var(--pkd)">am watching</b> videos on my tablet.</p></div><div class="us" style="background:#FDE9F3"><b>Around now — temporary · مُؤَقَّت</b><p class="ex">I <b style="color:var(--pkd)">am having</b> karate lessons at the moment.</p></div><div class="sgs"><span class="sgt">SIGNALS</span><span class="sg">now</span><span class="sg">at the moment</span><span class="sg">today</span><span class="sg">this summer</span><span class="sg">Look!</span></div></div></div></div><div class="cb"><p class="cbt">COMPARE · قارِن</p><p class="cbs"><span class="cbp">I am living with my grandparents this summer</span>, but <span class="cbb">I go back home every weekend</span>.</p><p class="ar" dir="rtl">الأوّلُ مُؤَقَّتٌ هٰذا الصَّيْف — والثّانِي عادَةٌ كُلَّ أُسْبُوع</p></div>'},
+{p:"teach",h:"Careful! Stative verbs",a:"انْتَبِه — أَفْعالُ الحالَة",x:'<div class="warn"><p><b>Some verbs do not usually use -ing:</b> feel, hate, hear, know, like, love, see, think, understand, want.</p><p class="ar" dir="rtl">هٰذِهِ الأَفْعالُ تُعَبِّرُ عن حالَةٍ لا حَرَكَة — فلا نَسْتَخْدِمُها غالِبًا في المُسْتَمِرّ</p></div><div class="vch"><span class="vc2"><b>like</b><span class="arw" dir="rtl">يُحِبّ</span></span><span class="vc2"><b>love</b><span class="arw" dir="rtl">يُحِبّ جِدّاً</span></span><span class="vc2"><b>hate</b><span class="arw" dir="rtl">يَكْرَه</span></span><span class="vc2"><b>want</b><span class="arw" dir="rtl">يُرِيد</span></span><span class="vc2"><b>know</b><span class="arw" dir="rtl">يَعْرِف</span></span><span class="vc2"><b>understand</b><span class="arw" dir="rtl">يَفْهَم</span></span><span class="vc2"><b>think</b><span class="arw" dir="rtl">يَعْتَقِد</span></span><span class="vc2"><b>see</b><span class="arw" dir="rtl">يَرى</span></span></div><div class="xxg"><div class="xx g"><svg class="ic"><use href="#i-check"/></svg>I like cooking for my family.</div><div class="xx b"><svg class="ic"><use href="#i-x"/></svg>I am liking cooking</div><div class="xx g"><svg class="ic"><use href="#i-check"/></svg>I want to be a film star.</div><div class="xx b"><svg class="ic"><use href="#i-x"/></svg>I am wanting to be a film star</div></div>'},
+{p:"quiz",two:1,h:"Choose the right door!",a:"اخْتَرِ البابَ الصَّحِيح",qs:[
+{q:"Look! It ___ outside right now. <span class=bs>(rain)</span>",c:1,h:"It is raining — Look! + right now = NOW.",ha:"كَلِمَتا Look و right now تَعْنيانِ أنَّ الفِعْلَ يَحْدُثُ الآن"},
+{q:"She ___ football with her friends every Friday. <span class=bs>(play)</span>",c:0,h:"She plays — every Friday = a habit.",ha:"كُلَّ جُمْعَة = عادَةٌ مُتَكَرِّرَة"},
+{q:"Taha ___ with his grandparents at the moment. <span class=bs>(live)</span>",c:1,h:"Taha is living — at the moment = temporary.",ha:"في هٰذِهِ الفَتْرَة = أمْرٌ مُؤَقَّت"},
+{q:"My sister ___ blonde hair and blue eyes. <span class=bs>(have)</span>",c:0,h:"She has — a state, not an action.",ha:"وَصْفٌ ثابِتٌ لا حَرَكَة"},
+{q:"Hurry up! Your friends ___ for you downstairs! <span class=bs>(wait)</span>",c:1,h:"Your friends are waiting — happening now!",ha:"يَحْدُثُ في هٰذِهِ اللَّحْظَة"},
+{q:"I ___ where Laila is. <span class=bs>(not know)</span>",c:0,h:"I do not know — know is a stative verb, no -ing!",ha:"know فِعْلُ حالَة — بِلا ing"}]}]},
+{t:"How Often?",ar:"كَمْ مَرَّة؟",hi:"How often do you do things? Let us learn the words of frequency!",ha:"كَمْ مَرَّةً تُمارِسُ الأُمور؟ لِنَتَعَلَّمْ كَلِماتِ التَّكْرار!",st:[
+{p:"teach",h:"The frequency meter",a:"مِقْياسُ التَّكْرار",x:'<div class="card"><div class="chips"><button class="chip" data-say="always" style="--cc:#0B8457"><b>always</b><span class="ar" dir="rtl">دائِمًا 100%</span></button><button class="chip" data-say="usually" style="--cc:#16A085"><b>usually</b><span class="ar" dir="rtl">غالِبًا</span></button><button class="chip" data-say="often" style="--cc:#F39C12"><b>often</b><span class="ar" dir="rtl">كَثِيرًا</span></button><button class="chip" data-say="sometimes" style="--cc:#E67E22"><b>sometimes</b><span class="ar" dir="rtl">أحْيانًا</span></button><button class="chip" data-say="rarely" style="--cc:#D35400"><b>rarely</b><span class="ar" dir="rtl">نادِرًا</span></button><button class="chip" data-say="never" style="--cc:#C0392B"><b>never</b><span class="ar" dir="rtl">أبَدًا 0%</span></button></div><div class="fsb"></div><div class="fsl"><span>100%</span><span>0%</span></div><p class="mn">Tap the words to hear them!<span class="ar" dir="rtl">اضْغَطِ الكَلِماتِ لِتَسْمَعَها</span></p></div>'},
+{p:"teach",h:"Where do they go?",a:"أيْنَ نَضَعُها في الجُمْلَة؟",x:'<div class="rg"><div class="rc" style="--rcc:var(--te)"><div class="rn">1</div><p class="rt">AFTER the verb be</p><p class="ar" dir="rtl">بَعْدَ فِعْلِ الكَوْن</p><p class="rx">I hate winter – it is <b>always</b> so cold!</p></div><div class="rc" style="--rcc:var(--bl)"><div class="rn">2</div><p class="rt">BEFORE other main verbs</p><p class="ar" dir="rtl">قَبْلَ الفِعْلِ الرَّئِيسِيّ</p><p class="rx">I <b>often</b> go on foot.</p></div><div class="rc" style="--rcc:var(--pu)"><div class="rn">3</div><p class="rt">Time phrases go at the END</p><p class="ar" dir="rtl">عِباراتُ الزَّمَنِ في النِّهايَة</p><p class="rx">Give me sunshine and heat <b>every day</b>!</p></div></div><p class="mn">Time phrases: every day · once a week · at the weekend · now and then<span class="ar" dir="rtl">عِباراتُ زَمَنٍ شائِعَة</span></p>'},
+{p:"order",h:"Build the sentence!",a:"ابْنِ الجُمْلَة — اضْغَطِ الكَلِماتِ بالتَّرْتِيبِ الصَّحِيح",se:[
+{w:["We can see","a full moon","once a month"],ar:"نَرى البَدْرَ الكامِلَ مَرَّةً كُلَّ شَهْر"},
+{w:["It is not","usually","dark","in June"],ar:"لا يَكُونُ الجَوُّ مُظْلِمًا غالِبًا في يُونْيُو"},
+{w:["Tom and I","go skating","once a week"],ar:"أَنَا وتوم نَذْهَبُ لِلتَّزَلُّجِ مَرَّةً كُلَّ أُسْبُوع"},
+{w:["I am","always","tired","on Thursdays"],ar:"أكُونُ مُتْعَبًا دائِمًا أيّامَ الخَمِيس"}]}]},
+{t:"Power Words",ar:"كَلِماتُ القُوَّة",hi:"Two tiny words with big power: quite and very!",ha:"كَلِمَتانِ صَغيرَتانِ بقُوَّةٍ كَبِيرَة: quite و very",st:[
+{p:"teach",h:"quite vs very",a:"الفرقُ بَيْنَ quite و very",x:'<div class="qvg"><div class="qvc v"><h3>very</h3><p class="ar" dir="rtl">جِدّاً — تَجْعَلُ الصِّفَةَ أقْوى</p><span class="qvb bv"></span><span class="qvcap">stronger · أقْوى</span><p class="qvx">He is <b>very</b> funny. · I am <b>very</b> shy.</p></div><div class="qvc q"><h3>quite</h3><p class="ar" dir="rtl">نِسْبِيّاً — تَجْعَلُ الصِّفَةَ أخَفَّ</p><span class="qvb bq"></span><span class="qvcap">less strong · أخَفّ</span><p class="qvx">I am <b>quite</b> lazy. · It is <b>quite</b> exciting.</p></div></div>'},
+{p:"teach",h:"Careful with a / an!",a:"انْتَبِهْ عِنْدَ أداةِ النَّكِرَة",x:'<div class="card" style="text-align:center"><div class="orw"><span class="occ">a <b>very</b> good film<small>very comes AFTER a</small></span><span class="occ"><b>quite</b> an interesting story<small>quite comes BEFORE an</small></span></div></div><div class="warn" style="margin-top:16px"><p><b>No quite or very with extreme adjectives</b> (furious, terrified…): we say I was terrified!</p><p class="ar" dir="rtl">لا نَسْتَخْدِمُ quite أو very مَعَ صِفاتِ المُبالَغَةِ مِثْل furious و terrified</p></div>'},
+{p:"teach",h:"Rahaf's email",a:"بَرِيدُ رَهَف",x:'<div class="lgd"><span class="lgx"><span class="mk v">very</span> <span class="ar" dir="rtl">جِدّاً</span></span><span class="lgx"><span class="mk q">quite</span> <span class="ar" dir="rtl">نِسْبِيّاً</span></span></div><div class="mail"><div class="mtp"><div class="mav">R</div><div class="mfr"><b>From:</b> Rahaf · <b>To:</b> Dana</div><button class="bt" data-say="Dear Dana, I am Rahaf. I am fourteen, and I come from Oman. I live in a small village called Misfat Al Abryeen. My friends and family mean a lot to me. Some people think I am quiet, but I am actually quite sociable. I enjoy meeting new people and chatting. I love living in my village. It is very quiet, and I love hiking. Choose me because I live in an amazing place where life is very close to nature. I hope to hear from you. Rahaf" style="--bc:var(--te);--bs:var(--ted);font-size:14px;padding:9px 18px;margin-left:auto"><svg class="ic" style="width:16px;height:16px"><use href="#i-speaker"/></svg>Listen</button></div><div class="mbd"><p>Dear Dana,</p><p>I am Rahaf. I am fourteen, and I come from Oman. I live in a small village called Misfat Al Abryeen. My friends and family mean a lot to me.</p><p>Some people think I am quiet, but I am actually <span class="mk q">quite</span> sociable. I enjoy meeting new people and chatting!</p><p>I love living in my village. It is <span class="mk v">very</span> quiet, and I love hiking — there are lots of places to walk nearby.</p><p>Choose me because I live in an amazing place where life is <span class="mk v">very</span> close to nature.</p><p>I hope to hear from you!<br>Rahaf</p></div></div><p class="mn">Rahaf lives in Misfat Al Abryeen — a beautiful village in Oman.<span class="ar" dir="rtl">تَسْكُنُ رَهَفُ في مِسْفَع العَبْرِيّين — قَرْيَةٌ جَمِيلَةٌ في عُمان</span></p>'},
+{p:"quiz",h:"Power up!",a:"شَحِّنِ الجُمَل!",qs:[
+{q:"It is ___ exciting city!",o:["very a","quite an","a quite"],c:1,h:"quite an exciting city.",ha:"quite تَأْتي قَبْلَ أداةِ النَّكِرَة"},
+{q:"They live in ___ old part of the city.",o:["a very","quite a","very"],c:0,h:"a very old part.",ha:"very تَأْتي بَعْدَ أداةِ النَّكِرَة"},
+{q:"I am ___ interested in acting.",o:["quite","very a","a quite"],c:0,h:"quite interested — less than very.",ha:"مُهْتَمٌّ نِسْبِيّاً"},
+{q:"He is ___ funny — he makes everyone laugh!",o:["quite a","very","a very"],c:1,h:"very funny — the strongest!",ha:"very funny = مُضْحِكٌ جِدّاً"}]}]},
+{t:"The Final Gate",ar:"البوّابَةُ الأخِيرَة",hi:"Boss level! Answer all the questions to win the last puzzle piece!",ha:"المَرْحَلَةُ الأخِيرَة! أَجِبْ عَنْ كُلِّ الأسْئِلَةِ لِتَرْبَحَ آخِرَ قِطْعَة!",st:[
+{p:"quiz",h:"Boss battle!",a:"المَعْرَكَةُ الحاسِمَة",qs:[
+{q:"Osama ___ in Muscat with his family.",o:["live","lives","is living"],c:1,h:"Permanent state + he = lives.",ha:"حالَةٌ دائِمَة + he ← lives"},
+{q:"I ___ karate lessons at the moment.",o:["have","am having","has"],c:1,h:"At the moment = temporary.",ha:"في هٰذِهِ الفَتْرَة = مُؤَقَّت"},
+{q:"Zeinab never says please. She is ___.",o:["rude","calm","clever"],c:0,h:"Not polite = rude.",ha:"غَيْرُ مُؤَدَّب = rude"},
+{q:"I am really excited ___ the school trip.",o:["in","of","about"],c:2,h:"excited about — always!",ha:"excited about — دائِمًا"},
+{q:"I ___ go to bed late on weekdays.",o:["go never","never go","never going"],c:1,h:"never goes BEFORE the main verb.",ha:"never قَبْلَ الفِعْلِ الرَّئِيسِيّ"},
+{q:"It was ___ interesting story!",o:["a quite","quite an","an very"],c:1,h:"quite an interesting story.",ha:"quite قَبْلَ an"}]}]}];
+
+var PORT=["ALWAYS · present simple","NOW · present continuous"];
+
+/* sound */
+var AC=null;
+function ac(){try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();}catch(e){}return AC}
+function tn(f,t,d,ty,v){var a=ac();if(!a||S.mu)return;try{var o=a.createOscillator(),g=a.createGain();o.type=ty||"sine";o.frequency.value=f;g.gain.setValueAtTime(.0001,a.currentTime+t);g.gain.linearRampToValueAtTime(v||.14,a.currentTime+t+.02);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+t+d);o.connect(g);g.connect(a.destination);o.start(a.currentTime+t);o.stop(a.currentTime+t+d+.05);}catch(e){}}
+function sP(){tn(520,0,.09,"triangle",.11)}
+function sD(){tn(660,0,.12);tn(990,.09,.18)}
+function sB(){tn(150,0,.2,"square",.07)}
+function sF(){[523,659,784,1047].forEach(function(f,i){tn(f,i*.12,.26,"triangle",.12)})}
+var VF=null;
+function pk(){if(!window.speechSynthesis)return;var v=speechSynthesis.getVoices();VF=v.find(function(x){return /Zira|Libby|Hazel|Samantha|Aria|Jenny|Sonia|Female/i.test(x.name)&&/^en/i.test(x.lang)})||v.find(function(x){return /Google UK English Female/i.test(x.name)})||v.find(function(x){return /^en-GB/i.test(x.lang)})||v.find(function(x){return /^en/i.test(x.lang)})||null}
+if(window.speechSynthesis){pk();speechSynthesis.onvoiceschanged=pk;}
+function say(t){if(!window.speechSynthesis)return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang="en-GB";if(VF)u.voice=VF;u.rate=.85;u.pitch=1.05;speechSynthesis.speak(u);}
+
+/* fx */
+function cft(el){if(!el)return;var r=el.getBoundingClientRect(),cs=["#7C5CFC","#FF5C8A","#F0A400","#00A88E","#3E8EDE"];for(var i=0;i<14;i++){var c=document.createElement("span");c.className="conf";c.style.left=(r.left+r.width/2)+"px";c.style.top=(r.top+r.height/2)+"px";c.style.background=cs[i%5];c.style.setProperty("--dx",(Math.random()*230-115)+"px");c.style.setProperty("--dy",(Math.random()*-210-40)+"px");c.style.setProperty("--r",(Math.random()*720-360)+"deg");document.body.appendChild(c);(function(n){setTimeout(function(){n.remove()},950)})(c)}}
+function gxp(n,el){S.xp+=n;sv();pil();if(el){var r=el.getBoundingClientRect(),f=document.createElement("span");f.className="fxp";f.textContent="+"+n;f.style.left=(r.left+r.width/2-14)+"px";f.style.top=(r.top-8)+"px";document.body.appendChild(f);setTimeout(function(){f.remove()},1000)}}
+function pil(){document.querySelectorAll(".xpv").forEach(function(e){e.textContent=S.xp})}
+function sT(){var t=0;for(var k in S.st)t+=S.st[k];return t}
+function rStrip(){document.querySelectorAll(".strip").forEach(function(st){st.innerHTML="";for(var i=0;i<8;i++){var s=document.createElement("span");s.className="slot"+(i<S.pc?" got":"");if(i<S.pc){s.textContent=LET[i];s.style.setProperty("--c",LC[i]);s.style.setProperty("--cd",LD[i])}else s.textContent="?";st.appendChild(s)}});$("#starT").textContent=sT();$("#endStars").textContent=sT();}
+function show(id){document.querySelectorAll(".sc").forEach(function(s){s.classList.remove("on")});$(id).classList.add("on");window.scrollTo(0,0)}
+
+/* map */
+function rMap(){
+ rStrip();pil();
+ var l=$("#lvList");l.innerHTML="";
+ LV.forEach(function(lv,i){
+  var lk=(i+1)>S.un,dn=(i in S.st),nx=!dn&&!lk,sh="";
+  for(var j=0;j<3;j++)sh+='<svg class="ic'+((S.st[i]||0)>j?" f":"")+'"><use href="#i-star"/></svg>';
+  var b=document.createElement("button");
+  b.className="lv"+(nx?" next":"");b.disabled=lk;b.setAttribute("data-li",i);
+  b.style.setProperty("--c",LC[i]);b.style.setProperty("--cd",LD[i]);
+  b.innerHTML='<span class="ln">'+(i+1)+'</span><span class="li2"><svg class="ic"><use href="#i-'+ICN[i]+'"/></svg></span><span class="lin"><b>'+lv.t+'</b><span class="ar" dir="rtl">'+lv.ar+'</span></span><span class="lsr">'+sh+'</span>'+(lk?'<span class="lck"><svg class="ic" style="width:17px;height:17px"><use href="#i-lock"/></svg></span>':"");
+  l.appendChild(b);
+ });
+ if(S.pc>=8){var f=document.createElement("button");f.className="lv next";f.id="finBtn";f.style.setProperty("--c","#F0A400");f.style.setProperty("--cd","#C07E00");f.innerHTML='<span class="ln"><svg class="ic" style="width:22px;height:22px"><use href="#i-trophy"/></svg></span><span class="li2"><svg class="ic"><use href="#i-star"/></svg></span><span class="lin"><b>View your victory!</b><span class="ar" dir="rtl">شاهِدْ انْتِصارَك</span></span>';l.appendChild(f);}
+}
+
+/* engine */
+var cu={li:0,si:0,w:0},L=null;
+function stp(){return LV[cu.li].st[cu.si]}
+function iL(s){if(s.p==="quiz")return{i:0,a:false};if(s.p==="match")return{sl:null,sr:null,m:0};if(s.p==="order")return{si:0,ix:0,d:false};if(s.p==="pieces")return{on:0};return null}
+function pass(s){if(!L)return true;if(s.p==="quiz")return L.a;if(s.p==="match")return L.m>=s.lf.length;if(s.p==="order")return L.d;if(s.p==="pieces")return L.on>=s.items.length;return true}
+function start(i){cu={li:i,si:0,w:0};var lv=LV[i];$("#hT").textContent=(i+1)+" · "+lv.t;$("#hAr").textContent=lv.ar;$("#s-lvl").style.setProperty("--lc",LC[i]);$("#s-lvl").style.setProperty("--ld",LD[i]);show("#s-lvl");rStep()}
+function rStep(){
+ var s=stp();L=iL(s);
+ var h='<div class="sh"><span class="kk"><svg class="ic" style="width:15px;height:15px"><use href="#i-'+ICN[cu.li]+'"/></svg>LEVEL '+(cu.li+1)+'</span><h2>'+s.h+'</h2><p class="ar" dir="rtl">'+(s.a||"")+'</p></div>';
+ if(cu.si===0){var lv=LV[cu.li];h+='<div class="nrow" style="margin:0 0 20px"><svg class="noor" viewBox="0 0 120 112"><use href="#i-noor"/></svg><div class="bub"><p>'+lv.hi+'</p><p class="ar" dir="rtl">'+lv.ha+'</p></div></div>'}
+ var b="";
+ if(s.p==="teach")b=s.x;
+ else if(s.p==="prof")b='<div class="pg">'+s.ps.map(function(p){return '<div class="pc" style="--pc:'+p.c+'"><div class="ph"><span class="pa">'+p.n[0]+'</span><div><h4>'+p.n+'</h4><p class="pl2">'+p.l+'</p></div></div><p class="pt">'+p.t+'</p></div>'}).join("")+'</div>';
+ else if(s.p==="chips")b='<div class="chips">'+s.w.map(function(w){return '<button class="chip" data-say="'+w[0]+'" style="--cc:'+s.c+'"><b>'+w[0]+'</b><span class="ar" dir="rtl">'+w[1]+'</span></button>'}).join("")+'</div><p class="mn">Tap to listen, then repeat!<span class="ar" dir="rtl">اضْغَطْ لِلاسْتِماعِ ثُمَّ كَرِّرْ</span></p>';
+ else if(s.p==="vocab")b='<div class="vg">'+s.w.map(function(w,i){return '<div class="vc" style="--vcc:'+s.c+';animation-delay:'+(i*.06)+'s"><div class="vt"><span class="vw">'+w[0]+'</span><button class="ab" data-say="'+w[0]+'"><svg class="ic"><use href="#i-speaker"/></svg></button></div><p class="va ar" dir="rtl">'+w[1]+'</p><p class="vm">'+w[2]+'</p><div class="vx"><span>'+w[3]+'</span><button class="mb" data-say="'+w[3]+'"><svg class="ic" style="width:16px;height:16px"><use href="#i-speaker"/></svg></button></div></div>'}).join("")+'</div><p class="mn">Listen… then repeat after Noor!<span class="ar" dir="rtl">اسْتَمِعْ ثُمَّ كَرِّرْ بَعْدَ نُور</span></p>';
+ else if(s.p==="pieces")b='<p class="lead">'+s.ld+'</p><p class="leadar ar" dir="rtl">'+s.la+'</p><div class="pzr">'+s.items.map(function(it,i){return '<button class="pp" style="--c:'+s.cols[i]+'"><span>'+it[0]+'</span><span class="ar" dir="rtl">'+it[1]+'</span></button>'}).join("")+'</div>';
+ else if(s.p==="match"){var lf=shuf(s.lf.map(function(t,i){return{t:t,k:i}})),rt=shuf(s.rt.map(function(t,i){return{t:t,k:i}}));b='<div class="mg"><div class="mc">'+lf.map(function(o){return '<button class="mi" data-k="'+o.k+'" data-sd="l">'+o.t+'</button>'}).join("")+'</div><div class="mc">'+rt.map(function(o){return '<button class="mi" data-k="'+o.k+'" data-sd="r">'+o.t+'</button>'}).join("")+'</div></div><p class="mn">Tap an adjective, then its preposition!<span class="ar" dir="rtl">اضْغَطِ الصِّفَةَ ثُمَّ حَرْفَ الجَرِّ المُناسِب</span></p>'}
+ else if(s.p==="order"){var sn=s.se[L.si],ch=shuf(sn.w);b='<div class="oz" id="oz"><div class="qt"><span class="qn">'+(L.si+1)+'</span><span class="qg">'+(L.si+1)+" / "+s.se.length+'</span></div><div class="ol" id="ol"></div><div class="ocs">'+ch.map(function(w){return '<button class="oc">'+w+'</button>'}).join("")+'</div><p class="mn" style="margin-top:12px"><span class="ar" dir="rtl">'+sn.ar+'</span></p></div>';b='<div id="ozw">'+b+'</div>'}
+ else if(s.p==="quiz")b='<div id="qz">'+qH(s)+'</div>';
+ $("#lbody").innerHTML=h+b;
+ var d=$("#dots");d.innerHTML="";for(var j=0;j<LV[cu.li].st.length;j++){var x=document.createElement("span");x.className="dt"+(j<cu.si?" d":j===cu.si?" c":"");d.appendChild(x)}
+ var ok=pass(s);$("#nxt").disabled=!ok;$("#nxt").classList.toggle("rdy",ok);
+}
+function qH(s){var q=s.qs[L.i],op=s.two?PORT:q.o;
+ return '<div class="qc"><div class="qt"><span class="qn">'+(L.i+1)+'</span><span class="qg">'+(L.i+1)+" / "+s.qs.length+'</span></div><p class="qx">'+q.q+'</p><div class="ops'+(s.two?" two":"")+'">'+op.map(function(o,j){return '<button class="op'+(s.two?" portal p"+j:"")+'" data-j="'+j+'">'+(s.two?'<svg class="ic" style="color:'+(j===0?"var(--bld)":"var(--pkd)")+'"><use href="#i-'+(j===0?"clock":"bolt")+'"/></svg>':"")+"<span>"+o+"</span></button>"}).join("")+'</div><div class="hint" id="qh"></div></div>'+(s.two?'<p class="mn">Read the sentence. Which door is correct?<span class="ar" dir="rtl">اقْرَأِ الجُمْلَةَ ثُمَّ اخْتَرِ البابَ الصَّحِيح</span></p>':"")}
+
+/* clicks */
+document.addEventListener("click",function(e){
+ var sp=e.target.closest("[data-say]");
+ if(sp){say(sp.getAttribute("data-say"));sp.classList.add("play");setTimeout(function(){sp.classList.remove("play")},900);sP();return}
+ var lvc=e.target.closest(".lv");
+ if(lvc&&!lvc.disabled){if(lvc.id==="finBtn"){endScr()}else start(+lvc.getAttribute("data-li"));return}
+ var o=e.target.closest(".op");
+ if(o){if(!L||L.a)return;var s=stp();if(s.p!=="quiz")return;var q=s.qs[L.i];
+  var box=o.parentElement;box.classList.add("done");
+  var ok=(+o.getAttribute("data-j"))===q.c;
+  if(ok){o.classList.add("ok");cft(o);sD();gxp(10,o)}
+  else{o.classList.add("no");sB();cu.w++;var cc=box.children[q.c];if(cc)cc.classList.add("ok")}
+  var hh=$("#qh");if(hh){hh.className="hint on";hh.innerHTML=(ok?'<p class="okl"><svg class="ic"><use href="#i-check"/></svg>Correct!</p>':'<p class="nol"><svg class="ic"><use href="#i-x"/></svg>Look at the green answer!</p>')+(q.h?'<p class="hn">'+q.h+'</p>':"")+(q.ha?'<p class="ar" dir="rtl">'+q.ha+'</p>':"")}
+  L.a=true;$("#nxt").disabled=false;$("#nxt").classList.add("rdy");return}
+ var m=e.target.closest(".mi");
+ if(m){if(m.classList.contains("lock")||m.classList.contains("bad"))return;var s2=stp();if(s2.p!=="match")return;
+  if(m.getAttribute("data-sd")==="l"){if(L.sl)L.sl.classList.remove("sel");L.sl=m}
+  else{if(L.sr)L.sr.classList.remove("sel");L.sr=m}
+  m.classList.add("sel");sP();
+  if(L.sl&&L.sr){var a=L.sl,b=L.sr;L.sl=L.sr=null;
+   if(a.getAttribute("data-k")===b.getAttribute("data-k")){a.classList.remove("sel");b.classList.remove("sel");a.classList.add("lock");b.classList.add("lock");L.m++;sD();gxp(10,a);cft(a);if(L.m>=s2.lf.length){sF();$("#nxt").disabled=false;$("#nxt").classList.add("rdy")}}
+   else{cu.w++;sB();a.classList.add("bad");b.classList.add("bad");setTimeout(function(){a.classList.remove("bad","sel");b.classList.remove("bad","sel")},460)}}
+  return}
+ var c=e.target.closest(".oc");
+ if(c){if(c.classList.contains("used"))return;var s3=stp();if(s3.p!=="order"||L.d)return;
+  var sn=s3.se[L.si],tx=c.textContent.trim();
+  if(tx===sn.w[L.ix]){c.classList.add("used");var ln=$("#ol"),bw=document.createElement("span");bw.className="bw";bw.textContent=tx;ln.appendChild(bw);L.ix++;sP();
+   if(L.ix>=sn.w.length){gxp(15,ln);sD();cft(ln);var z=$("#oz");z.classList.add("done");
+    var hb=document.createElement("button");hb.className="mb hear";hb.setAttribute("data-say",sn.w.join(" "));hb.innerHTML='<svg class="ic" style="width:16px;height:16px"><use href="#i-speaker"/></svg> Hear it';z.appendChild(hb);
+    setTimeout(function(){if(L.si<s3.se.length-1){L.si++;L.ix=0;$("#ozw").innerHTML=(function(){var sn2=s3.se[L.si],ch=shuf(sn2.w);return '<div class="oz" id="oz"><div class="qt"><span class="qn">'+(L.si+1)+'</span><span class="qg">'+(L.si+1)+" / "+s3.se.length+'</span></div><div class="ol" id="ol"></div><div class="ocs">'+ch.map(function(w){return '<button class="oc">'+w+'</button>'}).join("")+'</div><p class="mn" style="margin-top:12px"><span class="ar" dir="rtl">'+sn2.ar+'</span></p></div>'})()}else{L.d=true;$("#nxt").disabled=false;$("#nxt").classList.add("rdy");sF()}},1400)}}
+  else{cu.w++;sB();c.classList.add("bad");setTimeout(function(){c.classList.remove("bad")},430)}
+  return}
+ var p=e.target.closest(".pp");
+ if(p){if(p.classList.contains("lit"))return;var s4=stp();if(s4.p!=="pieces")return;p.classList.add("lit");L.on++;sP();gxp(5,p);if(L.on>=s4.items.length){sF();cft(p);$("#nxt").disabled=false;$("#nxt").classList.add("rdy")}}
+});
+
+ $("#nxt").addEventListener("click",function(){
+ var s=stp();
+ if(s.p==="quiz"){if(!L.a)return;if(L.i<s.qs.length-1){L.i++;L.a=false;$("#qz").innerHTML=qH(s);$("#nxt").disabled=true;$("#nxt").classList.remove("rdy");sP();return}}
+ if(cu.si<LV[cu.li].st.length-1){cu.si++;rStep();sP()}
+ else finLvl();
+});
+function finLvl(){
+ var li=cu.li,fr=!(li in S.st);
+ var st2=cu.w===0?3:cu.w<=2?2:1;
+ if(fr){S.pc++;S.xp+=25}
+ if(!S.st[li]||S.st[li]<st2)S.st[li]=st2;
+ if(S.un<li+2)S.un=Math.min(li+2,8);
+ sv();rStrip();pil();sF();cft($("#nxt"));
+ var sh="";for(var j=0;j<3;j++)sh+='<svg'+(j<st2?' class="f"':'')+'><use href="#i-star"/></svg>';
+ $("#rovc").innerHTML='<p class="ovk">LEVEL COMPLETE</p><p class="ar" dir="rtl">أَكْمَلْتَ المَرْحَلَة!</p><div class="bst">'+sh+'</div>'+
+ (fr?'<div class="ptile" style="--c:'+LC[li]+';--cd:'+LD[li]+'"><span>'+LET[li]+'</span></div><p class="plx">You earned the letter <b style="color:'+LC[li]+'">'+LET[li]+'</b>!</p><p class="ar" dir="rtl" style="font-size:15px">حَصَلْتَ عَلى حَرْفٍ جَدِيدٍ لِبازْلِك</p><p class="pxp">+25 XP bonus!</p>':'<p class="plx">Great replay!</p><p class="pxp">Best stars saved</p>')+
+ '<div class="obtn"><button class="bt" id="rA" style="--bc:#fff;--bs:#D9D4EE;color:var(--ink)">Play again</button><button class="bt" id="rG" style="--bc:var(--gr);--bs:var(--grd)">Continue<svg class="ic"><use href="#i-arrow"/></svg></button></div>';
+ $("#rov").classList.add("on");
+ $("#rA").onclick=function(){$("#rov").classList.remove("on");start(li)};
+ $("#rG").onclick=function(){$("#rov").classList.remove("on");if(S.pc>=8){endScr()}else{rMap();show("#s-map")}};
+}
+function endScr(){rStrip();pil();var t=$("#endTiles");t.innerHTML="";for(var i=0;i<8;i++){var d=document.createElement("span");d.className="ptile";d.style.setProperty("--c",LC[i]);d.style.setProperty("--cd",LD[i]);d.innerHTML="<span>"+LET[i]+"</span>";t.appendChild(d)}show("#s-end");sF();setTimeout(function(){cft($("#endTiles"))},500)}
+
+ $("#playBtn").addEventListener("click",function(){ac();sD();rMap();show("#s-map")});
+ $("#homeBtn").addEventListener("click",function(){rMap();show("#s-map")});
+ $("#resetBtn").addEventListener("click",function(){S=dS();sv();rMap()});
+ $("#endMap").addEventListener("click",function(){rMap();show("#s-map")});
+ $("#endReset").addEventListener("click",function(){S=dS();sv();rMap();show("#s-map")});
+ $("#sndBtn").addEventListener("click",function(){S.mu=!S.mu;sv();$("#sndBtn").innerHTML='<svg class="ic"><use href="#i-'+(S.mu?"mute":"speaker")+'"/></svg>';if(!S.mu)sD()});
+ $("#sndBtn").innerHTML='<svg class="ic"><use href="#i-'+(S.mu?"mute":"speaker")+'"/></svg>';
+document.addEventListener("keydown",function(e){if(e.key==="ArrowRight"&&!$("#nxt").disabled)$("#nxt").click()});
+pil();rStrip();
+})();
+</script>
+</body>
+</html>
