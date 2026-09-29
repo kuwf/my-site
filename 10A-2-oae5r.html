@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Climate Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka:wght@400;500;600;700&family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+--paper:#EFF6E6;--paper2:#FBFEF8;--ink:#3D3450;--ink2:#8B829E;
+--ar:#0E8074;
+--mint:#29C0B2;--mintD:#1B9C8F;--coral:#FF6B6B;--coralD:#E14F4F;
+--sun:#FFA62B;--sunD:#E08700;--sky:#4D96FF;--skyD:#3677D9;
+--grape:#9B5DE5;--grapeD:#7C3FD3;--pink:#F15BB5;--pinkD:#CF3E96;
+--gold:#FFD166;--goldD:#E5B84B;--green:#4FBF43;--greenD:#3AA334;
+--bord:#DDEAD0;--sh:0 5px 0 rgba(61,52,80,.08);
+}
+body{font-family:'Fredoka',sans-serif;color:var(--ink);min-height:100vh;overflow-x:hidden;
+background-color:var(--paper);
+background-image:radial-gradient(rgba(61,52,80,.055) 2.2px,transparent 2.3px);
+background-size:30px 30px;
+-webkit-user-select:none;user-select:none}
+input{-webkit-user-select:text;user-select:text}
+button{font-family:inherit;touch-action:manipulation}
+.ar{font-family:'Baloo Bhaijaan 2',sans-serif;color:var(--ar);font-weight:600}
+.hidden{display:none!important}
+.ico{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;flex-direction:column;align-items:center;line-height:1.15;gap:1px;
+font-family:'Lilita One';font-size:1.05rem;letter-spacing:.6px;color:#fff;text-transform:uppercase;
+background:var(--bc,var(--mint));border:none;border-radius:999px;padding:12px 26px 13px;cursor:pointer;
+box-shadow:0 6px 0 var(--bcd,var(--mintD)),0 14px 26px rgba(61,52,80,.16);transition:transform .12s,box-shadow .12s}
+.btn:active{transform:translateY(6px);box-shadow:0 0 0 var(--bcd,var(--mintD)),0 4px 10px rgba(61,52,80,.15)}
+.btn .b-ar{font-family:'Baloo Bhaijaan 2';font-size:.82rem;font-weight:600;opacity:.95;text-transform:none}
+.btn.ghost{--bc:#fff;--bcd:#C7D9B4;color:var(--ink)}
+
+/* ---------- HUD ---------- */
+#hud{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:90;display:none;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;
+background:rgba(251,254,248,.95);border:3px solid var(--bord);border-radius:999px;padding:6px 10px;
+box-shadow:var(--sh);max-width:calc(100vw - 20px)}
+#hud.on{display:flex}
+.hchip{display:flex;align-items:center;gap:6px;font-family:'Lilita One';font-size:.95rem;background:#fff;
+border:2.5px solid var(--bord);border-radius:999px;padding:4px 12px}
+.hchip .ico{width:17px;height:17px}
+.hbtn{cursor:pointer;transition:transform .12s}
+.hbtn:active{transform:scale(.92)}
+#hudXp{background:#FFF3D6;border-color:var(--gold)} #hudXp .ico{color:var(--sunD)}
+#hudStreak{display:none;background:#FFE3E3;border-color:#FFB3B3;color:#D64545}
+#hudStreak.on{display:flex}
+#hudStreak.pop{animation:hpop .35s}
+#hudHearts .ico{width:18px;height:18px}
+.hh{color:var(--coral);display:inline-flex}
+.hh.off .ico{color:#CBDDB9}
+#hudHearts.hpop{animation:hpop .4s}
+@keyframes hpop{40%{transform:scale(1.18)}}
+.spacer{flex:1}
+@media(max-width:520px){.hchip{font-size:.8rem;padding:3px 9px}.hchip .ico{width:14px;height:14px}#hud{gap:5px;padding:5px 8px}}
+
+/* ---------- screens ---------- */
+.wrap{max-width:920px;margin:0 auto;padding:86px 16px 40px}
+.level .wrap{padding-bottom:60px}
+.screen{display:none}
+.screen.on{display:block;animation:scrIn .45s cubic-bezier(.2,.8,.3,1) both}
+@keyframes scrIn{from{opacity:0;transform:translateY(22px) scale(.985)}}
+
+/* ---------- title ---------- */
+.title-wrap{text-align:center;position:relative;padding-top:26px}
+.kick{display:inline-block;background:#fff;border:3px solid var(--bord);border-radius:999px;padding:5px 18px;
+font-family:'Lilita One';letter-spacing:2px;font-size:.8rem;color:var(--ink2);box-shadow:var(--sh)}
+.logo{font-family:'Lilita One';font-size:clamp(2.6rem,9vw,4.3rem);line-height:.95;margin-top:18px;display:flex;justify-content:center;flex-wrap:wrap}
+.logo span{display:inline-block;animation:wig 2.6s ease-in-out infinite;animation-delay:calc(var(--i)*.13s);text-shadow:0 4px 0 rgba(61,52,80,.14)}
+.logo .sp{width:.45em}
+@keyframes wig{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-9px) rotate(3deg)}}
+.ribbon{display:inline-block;background:var(--coral);color:#fff;font-family:'Lilita One';font-size:1.35rem;letter-spacing:4px;
+padding:5px 22px 6px;border-radius:14px;transform:rotate(-2deg);margin-top:12px;box-shadow:0 5px 0 var(--coralD)}
+.t-sub{margin-top:16px;font-weight:500;color:var(--ink2)}
+.t-sub-ar{margin-top:4px;font-size:1.1rem}
+.title-tabby{width:150px;margin:20px auto 0}
+.howto{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px}
+.howchip{background:#fff;border:3px solid var(--bord);border-radius:999px;padding:6px 16px;font-weight:600;box-shadow:var(--sh);font-size:.9rem;display:flex;align-items:center;gap:7px}
+.howchip .ico{width:17px;height:17px}
+.f-ico{position:absolute;animation:floaty 6s ease-in-out infinite;opacity:.9}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-20px) rotate(5deg)}}
+.ticker{overflow:hidden;background:#fff;border-top:3px solid var(--bord);border-bottom:3px solid var(--bord);margin-top:30px}
+.tk{display:flex;gap:12px;width:max-content;animation:tick 40s linear infinite;padding:10px 0}
+@keyframes tick{to{transform:translateX(-50%)}}
+.tkchip{background:#FFF3D6;border:2.5px solid var(--gold);color:#7A5B00;font-weight:600;font-size:.85rem;border-radius:999px;padding:4px 14px;white-space:nowrap}
+
+/* ---------- map ---------- */
+.map-head{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.map-logo{font-family:'Lilita One';font-size:1.7rem}
+.map-logo i{font-style:normal;color:var(--coral)}
+.map-wrap{position:relative;width:min(460px,94vw);height:1310px;margin:10px auto 0}
+.map-path{position:absolute;inset:0;width:100%;height:100%}
+.deco{position:absolute;pointer-events:none}
+#mapNodes{position:absolute;inset:0}
+.node{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;z-index:2;padding:6px}
+.node-face{position:relative;width:78px;height:78px;border-radius:26px;background:var(--nc,var(--mint));border:4px solid #fff;
+box-shadow:0 7px 0 var(--ncd,var(--mintD)),0 16px 26px rgba(61,52,80,.2);display:flex;align-items:center;justify-content:center;color:#fff;transition:transform .2s}
+.node-face .ico{width:34px;height:34px}
+.node:hover .node-face{transform:translateY(-5px) rotate(-3deg) scale(1.05)}
+.node-num{position:absolute;top:-9px;left:-9px;width:27px;height:27px;background:var(--gold);border:3px solid #fff;border-radius:50%;
+font-family:'Lilita One';font-size:.9rem;color:#7A5B00;display:flex;align-items:center;justify-content:center}
+.node.lock .node-face{background:#C2CFB0;box-shadow:0 7px 0 #A6B894;color:#8B829E}
+.node.cur .node-face::after{content:'';position:absolute;inset:-9px;border:4px solid var(--nc,var(--mint));border-radius:34px;animation:ring 1.6s infinite}
+@keyframes ring{from{transform:scale(.92);opacity:1}to{transform:scale(1.4);opacity:0}}
+.go-arrow{position:absolute;top:-52px;color:var(--coral);animation:bob 1s infinite}
+.go-arrow .ico{width:26px;height:26px}
+@keyframes bob{50%{transform:translateY(8px)}}
+.node-stars{display:flex;gap:3px}
+.nstar .ico{width:14px;height:14px;color:var(--gold)}
+.nstar.off .ico{color:#D3E2C2}
+.node-name{font-family:'Lilita One';font-size:.82rem;background:#fff;border:2.5px solid var(--bord);border-radius:999px;padding:2px 12px 4px;box-shadow:var(--sh);text-align:center}
+.node-name .nar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.72rem;display:block}
+.node.nshake{animation:nsh .4s}
+@keyframes nsh{25%{transform:translate(-50%,-50%) translateX(-7px)}75%{transform:translate(-50%,-50%) translateX(7px)}}
+.boss-node .node-face{width:104px;height:104px;border-radius:32px;background:#3D3450;box-shadow:0 8px 0 #2A2440,0 18px 30px rgba(61,52,80,.3)}
+.boss-node .node-face .ico{width:46px;height:46px;color:#FF6B6B}
+.boss-node.cur .node-face::after{border-color:#FF6B6B}
+.boss-ribbon{background:var(--coral);color:#fff;font-family:'Lilita One';font-size:.7rem;letter-spacing:2px;padding:2px 12px 3px;border-radius:99px}
+.map-foot{text-align:center;margin-top:8px;font-weight:600;color:var(--ink2)}
+.map-foot .ar{display:block;margin-top:2px}
+
+/* ---------- level head + dots ---------- */
+.lvl-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#fff;border:3px solid var(--bord);border-radius:24px;padding:14px 16px;box-shadow:var(--sh);margin-bottom:12px}
+.lvl-num{width:54px;height:54px;border-radius:18px;background:var(--lc);color:#fff;font-family:'Lilita One';font-size:1.6rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 var(--lcd);flex:none}
+.lt{font-family:'Lilita One';font-size:1.65rem;line-height:1.05}
+.lvl-ar{color:var(--ar);font-weight:600;font-size:1rem}
+.head-tabby{margin-left:auto;display:flex;align-items:center;gap:10px;max-width:340px}
+.tabby-slot{width:74px;flex:none}
+.tabby-slot.jump{animation:tjump .6s}
+.tabby-slot.shake{animation:nsh .4s}
+@keyframes tjump{30%{transform:translateY(-14px)}60%{transform:translateY(0)}80%{transform:translateY(-6px)}}
+.bubble{position:relative;background:var(--paper2);border:2.5px dashed var(--lc);border-radius:16px;padding:8px 12px;font-size:.83rem}
+.bubble::after{content:'';position:absolute;left:-9px;top:18px;border:7px solid transparent;border-right-color:var(--lc)}
+.bubble.bp{animation:bp .4s}
+@keyframes bp{from{transform:scale(.9);opacity:.4}}
+.tip-en{display:block;font-weight:600}
+.tip-ar{display:block;text-align:right;font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.8rem}
+.lvl-dots{display:flex;justify-content:center;gap:9px;margin:0 0 16px}
+.ldot{width:14px;height:14px;border-radius:50%;background:#DFEBD2;border:3px solid #C7D9B4;cursor:pointer;padding:0;transition:.2s;touch-action:manipulation}
+.ldot.cur{background:var(--lc,var(--mint));border-color:var(--lcd,var(--mintD));transform:scale(1.35)}
+.ldot.done{background:var(--gold);border-color:var(--goldD)}
+
+/* ---------- steps ---------- */
+.step{display:none}
+.step.on{display:block;animation:stepIn .4s ease both}
+@keyframes stepIn{from{opacity:0;transform:translateX(28px)}}
+.step-next{margin-top:20px;width:100%;font-size:1.12rem;--bc:var(--lc,var(--mint));--bcd:var(--lcd,var(--mintD))}
+.step-next.blocked{--bc:#C2CFB0;--bcd:#A6B894}
+.step-next.nshake{animation:nsh2 .4s}
+@keyframes nsh2{25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+.sh{font-family:'Lilita One';font-size:1.3rem;display:flex;align-items:center;gap:9px;margin:4px 0 2px}
+.sh .ico{color:var(--lcd)}
+.sh-ar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;text-align:right;margin-bottom:10px;display:block}
+
+/* ---------- cards / quiz ---------- */
+.gcard{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:18px;box-shadow:var(--sh)}
+.qz{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px 18px;margin:14px 0;box-shadow:var(--sh)}
+.qq{font-weight:600;font-size:1.05rem}
+.qar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.95rem;text-align:right;margin-top:3px}
+.opts{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.opt{font-weight:600;font-size:.95rem;color:var(--ink);background:var(--paper2);border:3px solid #DCEBCC;border-radius:14px;padding:9px 16px;cursor:pointer;box-shadow:0 4px 0 rgba(61,52,80,.08);transition:.15s;touch-action:manipulation}
+.opt:hover{transform:translateY(-2px);border-color:var(--lc,var(--mint))}
+.opt.ok{background:#DDF6D2;border-color:var(--green);color:#2C6B1F}
+.opt.no{background:#FDE0E0;border-color:var(--coral);color:#A31515;animation:shk .4s}
+.qz.lock .opt{pointer-events:none;opacity:.5}
+.qz.lock .opt.ok{opacity:1}
+.qfb{margin-top:10px;display:none;border-radius:12px;padding:9px 12px;font-weight:600;font-size:.9rem;align-items:center;gap:8px}
+.qfb.on{display:flex;flex-wrap:wrap;animation:pp .3s}
+.qfb.good{background:#DDF6D2;color:#2C6B1F;border:2.5px solid #A9DE98}
+.qfb.bad{background:#FDE0E0;color:#A31515;border:2.5px solid #FFB3B3}
+.qfb .fb-ar{display:block;width:100%;text-align:right;font-family:'Baloo Bhaijaan 2';font-weight:600;margin-top:2px}
+.qfb .fn{display:block;width:100%;font-size:.85rem;margin-top:2px}
+@keyframes shk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes pp{from{transform:scale(.93);opacity:0}}
+.bprog{font-family:'Lilita One';font-size:.72rem;letter-spacing:1.5px;color:var(--ink2);display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.bprog .ico{width:14px;height:14px;color:var(--coral)}
+
+/* ---------- vocab ---------- */
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px}
+.wcard{position:relative;background:#fff;border:3px solid var(--bord);border-radius:18px;padding:18px 8px 12px;text-align:center;box-shadow:var(--sh);transition:transform .2s}
+.wcard:hover{transform:translateY(-5px) rotate(-1.2deg);border-color:var(--lc)}
+.wcard .ico{width:36px;height:36px;color:var(--lcd)}
+.wcard .w{font-weight:600;font-size:.98rem;margin-top:6px}
+.wcard .war{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.95rem}
+.spk{position:absolute;top:6px;right:6px;width:30px;height:30px;border-radius:50%;border:2.5px solid var(--bord);background:#fff;color:var(--lcd);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;z-index:2;touch-action:manipulation}
+.spk .ico{width:15px;height:15px}
+.spk:hover{background:var(--lc);color:#fff;transform:scale(1.12)}
+.spk.busy{animation:spkb 1s ease}
+@keyframes spkb{50%{transform:scale(1.2);background:var(--coral);color:#fff}}
+
+/* ---------- flip cards ---------- */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:16px}
+.fc{perspective:1000px;height:225px;cursor:pointer;outline:none}
+.fi{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,1.4,.4,1)}
+.fc.flip .fi{transform:rotateY(180deg)}
+.ff,.fbk{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px}
+.ff{background:#fff;border:3px solid var(--bord);box-shadow:var(--sh)}
+.ff .ico{width:36px;height:36px;color:var(--lcd)}
+.fw{font-family:'Lilita One';font-size:1.2rem;margin-top:8px}
+.fhint{margin-top:12px;font-size:.7rem;color:var(--ink2);font-weight:600}
+.fhint .ar{display:block;font-weight:600}
+.fbk{background:linear-gradient(150deg,var(--lc),var(--lcd));color:#fff;transform:rotateY(180deg);box-shadow:0 6px 0 rgba(61,52,80,.18)}
+.den{font-weight:600;font-size:.92rem;line-height:1.3}
+.dar{font-family:'Baloo Bhaijaan 2';font-weight:600;font-size:1rem;margin-top:8px;color:#E4FBF4}
+.dex{margin-top:10px;background:rgba(255,255,255,.18);border-radius:12px;padding:6px 10px;font-size:.83rem;font-style:italic}
+
+/* ---------- LINK GAME ---------- */
+.lg{position:relative}
+.lg-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 60px;position:relative;z-index:2}
+.lg-col{display:flex;flex-direction:column;gap:10px}
+.lg-chip{position:relative;display:flex;align-items:center;gap:9px;background:#fff;border:3px solid #DCEBCC;border-radius:14px;padding:9px 12px;min-height:56px;cursor:pointer;font-weight:600;font-size:.95rem;box-shadow:0 4px 0 rgba(61,52,80,.08);transition:transform .15s,border-color .15s,background .15s;text-align:left;touch-action:manipulation}
+.lg-chip:hover{transform:translateY(-2px);border-color:var(--lc)}
+.lg-chip.sel{border-color:var(--lc);background:#EDF7E6;transform:scale(1.03)}
+.lg-chip.done{background:#DDF6D2;border-color:var(--green);color:#2C6B1F;animation:pp .4s}
+.lg-chip.done .ar{color:#1E6B4F}
+.lg-chip.err{animation:shk .4s;border-color:var(--coral)}
+.lg-chip .spk{position:static;flex:none;width:27px;height:27px}
+.lg-chip .ico{width:26px;height:26px;color:var(--lcd)}
+.lg-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:1}
+.lg-line{fill:none;stroke-width:5;stroke-linecap:round}
+.lg-temp{stroke-dasharray:9 7;animation:lgfade .65s forwards}
+@keyframes lgfade{0%{opacity:0}25%{opacity:1}70%{opacity:1}100%{opacity:0}}
+.wonbar{display:none;margin-top:14px;background:#DDF6D2;border:3px solid var(--green);border-radius:16px;padding:12px 16px;align-items:center;gap:10px;font-weight:600;color:#2C6B1F}
+.wonbar .ico{width:26px;height:26px;color:var(--greenD)}
+.wonbar.on{display:flex;animation:pp .4s}
+.wonbar .ar{color:#1E6B4F}
+.ci{display:flex;gap:3px;align-items:center;flex:none}
+.clue{width:26px;height:26px;flex:none}
+@media(max-width:520px){.lg-grid{gap:10px 40px}.lg-chip{padding:8px 9px;font-size:.85rem;min-height:52px}}
+
+/* ---------- phone feed ---------- */
+.l2grid{display:grid;grid-template-columns:minmax(290px,400px) 1fr;gap:20px;align-items:start}
+.phone{background:#3D3450;border-radius:34px;padding:11px;box-shadow:0 9px 0 rgba(61,52,80,.2)}
+.phone-screen{background:var(--paper2);border-radius:24px;overflow:hidden;border:3px solid #2A2440}
+.phone-top{display:flex;justify-content:space-between;padding:7px 14px;font-size:.7rem;font-weight:600;color:var(--ink2);background:#E9F2DD}
+.feed{padding:12px;display:flex;flex-direction:column;gap:10px;max-height:540px;overflow:auto}
+.msg{background:#fff;border:2.5px solid var(--bord);border-radius:16px;border-top-left-radius:4px;padding:10px 12px;box-shadow:0 3px 0 rgba(61,52,80,.06);position:relative}
+.step.on .msg{animation:msgIn .5s both;animation-delay:var(--d,0s)}
+@keyframes msgIn{from{opacity:0;transform:translateY(16px) scale(.96)}}
+.men{font-weight:500;font-size:.92rem;line-height:1.5;padding-right:34px}
+.men b{font-weight:700;color:var(--lcd,var(--coralD))}
+.men .ico{width:16px;height:16px;color:var(--coralD);vertical-align:-3px}
+.mar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.88rem;text-align:right;margin-top:6px;border-top:2px dashed var(--bord);padding-top:6px}
+.statcard{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px;box-shadow:var(--sh);display:flex;gap:16px;align-items:center}
+.donut{width:128px;flex:none}
+.dnum{font-family:'Lilita One';font-size:2rem;fill:var(--coral)}
+.dlbl{font-size:.65rem;fill:var(--ink2);font-weight:600}
+.dfill{stroke-dasharray:351.9;stroke-dashoffset:351.9}
+.step.on .dfill{animation:donutGo 1.2s .4s cubic-bezier(.3,.8,.3,1) forwards}
+@keyframes donutGo{to{stroke-dashoffset:78}}
+.keybox{margin-top:14px;background:linear-gradient(135deg,#FFF3D6,#EDF7E6);border:3px solid var(--gold);border-radius:18px;padding:14px 16px;display:flex;gap:10px;align-items:flex-start}
+.keybox .ico{width:26px;height:26px;color:var(--sunD);flex:none;margin-top:2px}
+.keybox p{font-weight:600;font-size:.95rem}
+.keybox .ar{display:block;margin-top:4px;font-size:.9rem}
+.tl{stroke-dasharray:700;stroke-dashoffset:700}
+.step.on .tl{animation:draw 1.6s .4s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.cdot{opacity:0;animation:cdotIn .35s forwards}
+@keyframes cdotIn{to{opacity:1}}
+
+/* ---------- grammar ---------- */
+.fchips{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px;box-shadow:var(--sh);margin:12px 0}
+.fch{font-family:'Lilita One';font-size:1rem;padding:8px 15px;border-radius:12px;color:#fff;box-shadow:0 4px 0 rgba(61,52,80,.16)}
+.step.on .fch{animation:chipIn .45s both;animation-delay:var(--d,0s)}
+@keyframes chipIn{from{opacity:0;transform:scale(.5) rotate(-7deg)}}
+.fplus{font-family:'Lilita One';color:#A6B894;font-size:1.4rem}
+.f-eq{font-family:'Lilita One';color:#A6B894;font-size:1.2rem}
+.c-adj{background:var(--sky)} .c-er{background:var(--sun)} .c-than{background:var(--coral)}
+.c-more{background:var(--grape)} .c-the{background:var(--coral)} .c-est{background:var(--grape)}
+.hl{padding:1px 6px;border-radius:8px;font-weight:700}
+.hl-sky{background:#E3EEFF;color:#2557B0} .hl-sun{background:#FFEBD1;color:#9A5B00}
+.hl-coral{background:#FFE1E1;color:#C0392B} .hl-grape{background:#EFE0FC;color:#6B2FB3}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:14px;margin-top:12px}
+.rcard{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px;box-shadow:var(--sh);border-top:7px solid var(--rc)}
+.rtag{display:inline-block;background:var(--rc);color:#fff;font-family:'Lilita One';font-size:.72rem;letter-spacing:1px;padding:3px 12px;border-radius:99px}
+.rname{font-family:'Lilita One';font-size:1.05rem;margin-left:8px}
+.rar{display:block;font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.9rem;text-align:right;margin-top:4px}
+.rf{margin:11px 0;background:#F4F9EE;border:2.5px dashed var(--rc);border-radius:12px;padding:9px;text-align:center;font-weight:600;font-size:.98rem}
+.rex{background:#FFF8E8;border:2.5px solid #FFE3A1;border-radius:12px;padding:9px 12px}
+.rex .en{font-weight:600;font-size:.93rem;color:#6B4E00;display:block}
+.rex .ar{display:block;margin-top:5px;font-size:.9rem}
+.watch{background:#FFF0F0;border:3px solid #FFC9C9;border-radius:16px;padding:11px 14px;color:#B02A2A;font-weight:600;display:flex;gap:10px;align-items:center;margin-top:14px}
+.watch .ico{width:24px;height:24px;flex:none}
+.watch .ar{display:block;font-weight:600;color:#BE3A3A;text-align:right;margin-top:2px;font-size:.9rem}
+.vsbox{display:flex;align-items:center;justify-content:center;gap:22px;background:#fff;border:3px solid var(--bord);border-radius:20px;padding:20px;box-shadow:var(--sh);flex-wrap:wrap}
+.vs-side{text-align:center}
+.vs-side .v-ic{width:38px;height:38px}
+.vs-side b{display:block;margin-top:6px}
+.vs-side .nm{display:block;font-weight:600;font-size:.85rem;margin-top:4px;color:var(--ink2)}
+.vs-badge{font-family:'Lilita One';background:var(--ink);color:var(--gold);border-radius:12px;padding:7px 13px;font-size:1.05rem;transform:rotate(-3deg);box-shadow:0 4px 0 #2A2440}
+.vs-cap{text-align:center;margin-top:12px;font-size:1.05rem;font-weight:600}
+.vs-cap .ar{display:block;margin-top:4px}
+.chain{margin-top:12px}
+.ch-row{background:#fff;border:3px solid var(--bord);border-radius:16px;padding:10px 14px;margin:10px 0;box-shadow:var(--sh)}
+.ch-en{font-weight:600;font-size:.98rem}
+.ch-en .c1{background:#E3EEFF;color:#2557B0;padding:1px 8px;border-radius:8px}
+.ch-en .arr{color:var(--coral);font-family:'Lilita One';padding:0 7px}
+.ch-en .c2{background:#FFE1E1;color:#C0392B;padding:1px 8px;border-radius:8px}
+.ch-ar{display:block;text-align:right;margin-top:5px}
+
+/* ---------- quiz helpers ---------- */
+.datastrip{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.dschip{background:#FFF3D6;border:2.5px solid var(--gold);border-radius:999px;padding:5px 14px;font-weight:600;font-size:.85rem;color:#7A5B00}
+
+/* ---------- phrases / talk ---------- */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px}
+.pgroup{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:14px;box-shadow:var(--sh);border-top:7px solid var(--pc)}
+.pg-h{font-family:'Lilita One';font-size:1rem;color:var(--ink)}
+.pg-h .ar{font-size:.85rem;display:block}
+.pchip{background:#F4F9EE;border:2.5px solid #DCEBCC;border-radius:12px;padding:7px 11px;margin-top:8px}
+.pchip .en{display:block;font-weight:600;font-size:.9rem}
+.pchip .ar{display:block;text-align:right;font-size:.82rem}
+.talkcard{margin-top:14px}
+.rvbtn{display:inline-flex;flex-direction:column;align-items:center;background:#FFF3D6;border:2.5px solid var(--gold);color:#7A5B00;border-radius:12px;padding:7px 18px;cursor:pointer;font-weight:600;transition:.2s;margin-top:10px;touch-action:manipulation}
+.rvbtn:hover{background:var(--gold)}
+.rvbtn .rv-ar{font-family:'Baloo Bhaijaan 2';font-size:.82rem;font-weight:600}
+.rvt{display:none;margin-top:10px;background:linear-gradient(135deg,#FEFCE8,#EDF7E6);border:2.5px dashed var(--gold);border-radius:14px;padding:11px 15px;font-weight:600}
+.rvt.on{display:block;animation:pp .35s}
+.rvt .ar{display:block;text-align:right;margin-top:4px;font-size:.9rem}
+.eco{display:flex;flex-wrap:wrap;gap:9px;margin-top:10px}
+.ecochip{border:3px solid #DCEBCC;background:#fff;border-radius:999px;padding:7px 14px;font-weight:600;cursor:pointer;font-size:.85rem;transition:.15s;touch-action:manipulation;color:var(--ink)}
+.ecochip:hover{border-color:var(--mint)}
+.ecochip.sel{background:var(--mint);color:#fff;border-color:var(--mintD)}
+
+/* ---------- facts + essay ---------- */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin-top:12px}
+.fact{background:#fff;border:3px solid var(--bord);border-radius:18px;padding:16px;box-shadow:var(--sh);text-align:center;border-top:6px solid var(--fc)}
+.fact .ico{width:34px;height:34px;color:var(--fc)}
+.fact .fe{font-weight:600;margin-top:8px;font-size:.95rem}
+.fact .ar{display:block;margin-top:4px}
+.paras{margin-top:12px}
+.para{position:relative;background:#fff;border:3px solid var(--bord);border-radius:16px;padding:12px 14px;margin:12px 0;box-shadow:var(--sh)}
+.para .pen{font-weight:500;line-height:1.55;padding-right:34px;font-size:.94rem}
+.para .pen b{color:var(--lcd,var(--mintD))}
+.para .par{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.9rem;text-align:right;margin-top:6px;border-top:2px dashed var(--bord);padding-top:6px}
+.para .spk{top:8px;right:8px}
+
+/* ---------- studio ---------- */
+.srow{display:flex;align-items:flex-start;gap:12px;margin-top:12px;flex-wrap:wrap}
+.slab{flex:0 0 88px;font-family:'Lilita One';color:var(--ink);padding-top:8px}
+.slab .ar{font-size:.75rem;display:block}
+.schips{display:flex;flex-wrap:wrap;gap:8px}
+.schip{border:3px solid #DCEBCC;background:#fff;border-radius:999px;padding:7px 14px;font-weight:600;cursor:pointer;font-size:.88rem;transition:.15s;box-shadow:0 3px 0 rgba(61,52,80,.07);touch-action:manipulation;color:var(--ink)}
+.schip:hover{border-color:var(--pink)}
+.schip.sel{background:var(--pink);color:#fff;border-color:var(--pinkD);transform:scale(1.04)}
+.swatch{display:inline-block;width:15px;height:15px;border-radius:5px;margin-right:7px;vertical-align:-2px;border:2px solid #fff;box-shadow:0 0 0 2px rgba(61,52,80,.2)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+.field label{display:block;font-weight:600;text-align:left}
+.field .f-ar{display:block;color:var(--ar);font-weight:600;font-size:.88rem;text-align:right}
+.field input{width:100%;margin-top:6px;border:3px solid #DCEBCC;border-radius:14px;padding:10px 14px;font-family:'Fredoka';font-weight:600;font-size:1rem;color:var(--ink);outline:none;background:#fff;transition:.2s}
+.field input:focus{border-color:var(--pink)}
+.tipgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.tipcard{background:#fff;border-radius:16px;padding:14px;box-shadow:var(--sh);border-top:5px solid var(--tc)}
+.tipcard h4{font-family:'Lilita One';color:var(--ink);display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.tipcard h4 .ar{font-size:.82rem;font-weight:600}
+.tipitem{display:flex;align-items:flex-start;gap:8px;margin-top:10px;font-weight:600;color:#475569;font-size:.88rem}
+.tipitem .ico{width:15px;height:15px;color:var(--tc);margin-top:3px;flex:none}
+.tipitem .ti-ar{display:block;color:var(--ar);font-weight:600;font-size:.82rem;text-align:right}
+.prevbox{margin-top:14px;text-align:center;border:3px dashed #C7D9B4;border-radius:20px;padding:14px}
+.prevbox .bp-h{color:var(--ink2);font-weight:600}
+.prevbox .bp-arh{font-weight:600;margin-top:2px}
+.prevbox .bp-body{display:none;padding:4px}
+.prevbox.ready{background:linear-gradient(135deg,#EDF7E6,#E9F4FF);border-color:var(--pink)}
+.prevbox.ready .bp-h,.prevbox.ready .bp-arh{display:none}
+.prevbox.ready .bp-body{display:block;animation:pp .4s}
+.bag-note{font-weight:600;margin-top:10px}
+.bag-note .ar{display:block;margin-top:3px}
+.slogchip .ico{width:15px;height:15px;color:var(--goldD);margin-right:6px;vertical-align:-2px}
+
+/* ---------- boss ---------- */
+.mon-wrap{text-align:center;position:relative;padding:6px 0}
+#monSvg{width:min(280px,68vw);filter:drop-shadow(0 10px 0 rgba(61,52,80,.12))}
+#monSvg.hit{animation:mhit .45s}
+@keyframes mhit{20%{transform:translateX(-13px) rotate(-2deg)}55%{transform:translateX(11px)}80%{transform:translateX(-6px)}}
+#monSvg.dead{animation:mdead 1s forwards}
+@keyframes mdead{to{transform:rotate(9deg) translateY(16px);filter:grayscale(1);opacity:.45}}
+.m-dead{display:none}
+#monSvg.dead .m-eyes{display:none}
+#monSvg.dead .m-dead{display:block}
+.hpbar{max-width:430px;margin:12px auto 4px;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:5px}
+.hpfill{height:16px;border-radius:99px;background:linear-gradient(90deg,var(--coral),var(--sun));width:100%;transition:width .5s cubic-bezier(.3,.8,.3,1)}
+.hplbl{font-family:'Lilita One';font-size:.75rem;letter-spacing:2px;color:var(--ink2)}
+.dmg{position:absolute;top:26%;left:58%;font-family:'Lilita One';color:#4D96FF;font-size:1.6rem;animation:dmgUp .9s forwards;pointer-events:none}
+@keyframes dmgUp{to{transform:translateY(-52px) scale(1.4);opacity:0}}
+.mondead{text-align:center;padding:20px}
+.mondead .ico{width:64px;height:64px;color:var(--sky)}
+
+/* ---------- win ---------- */
+.done-wrap{text-align:center;padding-top:20px}
+.trophy-big{width:100px;height:100px;color:var(--gold);filter:drop-shadow(0 8px 0 rgba(229,184,75,.4))}
+.done-title{font-family:'Lilita One';font-size:3rem;background:linear-gradient(90deg,var(--mint),var(--sky));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.done-sub{margin-top:10px;font-weight:500;color:var(--ink2)}
+.done-sub-ar{text-align:center;margin-top:6px;font-size:1.05rem}
+.statpills{display:flex;justify-content:center;gap:14px;margin:20px 0;flex-wrap:wrap}
+.statpill{background:#fff;border-radius:999px;padding:10px 22px;box-shadow:var(--sh);font-family:'Lilita One';font-size:1.05rem;display:flex;align-items:center;gap:8px;border:3px solid var(--bord)}
+.statpill .ico{color:var(--sunD)}
+.bdg-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:10px}
+.bdg{background:#fff;border:3px solid var(--bord);border-radius:18px;padding:12px 16px;text-align:center;box-shadow:var(--sh);min-width:130px}
+.bdg-ic{width:46px;height:46px;border-radius:14px;background:var(--bc);display:flex;align-items:center;justify-content:center;margin:0 auto;color:#fff}
+.bdg-ic .ico{width:24px;height:24px}
+.bdg b{font-family:'Lilita One';font-size:.8rem;display:block;margin-top:6px}
+.bdg .ar{font-size:.75rem;display:block;font-weight:600}
+.bdg.lock{opacity:.45;filter:grayscale(.8)}
+.bdg.lock .bdg-ic{background:#C2CFB0}
+.done-btns{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:22px}
+
+/* ---------- overlay / toasts / confetti ---------- */
+#ovl{position:fixed;inset:0;background:rgba(38,46,66,.55);backdrop-filter:blur(3px);z-index:120;display:none;align-items:center;justify-content:center;padding:20px}
+#ovl.on{display:flex;animation:fdi .3s}
+@keyframes fdi{from{opacity:0}}
+.ovl-card{background:var(--paper2);border:4px solid #fff;border-radius:28px;padding:28px;max-width:440px;width:100%;text-align:center;box-shadow:0 12px 0 rgba(61,52,80,.25),0 30px 60px rgba(0,0,0,.28);animation:ovlPop .5s cubic-bezier(.3,1.5,.4,1);max-height:calc(100vh - 40px);overflow:auto}
+@keyframes ovlPop{from{transform:scale(.7);opacity:0}}
+.ovl-kick{font-family:'Lilita One';letter-spacing:2px;font-size:.85rem}
+.ovl-t{font-family:'Lilita One';font-size:2rem;margin-top:4px}
+.ovl-ar{text-align:center;margin-top:4px;font-size:1.05rem}
+.ovl-p{margin-top:12px;font-weight:600;color:var(--ink2)}
+.big-stars{display:flex;justify-content:center;gap:12px;margin:16px 0}
+.bst .ico{width:58px;height:58px;color:#D3E2C2}
+.bst.lit .ico{color:var(--gold);animation:starPop .5s cubic-bezier(.3,1.8,.4,1);filter:drop-shadow(0 4px 0 rgba(229,184,75,.5))}
+@keyframes starPop{from{transform:scale(0) rotate(-100deg)}}
+.ovl-xp{font-family:'Lilita One';color:var(--sunD);display:flex;justify-content:center;gap:6px;align-items:center}
+.ovl-btns{display:flex;justify-content:center;gap:12px;margin-top:20px;flex-wrap:wrap}
+#toasts{position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:130;display:flex;flex-direction:column;gap:8px;pointer-events:none;align-items:center;width:max-content;max-width:92vw}
+.toast{display:flex;align-items:center;gap:10px;background:var(--ink);color:#fff;border-radius:16px;padding:10px 16px;box-shadow:0 8px 20px rgba(0,0,0,.3);animation:toastIn .4s cubic-bezier(.3,1.4,.4,1)}
+.toast .t-ic{width:36px;height:36px;border-radius:12px;background:var(--tc,var(--gold));display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+.toast .t-ic .ico{width:19px;height:19px}
+.toast b{font-family:'Lilita One';letter-spacing:.5px;display:block;font-size:.92rem}
+.toast .t-ar{font-family:'Baloo Bhaijaan 2';font-weight:600;font-size:.85rem;color:#CFF5EA;display:block;text-align:right}
+.toast.out{animation:toastOut .3s forwards}
+@keyframes toastIn{from{transform:translateY(-26px) scale(.9);opacity:0}}
+@keyframes toastOut{to{transform:translateY(-16px);opacity:0}}
+.cf{position:fixed;width:9px;height:14px;border-radius:2px;z-index:200;pointer-events:none;animation:cfall 1.6s ease-in forwards}
+@keyframes cfall{to{transform:translate(var(--dx,60px),70vh) rotate(720deg);opacity:.1}}
+
+/* ---------- responsive ---------- */
+@media(max-width:860px){.l2grid{grid-template-columns:1fr}}
+@media(max-width:640px){
+.lvl-head .head-tabby{width:100%;margin-left:0}
+.fields{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ ICONS ============ -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+ <symbol id="i-news" viewBox="0 0 24 24"><rect x="4" y="4.5" width="16" height="15" rx="1.8"/><line x1="7.5" y1="8.5" x2="13.5" y2="8.5"/><line x1="7.5" y1="12" x2="13.5" y2="12"/><line x1="7.5" y1="15.5" x2="13.5" y2="15.5"/><line x1="16.5" y1="8.5" x2="16.5" y2="15.5"/></symbol>
+ <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><line x1="10.5" y1="18" x2="13.5" y2="18"/></symbol>
+ <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.7 3.3a2.15 2.15 0 0 1 3 3L7.4 18.6 3 20l1.4-4.4z"/></symbol>
+ <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3.5 20.5l1.4-5.2A8.5 8.5 0 1 1 21 11.5z"/><path d="M8.3 12h.01M12 12h.01M15.7 12h.01" stroke-width="2.4"/></symbol>
+ <symbol id="i-speaker" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
+ <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.9 6.4.7-4.8 4.3 1.3 6.3-5.7-3.2-5.7 3.2 1.3-6.3L2.8 9.4l6.4-.7z"/></symbol>
+ <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21C12 21 3 15.5 3 9.5C3 6.5 5.5 4 8.5 4C10 4 11.3 4.8 12 6C12.7 4.8 14 4 15.5 4C18.5 4 21 6.5 21 9.5C21 15.5 12 21 12 21Z"/></symbol>
+ <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></symbol>
+ <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5 9.5 17.5 19.5 6.5"/></symbol>
+ <symbol id="i-arrowD" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></symbol>
+ <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 3.5l8 7V20a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 20z"/><path d="M9.5 21.5v-6h5v6"/></symbol>
+ <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></symbol>
+ <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 22a6.5 6.5 0 0 0 6.5-6.5c0-2.8-1.9-4.5-3.3-6.4C13.7 7 13 5 13 2.5c-3 2-4.3 4.5-4.3 6.3 0 1.2.4 2 .4 2S7.2 9.6 6.5 8.2A6.4 6.4 0 0 0 5.5 15.5C5.5 19.1 8.4 22 12 22z"/></symbol>
+ <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17.5V21M7 4h10v4.5a5 5 0 0 1-10 0z"/><path d="M7 5.5H4v1.7a3.3 3.3 0 0 0 3.3 3.3M17 5.5h3v1.7a3.3 3.3 0 0 1-3.3 3.3"/></symbol>
+ <symbol id="i-medal" viewBox="0 0 24 24"><circle cx="12" cy="14.5" r="5.5"/><path d="M9 10 6.5 3h4L12 7l1.5-4h4L15 10"/></symbol>
+ <symbol id="i-crown" viewBox="0 0 24 24"><path d="M4 8.5 8 11.5l4-6 4 6 4-3-1.2 10.5H5.2z"/></symbol>
+ <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+ <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.8"/><path d="M4.5 21c0-4.1 3.4-7 7.5-7s7.5 2.9 7.5 7"/></symbol>
+ <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v4.5l3.2 1.9"/></symbol>
+ <symbol id="i-loop" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 1 2.2 5.3"/><path d="M4.5 20v-4.7h4.7"/></symbol>
+ <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></symbol>
+ <symbol id="i-vol" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></symbol>
+ <symbol id="i-voloff" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></symbol>
+ <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"/></symbol>
+ <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18.5a4.3 4.3 0 0 1-.5-8.6A6 6 0 0 1 18 9.2a3.9 3.9 0 0 1-.4 9.3z"/></symbol>
+ <symbol id="i-rain" viewBox="0 0 24 24"><path d="M7 15.5a4 4 0 0 1-.5-8A5.6 5.6 0 0 1 17.5 6.8a3.6 3.6 0 0 1-.3 8.7z"/><path d="M9 18.5l-.8 2.5M13 18.5l-.8 2.5M17 18.5l-.8 2.5"/></symbol>
+ <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 10c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 16c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/></symbol>
+ <symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9"/></symbol>
+ <symbol id="i-thermo" viewBox="0 0 24 24"><path d="M10 4.5a2 2 0 0 1 4 0v9.3a4.5 4.5 0 1 1-4 0z"/><path d="M12 7v8"/></symbol>
+ <symbol id="i-earth" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M4.5 8.5c4 2.5 11 2.5 15 0M4.5 15.5c4-2.5 11-2.5 15 0"/></symbol>
+ <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M6.5 18.5C6.5 10.5 11.5 4.5 19.5 4c0 8-5.5 14-13 14.5z"/><path d="M8 17c2.5-3.5 5.5-6 9.5-8"/></symbol>
+ <symbol id="i-bike" viewBox="0 0 24 24"><circle cx="6.5" cy="16.5" r="4"/><circle cx="17.5" cy="16.5" r="4"/><path d="M6.5 16.5 10 8h4l3 8.5M10 8l-1.5-2.5h-2"/></symbol>
+ <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.8.6 1.5 1.6 1.5 2.6h4c0-1 .7-2 1.5-2.6A6 6 0 0 0 12 3z"/></symbol>
+ <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.5S6 10.5 6 14.5a6 6 0 0 0 12 0c0-4-6-11-6-11z"/></symbol>
+ <symbol id="i-glasses" viewBox="0 0 24 24"><circle cx="6.8" cy="13" r="3"/><circle cx="17.2" cy="13" r="3"/><path d="M9.8 13h4.4M3.8 12 2 10.5M20.2 12 22 10.5"/></symbol>
+ <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2.5h-15z"/><path d="M10.5 20.5a1.8 1.8 0 0 0 3 0"/></symbol>
+ <symbol id="i-bag" viewBox="0 0 24 24"><path d="M8 8V6.5a4 4 0 0 1 8 0V8"/><rect x="5.5" y="8" width="13" height="11.5" rx="2.5"/></symbol>
+ <symbol id="i-factory" viewBox="0 0 24 24"><path d="M5 19.5V8.5l5 3.5v-3.5l5 3.5V5h4.5v14.5z"/><path d="M8.5 16h2M13 16h2"/></symbol>
+ <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13"/><path d="M10 11v5M14 11v5"/></symbol>
+ <symbol id="i-fish" viewBox="0 0 24 24"><path d="M3 12c3-4 7-6 11-6 3 0 5 2 7 6-2 4-4 6-7 6-4 0-8-2-11-6z"/><path d="M3 12l4-4M3 12l4 4"/><circle cx="15.5" cy="10.5" r=".8" fill="currentColor" stroke="none"/></symbol>
+</svg>
+
+<!-- ============ HUD ============ -->
+<div id="hud">
+ <button id="hudHome" class="hchip hbtn" title="Map"><svg class="ico"><use href="#i-home"/></svg></button>
+ <div id="hudHearts" class="hchip hidden"></div>
+ <div class="spacer"></div>
+ <div id="hudStreak" class="hchip"><svg class="ico"><use href="#i-flame"/></svg><span id="streakN">x2</span></div>
+ <div id="hudXp" class="hchip"><svg class="ico"><use href="#i-bolt"/></svg><span id="xpN">0</span>&nbsp;XP</div>
+ <button id="sndBtn" class="hchip hbtn" title="Sound"><svg class="ico"><use id="sndUse" href="#i-vol"/></svg></button>
+</div>
+
+<div id="toasts"></div>
+<div id="ovl"></div>
+
+<!-- ============ TITLE ============ -->
+<section class="screen on" id="scr-title">
+ <div class="wrap title-wrap">
+  <div class="f-ico" style="top:6%;left:5%;color:var(--sky)"><svg class="ico" style="width:40px;height:40px"><use href="#i-cloud"/></svg></div>
+  <div class="f-ico" style="top:10%;right:6%;color:var(--sun);animation-delay:-1.5s"><svg class="ico" style="width:44px;height:44px"><use href="#i-sun"/></svg></div>
+  <div class="f-ico" style="bottom:24%;left:7%;color:var(--green);animation-delay:-3s"><svg class="ico" style="width:36px;height:36px"><use href="#i-leaf"/></svg></div>
+  <div class="f-ico" style="bottom:20%;right:9%;color:var(--skyD);animation-delay:-2s"><svg class="ico" style="width:40px;height:40px"><use href="#i-drop"/></svg></div>
+  <div class="f-ico" style="top:44%;left:2%;color:var(--mintD);animation-delay:-4s"><svg class="ico" style="width:30px;height:30px"><use href="#i-snow"/></svg></div>
+  <div class="f-ico" style="top:46%;right:2%;color:var(--grape);animation-delay:-5s"><svg class="ico" style="width:32px;height:32px"><use href="#i-earth"/></svg></div>
+  <span class="kick">UNIT 2 · CLIMATE CHANGE</span>
+  <h1 class="logo">
+   <span style="--i:0;color:var(--sky)">C</span><span style="--i:1;color:var(--green)">L</span><span style="--i:2;color:var(--coral)">I</span><span style="--i:3;color:var(--sun)">M</span><span style="--i:4;color:var(--grape)">A</span><span style="--i:5;color:var(--mint)">T</span><span style="--i:6;color:var(--pink)">E</span>
+  </h1>
+  <span class="ribbon">QUEST</span>
+  <p class="t-sub">A playful journey to understand — and save — our planet</p>
+  <p class="t-sub-ar ar" dir="rtl">رحلة مرحة لفهم كوكبنا وإنقاذه</p>
+  <div class="title-tabby tabby-slot"></div>
+  <div class="howto">
+   <span class="howchip"><svg class="ico" style="color:var(--skyD)"><use href="#i-book"/></svg>Play the levels</span>
+   <span class="howchip"><svg class="ico" style="color:var(--goldD)"><use href="#i-star"/></svg>Earn stars</span>
+   <span class="howchip"><svg class="ico" style="color:var(--mintD)"><use href="#i-snow"/></svg>Cool the planet</span>
+  </div>
+  <p class="t-sub-ar ar" dir="rtl" style="margin-top:8px">العب المراحل · اجمع النجوم · برّد الكوكب</p>
+  <button id="startBtn" class="btn" style="--bc:var(--green);--bcd:var(--greenD);font-size:1.3rem;padding:15px 42px 16px;margin-top:24px">
+   <span>Press Start</span><span class="b-ar" dir="rtl">ابدأ اللعب</span>
+  </button>
+  <div class="ticker"><div class="tk" id="tk"></div></div>
+ </div>
+</section>
+
+<!-- ============ MAP ============ -->
+<section class="screen" id="scr-map">
+ <div class="wrap">
+  <div class="map-head">
+   <div class="map-logo">CLIMATE <i>QUEST</i></div>
+   <div class="hchip"><svg class="ico" style="color:var(--sunD)"><use href="#i-star"/></svg><span id="mapStars">0</span>/18</div>
+   <div class="hchip"><svg class="ico" style="color:var(--grapeD)"><use href="#i-medal"/></svg><span id="mapBadges">0</span>/7</div>
+   <button id="mapReset" class="hchip hbtn" title="Reset"><svg class="ico"><use href="#i-loop"/></svg></button>
+  </div>
+  <div class="map-wrap">
+   <svg class="map-path" viewBox="0 0 400 1300" preserveAspectRatio="none">
+    <path d="M200 105 C200 190 96 185 96 285 C96 385 264 380 264 465 C264 555 104 555 104 645 C104 745 272 740 272 825 C272 915 120 915 120 1005 C120 1095 200 1100 200 1200" fill="none" stroke="#D3E3C0" stroke-width="24" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+    <path d="M200 105 C200 190 96 185 96 285 C96 385 264 380 264 465 C264 555 104 555 104 645 C104 745 272 740 272 825 C272 915 120 915 120 1005 C120 1095 200 1100 200 1200" fill="none" stroke="#EFF6E6" stroke-width="14" stroke-linecap="round" stroke-dasharray="1 24" vector-effect="non-scaling-stroke"/>
+   </svg>
+   <svg class="deco" style="right:2%;top:1%;width:64px" viewBox="0 0 64 64"><circle cx="32" cy="32" r="14" fill="#FFD166" stroke="#E5B84B" stroke-width="4"/><g stroke="#FFA62B" stroke-width="4" stroke-linecap="round"><line x1="32" y1="4" x2="32" y2="12"/><line x1="32" y1="52" x2="32" y2="60"/><line x1="4" y1="32" x2="12" y2="32"/><line x1="52" y1="32" x2="60" y2="32"/></g></svg>
+   <svg class="deco" style="left:4%;top:6%;width:80px" viewBox="0 0 80 40"><path d="M20 32a12 12 0 0 1 2-23 14 14 0 0 1 26 2 11 11 0 0 1 12 21z" fill="#fff" stroke="#C7D9B4" stroke-width="3"/></svg>
+   <svg class="deco" style="right:6%;top:28%;width:70px" viewBox="0 0 80 40"><path d="M20 32a12 12 0 0 1 2-23 14 14 0 0 1 26 2 11 11 0 0 1 12 21z" fill="#fff" stroke="#C7D9B4" stroke-width="3"/></svg>
+   <svg class="deco" style="left:5%;top:56%;width:64px" viewBox="0 0 80 40"><path d="M20 32a12 12 0 0 1 2-23 14 14 0 0 1 26 2 11 11 0 0 1 12 21z" fill="#fff" stroke="#C7D9B4" stroke-width="3"/></svg>
+   <svg class="deco" style="left:8%;top:90%;width:46px" viewBox="0 0 40 52"><rect x="17" y="26" width="6" height="22" rx="3" fill="#B0895A"/><circle cx="20" cy="18" r="14" fill="#7ED27E" stroke="#3E9B4F" stroke-width="3"/></svg>
+   <svg class="deco" style="right:8%;top:76%;width:40px" viewBox="0 0 40 52"><rect x="17" y="26" width="6" height="22" rx="3" fill="#B0895A"/><circle cx="20" cy="18" r="14" fill="#7ED27E" stroke="#3E9B4F" stroke-width="3"/></svg>
+   <svg class="deco" style="right:4%;top:52%;width:42px" viewBox="0 0 44 44"><circle cx="22" cy="22" r="14" fill="#A8E6DD" stroke="#1B9C8F" stroke-width="3.5"/><path d="M22 8v28M10 15c6 4 18 4 24 0" fill="none" stroke="#1B9C8F" stroke-width="3"/></svg>
+   <div id="mapNodes"></div>
+  </div>
+  <div class="map-foot">
+   Complete all six levels to open the Boss Gate and cool the planet!
+   <span class="ar" dir="rtl">أكمل المراحل الست لفتح بوابة الوحش وتبريد الكوكب!</span>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 1 ============ -->
+<section class="screen level" id="scr-l1" style="--lc:var(--sky);--lcd:var(--skyD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">1</span>
+   <div><h2 class="lt">Climate Basics</h2><span class="lvl-ar" dir="rtl">أساسيات المناخ</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Hi! I am Sunny! Let us explore the climate together!" data-tipar="مرحبًا! أنا سَنّي! هيا نستكشف المناخ معًا!">
+    <h3 class="sh"><svg class="ico"><use href="#i-earth"/></svg>What is Climate Change?</h3>
+    <span class="sh-ar" dir="rtl">ما هو تغيّر المناخ؟</span>
+    <div class="gcard" style="background:linear-gradient(135deg,#E9F4FF,#EDF7E6)">
+     <p style="font-size:1.1rem;font-weight:600;line-height:1.5">The term climate change refers to a <b class="hl hl-sky">change or an increase</b> in average global temperatures. Climate change is a <b class="hl hl-coral">serious threat</b> to our planet.</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:8px">تغيّر المناخ يعني تغيّرًا أو ارتفاعًا في متوسط درجات الحرارة العالمية — وهو تهديد خطير لكوكبنا.</p>
+    </div>
+    <div class="rgrid">
+     <div class="rcard" style="--rc:var(--skyD)"><svg class="ico" style="color:var(--skyD)"><use href="#i-wave"/></svg><p style="font-weight:600;margin-top:8px">Oceans are warming and ice caps are melting — sea levels are rising.</p><p class="rar" dir="rtl">المحيطات تسخن والقمم الجليدية تذوب — ومستوى البحر يرتفع.</p></div>
+     <div class="rcard" style="--rc:var(--coralD)"><svg class="ico" style="color:var(--coralD)"><use href="#i-sun"/></svg><p style="font-weight:600;margin-top:8px">We are experiencing more droughts, floods, heat waves and climate disasters.</p><p class="rar" dir="rtl">نعاني المزيد من الجفاف والفيضانات وموجات الحر والكوارث المناخية.</p></div>
+     <div class="rcard" style="--rc:var(--greenD)"><svg class="ico" style="color:var(--greenD)"><use href="#i-bell"/></svg><p style="font-weight:600;margin-top:8px">If we do not take action now, we may all be in danger in the future.</p><p class="rar" dir="rtl">إن لم نتخذ إجراءً الآن فقد نكون جميعًا في خطر مستقبلًا.</p></div>
+    </div>
+    <div class="gcard talkcard">
+     <p style="font-weight:600"><svg class="ico" style="width:18px;height:18px;color:var(--skyD);vertical-align:-3px"><use href="#i-chat"/></svg> How concerned are you about climate change?</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">كم مدى قلقك بشأن تغيّر المناخ؟ انقر على العبارة التي تصفك</p>
+     <div class="eco">
+      <button class="ecochip">I feel very concerned because…</button>
+      <button class="ecochip">I feel quite concerned because…</button>
+      <button class="ecochip">I don't really feel concerned because…</button>
+     </div>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:10px">ثم أكمل الجملة بسببٍ من عندك: «أشعر بقلق شديد لأنّ…»</p>
+    </div>
+   </div>
+   <div class="step" data-tip="These words will help you talk about the climate!" data-tipar="هذه الكلمات ستساعدك على الحديث عن المناخ!">
+    <h3 class="sh"><svg class="ico"><use href="#i-cloud"/></svg>Weather Words</h3>
+    <span class="sh-ar" dir="rtl">كلمات المناخ والطقس — انقر زرّ السماعة لتسمع الكلمة</span>
+    <div class="wgrid" id="m-l1voc"></div>
+   </div>
+   <div class="step" data-tip="Tap a word, then tap its picture to connect them!" data-tipar="انقر الكلمة ثم انقر صورتها لتتصل بهما!">
+    <h3 class="sh"><svg class="ico"><use href="#i-search"/></svg>Connect!</h3>
+    <span class="sh-ar" dir="rtl">وصّل كل كلمة بصورتها — انقر الكلمة ثم الصورة فيُرسم خط بينهما</span>
+    <div id="m-match"></div>
+   </div>
+   <div class="step" data-tip="Last check — show me what you learned!" data-tipar="اختبار أخير — أرني ما تعلمته!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Quick Check</h3>
+    <span class="sh-ar" dir="rtl">تحقّق سريع — اختر الإجابة الصحيحة</span>
+    <div id="m-l1q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 2 ============ -->
+<section class="screen level" id="scr-l2" style="--lc:var(--coral);--lcd:var(--coralD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">2</span>
+   <div><h2 class="lt">The Hot Planet</h2><span class="lvl-ar" dir="rtl">الكوكب الحارّ</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Read the planet news on my screen!" data-tipar="اقرأ أخبار الكوكب على شاشتي!">
+    <h3 class="sh"><svg class="ico"><use href="#i-thermo"/></svg>The Planet Story</h3>
+    <span class="sh-ar" dir="rtl">قصة الكوكب — اقرأ الرسائل ثم انظر للرسم</span>
+    <div class="l2grid">
+     <div class="phone">
+      <div class="phone-screen">
+       <div class="phone-top"><span>9:41</span><span>PlanetWatch</span><span>100%</span></div>
+       <div class="feed">
+        <div class="msg" style="--d:.1s">
+         <button class="spk" data-say="Climate change is an issue that affects every country in the world. It means changes in the Earth's weather, in particular global warming, the increase in the planet's temperature."><svg class="ico"><use href="#i-speaker"/></svg></button>
+         <p class="men"><svg class="ico"><use href="#i-earth"/></svg> Climate change is an issue that affects <b>every country</b> in the world. It means changes in the Earth's weather — in particular <b>global warming</b>, the increase in the planet's temperature.</p>
+         <p class="mar" dir="rtl">تغيّر المناخ قضية تؤثر على كل بلدان العالم، ويعني تغيّرات في طقس الأرض — وخاصة الاحترار العالمي: ارتفاع حرارة الكوكب.</p>
+        </div>
+        <div class="msg" style="--d:.5s">
+         <button class="spk" data-say="In the last 200 years, human activity has produced excessive amounts of greenhouse gases. When people burn fossil fuels, such as coal, oil and gas, they release carbon dioxide into the atmosphere. Methane is produced by bacteria in landfill sites and from modern agriculture."><svg class="ico"><use href="#i-speaker"/></svg></button>
+         <p class="men">In the last <b>200 years</b>, human activity has produced excessive amounts of <b>greenhouse gases</b>. When people burn <b>fossil fuels</b> — coal, oil and gas — they release carbon dioxide into the <b>atmosphere</b>. Methane comes from bacteria in landfill sites and modern agriculture.</p>
+         <p class="mar" dir="rtl">خلال آخر 200 عام أنتج النشاط البشري كميات مفرطة من غازات الدفيئة؛ حرق الوقود الأحفوري يطلق ثاني أكسيد الكربون، والميثان يأتي من البكتيريا في مكبّات النفايات والزراعة الحديثة.</p>
+        </div>
+        <div class="msg" style="--d:.9s">
+         <button class="spk" data-say="These gases trap heat in the atmosphere, just like the glass walls of a greenhouse trap the sun's heat. This is causing the Earth's temperature to rise."><svg class="ico"><use href="#i-speaker"/></svg></button>
+         <p class="men">These gases <b>trap heat</b> in the atmosphere — just like the glass walls of a greenhouse trap the sun's heat. This is causing the Earth's temperature to rise.</p>
+         <p class="mar" dir="rtl">تحبس هذه الغازات الحرارة في الغلاف الجوي — تمامًا كجدران الدفيئة الزجاجية التي تحبس حرارة الشمس — مما يرفع حرارة الأرض.</p>
+        </div>
+        <div class="msg" style="--d:1.3s">
+         <button class="spk" data-say="The effects are devastating: longer and more extreme heat waves, droughts that stop farmers growing crops, heavier rainfall and severe floods. Cities at sea level are at risk from rising seas caused by melting ice caps and glaciers."><svg class="ico"><use href="#i-speaker"/></svg></button>
+         <p class="men">The effects are <b>devastating</b>: longer and more <b>extreme heat waves</b>, <b>droughts</b> that stop farmers growing crops, heavier rainfall and severe <b>floods</b>. Cities at sea-level are at risk from rising seas caused by melting <b>ice caps</b> and glaciers.</p>
+         <p class="mar" dir="rtl">الآثار مدمرة: موجات حر أطول وأشد، وجفاف يمنع المزارعين من الزراعة، وأمطار غزيرة وفيضانات — والمدن الساحلية مهددة بسبب ذوبان الجليد وارتفاع البحار.</p>
+        </div>
+        <div class="msg" style="--d:1.7s">
+         <button class="spk" data-say="The solution? Reduce your carbon footprint: turn off lights and devices, walk or ride a bike, take shorter showers, use reusable bags and recycle your waste."><svg class="ico"><use href="#i-speaker"/></svg></button>
+         <p class="men">The solution? Reduce your <b>carbon footprint</b>: turn off lights and devices, walk or ride a bike, take shorter showers, use reusable bags and recycle your waste.</p>
+         <p class="mar" dir="rtl">الحل؟ قلّل بصمتك الكربونية: أطفئ الأنوار والأجهزة، وامشِ أو اركب الدراجة، وخذ دشًا أقصر، واستخدم حقائب قابلة لإعادة الاستخدام وأعد التدوير.</p>
+        </div>
+        <div class="msg" style="--d:2.1s">
+         <button class="spk=" data-say="Some people think governments have to solve climate change, but fighting climate change should be considered everyone's responsibility."><svg class="ico"><use href="#i-speaker"/></svg></button>
+         <p class="men">Some people think governments have to solve climate change — but fighting climate change should be considered <b>everyone's responsibility</b>.</p>
+         <p class="mar" dir="rtl">يرى بعض الناس أن على الحكومات حلّ المشكلة — لكن مكافحة تغيّر المناخ مسؤولية الجميع.</p>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div>
+      <div class="statcard">
+       <svg class="donut" viewBox="0 0 140 140">
+        <circle cx="70" cy="70" r="56" fill="none" stroke="#E0EBD2" stroke-width="16"/>
+        <circle class="dfill" cx="70" cy="70" r="56" fill="none" stroke="var(--coral)" stroke-width="16" stroke-linecap="round" transform="rotate(-90 70 70)"/>
+        <text class="dnum" x="70" y="72" text-anchor="middle">+0.8°</text>
+        <text class="dlbl" x="70" y="92" text-anchor="middle">SINCE 1881</text>
+       </svg>
+       <div>
+        <p style="font-weight:600">Global temperature rose from <b>13.68°C</b> to about <b>14.47°C</b>.</p>
+        <p class="ar" dir="rtl" style="text-align:right;margin-top:6px">ارتفعت حرارة الأرض من 13.68 إلى نحو 14.47 درجة مئوية.</p>
+       </div>
+      </div>
+      <div class="gcard" style="margin-top:14px">
+       <p style="text-align:center;font-weight:600">Global temperature (°C) — it is rising!</p>
+       <p class="ar" dir="rtl" style="text-align:center;margin:2px 0 6px">درجة حرارة الأرض في ارتفاع مستمر</p>
+       <svg viewBox="0 0 520 235" style="width:100%;height:auto">
+        <line x1="45" y1="195" x2="505" y2="195" stroke="#C6D6B2" stroke-width="3"/>
+        <polyline class="tl" points="60,165 96,166 132,177 168,170 204,154 239,135 275,127 311,131 347,130 383,127 418,103 454,84 490,54" fill="none" stroke="var(--coral)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle class="cdot" cx="60" cy="165" r="5" fill="var(--coralD)" style="animation-delay:.5s"/>
+        <circle class="cdot" cx="132" cy="177" r="4" fill="var(--coralD)" style="animation-delay:.7s"/>
+        <circle class="cdot" cx="204" cy="154" r="4" fill="var(--coralD)" style="animation-delay:.9s"/>
+        <circle class="cdot" cx="275" cy="127" r="4" fill="var(--coralD)" style="animation-delay:1.1s"/>
+        <circle class="cdot" cx="347" cy="130" r="4" fill="var(--coralD)" style="animation-delay:1.3s"/>
+        <circle class="cdot" cx="418" cy="103" r="4" fill="var(--coralD)" style="animation-delay:1.5s"/>
+        <circle class="cdot" cx="490" cy="54" r="6" fill="var(--coralD)" style="animation-delay:1.7s"/>
+        <text x="60" y="150" text-anchor="start" font-family="Lilita One" font-size="13" fill="#C0392B">13.68°C</text>
+        <text x="490" y="40" text-anchor="end" font-family="Lilita One" font-size="13" fill="#C0392B">≈14.47°C</text>
+        <text x="60" y="215" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="12" fill="#8B829E">1881</text>
+        <text x="204" y="215" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="12" fill="#8B829E">1921</text>
+        <text x="347" y="215" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="12" fill="#8B829E">1961</text>
+        <text x="490" y="215" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="12" fill="#8B829E">2010</text>
+       </svg>
+      </div>
+      <div class="keybox">
+       <svg class="ico"><use href="#i-sun"/></svg>
+       <div>
+        <p>Greenhouse gases trap heat — just like the glass walls of a greenhouse trap the sun's heat!</p>
+        <p class="ar" dir="rtl">غازات الدفيئة تحبس الحرارة — تمامًا كجدران الدفيئة الزجاجية!</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="step" data-tip="Flip the cards to learn the new words!" data-tipar="اقلب البطاقات لتتعلم الكلمات الجديدة!">
+    <h3 class="sh"><svg class="ico"><use href="#i-book"/></svg>New Words</h3>
+    <span class="sh-ar" dir="rtl">كلمات جديدة — انقر البطاقة لتقلبها</span>
+    <div class="fgrid" id="m-l2flip"></div>
+   </div>
+   <div class="step" data-tip="Time to check your understanding!" data-tipar="حان وقت اختبار فهمك!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Check Your Understanding</h3>
+    <span class="sh-ar" dir="rtl">تحقّق من فهمك — البيانات أمامك</span>
+    <div class="datastrip">
+     <span class="dschip">Greenhouse gases trap heat</span><span class="dschip">Sea-level cities → floods</span><span class="dschip">1881: 13.68°C → Now: ≈14.47°C</span>
+    </div>
+    <div id="m-l2q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 3 ============ -->
+<section class="screen level" id="scr-l3" style="--lc:var(--sun);--lcd:var(--sunD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">3</span>
+   <div><h2 class="lt">Cause &amp; Effect Lab</h2><span class="lvl-ar" dir="rtl">مختبر السبب والنتيجة</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="The cause makes something happen; the effect is the result!" data-tipar="السبب يُحدث الأمر، والنتيجة هي ما يحدث بعده!">
+    <h3 class="sh"><svg class="ico"><use href="#i-loop"/></svg>Cause → Effect</h3>
+    <span class="sh-ar" dir="rtl">السبب والنتيجة — نربط بينهما بأدوات ربط</span>
+    <div class="fchips">
+     <span class="fch c-adj" style="--d:.1s">CAUSE</span><span class="fplus">→</span><span class="fch c-than" style="--d:.25s">connector</span><span class="fplus">→</span><span class="fch c-more" style="--d:.4s">EFFECT</span>
+    </div>
+    <div class="vsbox">
+     <div class="vs-side"><svg class="ico v-ic" style="color:var(--coralD)"><use href="#i-flame"/></svg><b>Burning fossil fuels</b><span class="ar" dir="rtl">حرق الوقود الأحفوري</span></div>
+     <div class="vs-badge">therefore</div>
+     <div class="vs-side"><svg class="ico v-ic" style="color:var(--coralD)"><use href="#i-thermo"/></svg><b>The Earth gets hotter</b><span class="ar" dir="rtl">الأرض تسخن</span></div>
+    </div>
+    <p class="vs-cap">Cause first → then the effect, with <b class="hl hl-sun">therefore</b>.
+     <span class="ar" dir="rtl">السبب أولًا ثم النتيجة مع therefore.</span></p>
+    <div class="vsbox">
+     <div class="vs-side"><svg class="ico v-ic" style="color:var(--skyD)"><use href="#i-thermo"/></svg><b>The Earth gets hotter</b><span class="ar" dir="rtl">الأرض تسخن</span></div>
+     <div class="vs-badge">because of</div>
+     <div class="vs-side"><svg class="ico v-ic" style="color:var(--skyD)"><use href="#i-flame"/></svg><b>Burning fossil fuels</b><span class="ar" dir="rtl">حرق الوقود الأحفوري</span></div>
+    </div>
+    <p class="vs-cap">Effect first → then the cause, with <b class="hl hl-sky">because of</b>.
+     <span class="ar" dir="rtl">النتيجة أولًا ثم السبب مع because of.</span></p>
+    <div class="rgrid">
+     <div class="rcard" style="--rc:var(--skyD)"><div><span class="rtag">RULE 1</span><span class="rname">because of / due to</span><span class="rar" dir="rtl">تأتي قبل السبب</span></div>
+      <div class="rf">effect + <b class="hl hl-sky">because of</b> + cause</div>
+      <div class="rex"><span class="en">Polar bears are dying <b class="hl hl-sky">because of</b> melting ice.</span><span class="ar" dir="rtl">تموت الدببة القطبية بسبب ذوبان الجليد.</span></div></div>
+     <div class="rcard" style="--rc:var(--sunD)"><div><span class="rtag">RULE 2</span><span class="rname">so / therefore / consequently</span><span class="rar" dir="rtl">تأتي قبل النتيجة</span></div>
+      <div class="rf">cause + <b class="hl hl-sun">therefore</b> + effect</div>
+      <div class="rex"><span class="en">As the ice melts, it is harder for polar bears to survive; <b class="hl hl-sun">therefore</b>, many polar bears are dying.</span><span class="ar" dir="rtl">مع ذوبان الجليد يصعب على الدببة البقاء، لذا تموت كثيرٌ منها.</span></div></div>
+     <div class="rcard" style="--rc:var(--grapeD)"><div><span class="rtag">RULE 3</span><span class="rname">One effect of …</span><span class="rar" dir="rtl">صيغة إبراز النتيجة</span></div>
+      <div class="rf"><b class="hl hl-grape">One effect of</b> + cause + is + effect</div>
+      <div class="rex"><span class="en"><b class="hl hl-grape">One effect of</b> melting ice is that many polar bears are dying.</span><span class="ar" dir="rtl">إحدى نتائج ذوبان الجليد موتُ许多 الدببة — (إحدى نتائج ذوبان الجليد أن كثيرًا من الدببة يموت).</span></div></div>
+    </div>
+    <div class="watch"><svg class="ico"><use href="#i-flame"/></svg><div>The cause makes something happen; the effect is the result!
+     <span class="ar" dir="rtl">السبب هو ما يُحدث الأمر، والنتيجة هي ما يحدث بعده — لا تخلط بينهما!</span></div></div>
+   </div>
+   <div class="step" data-tip="Look at these cause-and-effect chains from the unit!" data-tipar="انظر إلى سلاسل السبب والنتيجة من الوحدة!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Cause &amp; Effect Chains</h3>
+    <span class="sh-ar" dir="rtl">سلاسل السبب والنتيجة — السبب أزرق والنتيجة حمراء</span>
+    <div class="chain">
+     <div class="ch-row"><p class="ch-en"><span class="c1">Burning fossil fuels</span><span class="arr">→</span><span class="c2">carbon dioxide in the atmosphere</span></p><p class="ch-ar ar" dir="rtl">حرق الوقود الأحفوري ← ثاني أكسيد الكربون في الغلاف الجوي</p></div>
+     <div class="ch-row"><p class="ch-en"><span class="c1">Greenhouse gases</span><span class="arr">→</span><span class="c2">heat trapped in the atmosphere</span></p><p class="ch-ar ar" dir="rtl">غازات الدفيئة ← حبس الحرارة في الغلاف الجوي</p></div>
+     <div class="ch-row"><p class="ch-en"><span class="c1">Rising temperatures</span><span class="arr">→</span><span class="c2">longer heat waves and droughts</span></p><p class="ch-ar ar" dir="rtl">ارتفاع الحرارة ← موجات حر أطول وجفاف</p></div>
+     <div class="ch-row"><p class="ch-en"><span class="c1">Melting ice caps</span><span class="arr">→</span><span class="c2">rising sea levels and floods</span></p><p class="ch-ar ar" dir="rtl">ذوبان القمم الجليدية ← ارتفاع البحار وفيضانات</p></div>
+     <div class="ch-row"><p class="ch-en"><span class="c1">Plastic in the ocean</span><span class="arr">→</span><span class="c2">marine animals die</span></p><p class="ch-ar ar" dir="rtl">البلاستيك في المحيط ← موت الكائنات البحرية</p></div>
+    </div>
+    <div class="gcard" style="margin-top:14px;background:#FFF8E8">
+     <p style="font-weight:600">More connectors: <b class="hl hl-grape">as a result of</b> · <b class="hl hl-grape">One consequence of</b> · <b class="hl hl-grape">One result of</b></p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:6px">أدوات إضافية بنفس الفكرة: نتيجةً لـ · إحدى نتائج · أحد مخرجات</p>
+    </div>
+   </div>
+   <div class="step" data-tip="Connector battle — good luck!" data-tipar="معركة الأدوات — بالتوفيق!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Connector Battle</h3>
+    <span class="sh-ar" dir="rtl">تدريب — اختبر قوتك</span>
+    <div class="datastrip">
+     <span class="dschip">because of / due to = +cause</span><span class="dschip">therefore / so = +effect</span><span class="dschip">One effect of X is Y</span>
+    </div>
+    <div id="m-l3q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 4 ============ -->
+<section class="screen level" id="scr-l4" style="--lc:var(--grape);--lcd:var(--grapeD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">4</span>
+   <div><h2 class="lt">Word Forest</h2><span class="lvl-ar" dir="rtl">غابة الكلمات المركّبة</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Two small words can join to make one new word!" data-tipar="كلمتان صغيرتان قد تتحدان لتصنعا كلمة جديدة!">
+    <h3 class="sh"><svg class="ico"><use href="#i-leaf"/></svg>Compound Nouns</h3>
+    <span class="sh-ar" dir="rtl">الأسماء المركّبة — اسم يتكوّن من كلمتين أو أكثر</span>
+    <div class="fchips">
+     <span class="fch c-adj" style="--d:.1s">word</span><span class="fplus">+</span><span class="fch c-er" style="--d:.25s">word</span><span class="fplus">=</span><span class="fch c-more" style="--d:.4s">NEW noun!</span>
+    </div>
+    <div class="rgrid">
+     <div class="rcard" style="--rc:var(--grapeD)"><div><span class="rtag">TYPE 1</span><span class="rname">Joined</span><span class="rar" dir="rtl">تُكتب كلمة واحدة</span></div>
+      <div class="rf">arm<b>chair</b> · class<b>mate</b> · sun<b>glasses</b> · text<b>book</b> · thunder<b>storm</b></div>
+      <div class="rex"><span class="en">sunglasses = sun + glasses</span><span class="ar" dir="rtl">نظارة شمسية = شمس + نظارة.</span></div></div>
+     <div class="rcard" style="--rc:var(--skyD)"><div><span class="rtag">TYPE 2</span><span class="rname">With a hyphen</span><span class="rar" dir="rtl">بشرطة بين الكلمتين</span></div>
+      <div class="rf">dry-cleaning · one-year-old · passer-by</div>
+      <div class="rex"><span class="en">one-year-old = a child aged one year</span><span class="ar" dir="rtl">طفل عمره عام واحد.</span></div></div>
+     <div class="rcard" style="--rc:var(--greenD)"><div><span class="rtag">TYPE 3</span><span class="rname">Separate words</span><span class="rar" dir="rtl">كلمتان منفصلتان</span></div>
+      <div class="rf">air conditioner · alarm clock · fossil fuel · ice cream</div>
+      <div class="rex"><span class="en">fossil fuel = coal, oil and gas</span><span class="ar" dir="rtl">الوقود الأحفوري = الفحم والنفط والغاز.</span></div></div>
+    </div>
+    <div class="watch"><svg class="ico"><use href="#i-book"/></svg><div>A dictionary shows the correct way to write a compound noun!
+     <span class="ar" dir="rtl">القاموس يوضح الطريقة الصحيحة لكتابة الاسم المركّب.</span></div></div>
+   </div>
+   <div class="step" data-tip="Each pair of pictures is a clue — connect them!" data-tipar="كل زوج صورٍ دليل — وصّل الكلمة بصورتها!">
+    <h3 class="sh"><svg class="ico"><use href="#i-search"/></svg>Picture Clues!</h3>
+    <span class="sh-ar" dir="rtl">أدلة الصور — انقر الكلمة ثم قرينتها المكوّنة من صورتين</span>
+    <div id="m-comp"></div>
+   </div>
+   <div class="step" data-tip="Debate time — who should stop global warming?" data-tipar="وقت المناظرة — من يجب أن يوقف الاحترار العالمي؟">
+    <h3 class="sh"><svg class="ico"><use href="#i-chat"/></svg>Debate Corner</h3>
+    <span class="sh-ar" dir="rtl">زاوية المناظرة — كلمات ثم رأيك</span>
+    <div class="wgrid" id="m-l4voc"></div>
+    <div class="gcard talkcard">
+     <p style="font-weight:600"><svg class="ico" style="width:18px;height:18px;color:var(--grapeD);vertical-align:-3px"><use href="#i-chat"/></svg> Debate topic: Governments alone cannot stop global warming.</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">موضوع المناظرة: الحكومات وحدها لا تستطيع إيقاف الاحترار العالمي — هل توافق؟</p>
+     <button class="rvbtn"><span class="rv-en">Show arguments</span><span class="rv-ar" dir="rtl">أظهر الحجج</span></button>
+     <div class="rvt"><span class="rvv">For governments acting: we need new policies and laws; governments must educate people; saving the planet is more important than money.</span>
+      <span class="ar" dir="rtl">مع دور الحكومات: نحتاج سياسات وقوانين جديدة، وعلى الحكومات تثقيف الناس، وإنقاذ الكوكب أهم من المال.</span>
+      <span class="rvv" style="display:block;margin-top:8px">For everyone acting: individual people have to take more responsibility and change their habits — people may be unlikely to change unless everyone helps.</span>
+      <span class="ar" dir="rtl" style="display:block;margin-top:4px">مع دور الجميع: على الأفراد تحمّل مسؤولية أكبر وتغيير عاداتهم — فالتغيير لن يحدث بمساعدة الجميع.</span></div>
+    </div>
+    <div class="gcard talkcard">
+     <p style="font-weight:600"><svg class="ico" style="width:18px;height:18px;color:var(--greenD);vertical-align:-3px"><use href="#i-leaf"/></svg> Your eco habits — tap the ones you already do!</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">عاداتك البيئية — انقر ما تفعله بالفعل لتقليل بصمتك الكربونية</p>
+     <div class="eco">
+      <button class="ecochip">Turn off devices</button>
+      <button class="ecochip">Switch off lights</button>
+      <button class="ecochip">Take shorter showers</button>
+      <button class="ecochip">Walk or ride a bike</button>
+      <button class="ecochip">Eat locally grown food</button>
+      <button class="ecochip">Fill the kettle with only what you need</button>
+      <button class="ecochip">Use energy-saving bulbs</button>
+      <button class="ecochip">Reduce AC and fans</button>
+      <button class="ecochip">Recycled paper &amp; sustainable wood</button>
+     </div>
+    </div>
+   </div>
+   <div class="step" data-tip="Last check for the forest!" data-tipar="اختبار الغابة الأخير!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Forest Check</h3>
+    <span class="sh-ar" dir="rtl">تحقّق سريع — اختر الإجابة الصحيحة</span>
+    <div id="m-l4q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 5 ============ -->
+<section class="screen level" id="scr-l5" style="--lc:var(--mint);--lcd:var(--mintD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">5</span>
+   <div><h2 class="lt">Ocean Rescue</h2><span class="lvl-ar" dir="rtl">إنقاذ المحيط</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Shocking facts about plastic in our oceans!" data-tipar="حقائق صادمة عن البلاستيك في محيطاتنا!">
+    <h3 class="sh"><svg class="ico"><use href="#i-drop"/></svg>Shocking Facts</h3>
+    <span class="sh-ar" dir="rtl">حقائق صادمة عن البلاستيك في المحيطات</span>
+    <div class="facts">
+     <div class="fact" style="--fc:var(--coral)"><svg class="ico"><use href="#i-trash"/></svg><p class="fe">Every year, we put <b>8 million tonnes</b> of plastic into the oceans.</p><p class="ar" dir="rtl">8 ملايين طن من البلاستيك تدخل المحيطات سنويًا.</p></div>
+     <div class="fact" style="--fc:var(--sky)"><svg class="ico"><use href="#i-fish"/></svg><p class="fe">Hundreds of thousands of <b>marine animals</b> die every year.</p><p class="ar" dir="rtl">مئات الآلاف من الكائنات البحرية تموت كل عام.</p></div>
+     <div class="fact" style="--fc:var(--grape)"><svg class="ico"><use href="#i-earth"/></svg><p class="fe">By <b>2050</b>, there may be more plastic in the oceans than fish.</p><p class="ar" dir="rtl">بحلول 2050 قد يصبح البلاستيك في المحيطات أكثر من الأسماك.</p></div>
+    </div>
+    <h3 class="sh" style="margin-top:20px"><svg class="ico"><use href="#i-book"/></svg>The Opinion Essay</h3>
+    <span class="sh-ar" dir="rtl">مقال الرأي — «يجب أن نقلل البلاستيك لحماية محيطاتنا»</span>
+    <div class="paras">
+     <div class="para">
+      <button class="spk" data-say="Our oceans are under threat because of plastic pollution. Plastic waste, such as packaging, cups and straws, is lightweight and so it often gets blown or washed into the ocean. However, I believe that we must use less plastic to protect the oceans."><svg class="ico"><use href="#i-speaker"/></svg></button>
+      <p class="pen"><b>Paragraph 1:</b> Our oceans are under threat because of plastic pollution. Plastic waste — such as packaging, cups and straws — is lightweight, so it often gets <b>blown or washed</b> into the ocean. However, <b>I believe</b> that we must use less plastic to protect the oceans.</p>
+      <p class="par" dir="rtl">محيطاتنا مهددة بسبب تلوث البلاستيك؛ فهو خفيف فيُحمل بالريح أو يُجرف إلى البحر — لكنّي أعتقد أننا يجب أن نقلل البلاستيك لحماية المحيطات.</p>
+     </div>
+     <div class="para">
+      <button class="spk" data-say="One reason to use less plastic is that plastic pollution is dangerous to marine life and humans. Many marine animals die as a result of getting tangled in plastic or eating plastic. Also, if you eat fish, you may be eating pieces of plastic."><svg class="ico"><use href="#i-speaker"/></svg></button>
+      <p class="pen"><b>Paragraph 2:</b> One reason is that plastic pollution is dangerous to <b>marine life</b> and humans. Many marine animals die as a result of getting tangled in plastic or eating it. Also, if you eat fish, you may be eating pieces of plastic.</p>
+      <p class="par" dir="rtl">سبب أول: التلوث خطير على الكائنات البحرية والبشر؛ كثير منها يموت بسبب التشابك بالبلاستيك أو أكله — وحتى الأسماك التي نأكلها قد تحمل قطعًا منه.</p>
+     </div>
+     <div class="para">
+      <button class="spk" data-say="Another reason is that it is easy to do. For example, a million plastic bottles are sold every minute worldwide. They are used once and then thrown away. However, we could easily use reusable bottles instead."><svg class="ico"><use href="#i-speaker"/></svg></button>
+      <p class="pen"><b>Paragraph 3:</b> Another reason is that it is easy! For example, <b>a million plastic bottles</b> are sold every minute worldwide — used once, then thrown away. We could easily use <b>reusable bottles</b> instead.</p>
+      <p class="par" dir="rtl">سبب آخر: الأمر سهل! مليون زجاجة بلاستيك تُباع كل دقيقة وتُرمى بعد استخدام واحد — بينما يمكننا استخدام زجاجات قابلة لإعادة الاستخدام.</p>
+     </div>
+     <div class="para">
+      <button class="spk" data-say="To sum up, plastic waste is a serious threat to our oceans, but we can all reduce the amount of plastic we use and protect the oceans."><svg class="ico"><use href="#i-speaker"/></svg></button>
+      <p class="pen"><b>Paragraph 4:</b> <b>To sum up</b>, plastic waste is a serious threat to our oceans — but we can all reduce the plastic we use and protect the oceans.</p>
+      <p class="par" dir="rtl">خلاصةً: نفايات البلاستيك تهديد خطير لمحيطاتنا — لكن بوسعنا جميعًا تقليل استخدامه وحماية المحيطات.</p>
+     </div>
+    </div>
+   </div>
+   <div class="step" data-tip="Match each paragraph to its job in the essay!" data-tipar="طابق كل فقرة بوظيفتها في المقال!">
+    <h3 class="sh"><svg class="ico"><use href="#i-search"/></svg>Connect!</h3>
+    <span class="sh-ar" dir="rtl">وصّل كل فقرة بوظيفتها — انقر الفقرة ثم وظيفتها</span>
+    <div id="m-essay"></div>
+   </div>
+   <div class="step" data-tip="Final ocean check!" data-tipar="اختبار المحيط الأخير!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Ocean Check</h3>
+    <span class="sh-ar" dir="rtl">تحقّق سريع — المعلومات داخل كل سؤال</span>
+    <div id="m-l5q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 6 ============ -->
+<section class="screen level" id="scr-l6" style="--lc:var(--pink);--lcd:var(--pinkD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">6</span>
+   <div><h2 class="lt">Eco Studio</h2><span class="lvl-ar" dir="rtl">الاستوديو البيئي</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Let's design a reusable shopping bag like the pros!" data-tipar="هيا نصمّم حقيبة تسوّق قابلة لإعادة الاستخدام باحتراف!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bag"/></svg>Design a Reusable Bag</h3>
+    <span class="sh-ar" dir="rtl">صمّم حقيبة تسوّق بيئية — شعارات ملهمة من الكتاب</span>
+    <div class="gcard">
+     <p style="font-weight:600;font-size:1.02rem">Inspiration — real slogans from eco bags:</p>
+     <div class="schips" style="margin-top:10px">
+      <span class="schip slogchip"><svg class="ico"><use href="#i-star"/></svg>Let's go green and keep the planet clean!</span>
+      <span class="schip slogchip"><svg class="ico"><use href="#i-leaf"/></svg>Reduce your carbon footprint</span>
+      <span class="schip slogchip"><svg class="ico"><use href="#i-bulb"/></svg>Keep your future bright, turn off the light!</span>
+     </div>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:10px">لاحظ أن الشعارين الأول والثالث «يقافيان» — الأوزان السجعية تجعل الشعار سهل الحفظ ومؤثرًا!</p>
+    </div>
+    <div class="tipgrid">
+     <div class="tipcard" style="--tc:var(--mintD)"><h4><span>Message</span><span class="ar" dir="rtl">الرسالة</span></h4>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>What is your bag's message about?<span class="ti-ar" dir="rtl">عمّا ستتحدث حقيبتك؟ (بلاستيك المحيط؟ توفير الماء؟)</span></span></div></div>
+     <div class="tipcard" style="--tc:var(--grapeD)"><h4><span>Image</span><span class="ar" dir="rtl">الصورة</span></h4>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Choose an image that is easy to understand<span class="ti-ar" dir="rtl">اختر صورة سهلة الفهم تعبّر عن رسالتك</span></span></div></div>
+     <div class="tipcard" style="--tc:var(--sunD)"><h4><span>Slogan</span><span class="ar" dir="rtl">الشعار</span></h4>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Keep it short and memorable — rhymes work great!<span class="ti-ar" dir="rtl">اجعله قصيرًا ولافتًا — والسجع يصنع الفرق!</span></span></div></div>
+     <div class="tipcard" style="--tc:var(--skyD)"><h4><span>Colour</span><span class="ar" dir="rtl">اللون</span></h4>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Connect it to your message (blue = the ocean)<span class="ti-ar" dir="rtl">اربطه برسالتك — الأزرق للمحيط مثلًا</span></span></div></div>
+     <div class="tipcard" style="--tc:var(--greenD)"><h4><span>Material</span><span class="ar" dir="rtl">الخامة</span></h4>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Strong and eco-friendly (recycled plastic bottles!)<span class="ti-ar" dir="rtl">قوية وصديقة للبيئة — كالزجاجات المعاد تدويرها</span></span></div></div>
+    </div>
+   </div>
+   <div class="step" data-tip="Now create YOUR eco bag — I can't wait!" data-tipar="الآن اصنع حقيبتك أنت — لا أستطيع الانتظار!">
+    <h3 class="sh"><svg class="ico"><use href="#i-pen"/></svg>Your Turn: Build Your Bag</h3>
+    <span class="sh-ar" dir="rtl">دورك الآن — املأ كل الاختيارات ثم أنشئ حقيبتك</span>
+    <div class="gcard">
+     <div class="fields">
+      <div class="field"><label>Bag message (what is it about?)</label><span class="f-ar" dir="rtl">رسالة الحقيبة</span><input id="bagMsg" placeholder="e.g. saving the oceans" maxlength="40"></div>
+      <div class="field"><label>Your slogan</label><span class="f-ar" dir="rtl">شعارك</span><input id="bagSlogan" placeholder="e.g. Be cool, keep the sea clean!" maxlength="60"></div>
+     </div>
+     <p style="font-weight:600;margin-top:14px">Slogan inspiration — tap one to use it:</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:2px">أفكار شعارات — انقر واحدًا لاستخدامه أو اكتب شعارك</p>
+     <div class="schips" style="margin-top:8px" id="inspRow">
+      <button class="schip insp" data-s="Let's go green and keep the planet clean!">Let's go green and keep the planet clean!</button>
+      <button class="schip insp" data-s="Keep your future bright, turn off the light!">Keep your future bright, turn off the light!</button>
+      <button class="schip insp" data-s="Be cool, keep the sea clean!">Be cool, keep the sea clean!</button>
+     </div>
+     <div class="srow"><span class="slab">Colour<span class="ar" dir="rtl">اللون</span></span>
+      <div class="schips" id="colRow">
+       <button class="schip bagcol" data-col="blue"><i class="swatch" style="background:#4D96FF"></i>Ocean Blue</button>
+       <button class="schip bagcol" data-col="green"><i class="swatch" style="background:#34A853"></i>Earth Green</button>
+       <button class="schip bagcol" data-col="yellow"><i class="swatch" style="background:#FFD166"></i>Sun Yellow</button>
+       <button class="schip bagcol" data-col="pink"><i class="swatch" style="background:#F15BB5"></i>Coral Pink</button>
+      </div>
+     </div>
+     <div class="srow"><span class="slab">Material<span class="ar" dir="rtl">الخامة</span></span>
+      <div class="schips" id="matRow">
+       <button class="schip bagmat" data-mat="Recycled plastic bottles">Recycled plastic bottles</button>
+       <button class="schip bagmat" data-mat="Cotton">Cotton</button>
+       <button class="schip bagmat" data-mat="Recycled paper">Recycled paper</button>
+      </div>
+     </div>
+     <button id="bagGo" class="btn" style="--bc:var(--pink);--bcd:var(--pinkD);margin-top:16px"><span>Create my eco bag</span><span class="b-ar" dir="rtl">أنشئ حقيبتي البيئية</span></button>
+     <div class="prevbox" id="bagPrev">
+      <p class="bp-h">Your bag appears here</p>
+      <p class="bp-arh ar" dir="rtl">ستظهر حقيبتك هنا</p>
+      <div class="bp-body" id="bagBody"></div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ BOSS ============ -->
+<section class="screen level" id="scr-boss" style="--lc:#3D3450;--lcd:#2A2440">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num" style="background:#3D3450;box-shadow:0 4px 0 #2A2440"><svg class="ico" style="width:26px;height:26px"><use href="#i-flame"/></svg></span>
+   <div><h2 class="lt">The Heat Monster</h2><span class="lvl-ar" dir="rtl">وحش الحرارة</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en">This is it! Cool down the Heat Monster!</span><span class="tip-ar" dir="rtl">لحظة الحسم! برّد وحش الحرارة!</span></div></div>
+  </header>
+  <div class="mon-wrap" id="monWrap">
+   <svg id="monSvg" viewBox="0 0 240 210">
+    <g stroke="#FFA62B" stroke-width="11" stroke-linecap="round">
+     <line x1="190" y1="105" x2="216" y2="105"/><line x1="181" y1="70" x2="204" y2="57"/>
+     <line x1="155" y1="44" x2="168" y2="22"/><line x1="120" y1="35" x2="120" y2="9"/>
+     <line x1="85" y1="44" x2="72" y2="22"/><line x1="59" y1="70" x2="36" y2="57"/>
+     <line x1="50" y1="105" x2="24" y2="105"/><line x1="59" y1="140" x2="36" y2="153"/>
+     <line x1="85" y1="166" x2="72" y2="188"/><line x1="120" y1="175" x2="120" y2="201"/>
+     <line x1="155" y1="166" x2="168" y2="188"/><line x1="181" y1="140" x2="204" y2="153"/>
+    </g>
+    <circle cx="120" cy="105" r="62" fill="#FF6B6B" stroke="#E14F4F" stroke-width="6"/>
+    <g class="m-eyes">
+     <path d="M70 76 L102 88" stroke="#B02323" stroke-width="7" stroke-linecap="round"/>
+     <path d="M170 76 L138 88" stroke="#B02323" stroke-width="7" stroke-linecap="round"/>
+     <rect x="72" y="88" width="30" height="20" rx="8" fill="#fff"/>
+     <rect x="138" y="88" width="30" height="20" rx="8" fill="#fff"/>
+     <circle cx="88" cy="98" r="6" fill="#B02323"/><circle cx="152" cy="98" r="6" fill="#B02323"/>
+    </g>
+    <g class="m-dead">
+     <path d="M74 90 L100 110 M100 90 L74 110" stroke="#8B829E" stroke-width="6" stroke-linecap="round"/>
+     <path d="M140 90 L166 110 M166 90 L140 110" stroke="#8B829E" stroke-width="6" stroke-linecap="round"/>
+    </g>
+    <path class="m-mouth" d="M88 134 L98 126 L108 134 L118 126 L128 134 L138 126 L148 134" fill="none" stroke="#B02323" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+   </svg>
+   <div class="hpbar"><div class="hpfill" id="hpFill"></div></div>
+   <p class="hplbl">HEAT LEVEL · مستوى الحرارة</p>
+   <p style="font-weight:600;margin-top:10px">Answer 8 questions to cool it down — every correct answer removes 1° of heat!</p>
+   <p class="ar" dir="rtl" style="text-align:center;margin-top:4px">أجب عن 8 أسئلة لتبريده — كل إجابة صحيحة تخفض درجة حرارته!</p>
+  </div>
+  <div id="bq"></div>
+ </div>
+</section>
+
+<!-- ============ WIN ============ -->
+<section class="screen" id="scr-win">
+ <div class="wrap done-wrap">
+  <svg class="trophy-big"><use href="#i-trophy"/></svg>
+  <h2 class="done-title">PLANET SAVED!</h2>
+  <p class="done-sub">You defeated the Heat Monster, cooled the planet, and mastered Climate Change.</p>
+  <p class="done-sub-ar ar" dir="rtl">هزمتَ وحش الحرارة وبرّدتَ الكوكب وأتقنت وحدة تغيّر المناخ — أحسنت!</p>
+  <div class="statpills">
+   <div class="statpill"><svg class="ico"><use href="#i-bolt"/></svg><span id="winXp">0</span>&nbsp;XP</div>
+   <div class="statpill"><svg class="ico"><use href="#i-star"/></svg><span id="winStars">0</span>/18</div>
+   <div class="statpill"><svg class="ico"><use href="#i-medal"/></svg><span id="winBdg">0</span>/7</div>
+  </div>
+  <h3 class="sh" style="justify-content:center"><svg class="ico"><use href="#i-medal"/></svg>Your Badges</h3>
+  <span class="sh-ar" dir="rtl" style="text-align:center">أوسمتك — اجمعها كلها!</span>
+  <div class="bdg-grid" id="winBadges"></div>
+  <div class="done-btns">
+   <button id="winMapBtn" class="btn ghost"><span>Back to Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>
+   <button id="winAgainBtn" class="btn" style="--bc:var(--green);--bcd:var(--greenD)"><span>Play Again</span><span class="b-ar" dir="rtl">العب من جديد</span></button>
+  </div>
+ </div>
+</section>
+
+<script>
+(function(){
+'use strict';
+/* ================= helpers ================= */
+var $=function(s){return document.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+var IC=function(n){return '<svg class="ico"><use href="#'+n+'"/></svg>'};
+var CL=function(n){return '<svg class="clue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#'+n+'"/></svg>'};
+var shuffle=function(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t}return b};
+
+/* ================= audio ================= */
+var actx=null,muted=false;
+function initAudio(){if(actx)return;try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}
+function tone(f,d,type,v,dl){if(!actx||muted)return;type=type||'sine';v=v||.12;dl=dl||0;
+ var t=actx.currentTime+dl,o=actx.createOscillator(),g=actx.createGain();
+ o.type=type;o.frequency.setValueAtTime(f,t);
+ g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+ o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+d+.05)}
+function sfx(n,i){switch(n){
+ case 'click':tone(560,.07,'triangle',.06);break;
+ case 'pop':tone(340,.06,'sine',.08);break;
+ case 'correct':tone(660,.12,'sine',.12);tone(880,.16,'sine',.12,.09);break;
+ case 'wrong':tone(220,.18,'sawtooth',.06);tone(160,.22,'sawtooth',.05,.09);break;
+ case 'match':tone(523,.09,'sine',.1);tone(659,.09,'sine',.1,.08);tone(784,.14,'sine',.1,.16);break;
+ case 'heart':tone(392,.12,'sine',.1);tone(294,.18,'sine',.09,.1);break;
+ case 'hit':tone(130,.14,'square',.09);tone(90,.2,'square',.07,.05);break;
+ case 'cool':tone(880,.12,'sine',.09);tone(1174,.18,'sine',.09,.09);break;
+ case 'unlock':tone(600,.1,'triangle',.09);tone(900,.16,'triangle',.09,.09);break;
+ case 'star':tone(700+(i||0)*160,.16,'sine',.12);break;
+ case 'fanfare':[523,659,784,1046].forEach(function(f,k){tone(f,.16,'triangle',.11,k*.13)});tone(1318,.3,'triangle',.1,.55);break;
+}}
+document.addEventListener('pointerdown',function once(){initAudio();document.removeEventListener('pointerdown',once)});
+
+/* ================= state ================= */
+var KEY='ccq1';
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY));
+ if(d&&typeof d.xp==='number')return{xp:d.xp,stars:d.stars||{},unlocked:d.unlocked||1,badges:d.badges||[],streak:0}}catch(e){}
+ return{xp:0,stars:{},unlocked:1,badges:[],streak:0}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({xp:S.xp,stars:S.stars,unlocked:S.unlocked,badges:S.badges}))}catch(e){}}
+var S=load();
+var MODE=null,L=null,B=null;
+
+/* ================= speech ================= */
+var voices=[];
+function loadVoices(){try{voices=window.speechSynthesis.getVoices()}catch(e){}}
+if('speechSynthesis' in window){loadVoices();window.speechSynthesis.addEventListener('voiceschanged',loadVoices)}
+var VPREF=['Google UK English Female','Microsoft Sonia','Microsoft Libby','Microsoft Aria','Microsoft Michelle','Samantha','Serena','Kate','Moira','Zira','Victoria','Google US English'];
+function pickVoice(){var i,j;
+ for(i=0;i<VPREF.length;i++){for(j=0;j<voices.length;j++){if(voices[j].name===VPREF[i])return voices[j]}}
+ for(j=0;j<voices.length;j++){if(/female/i.test(voices[j].name))return voices[j]}
+ for(j=0;j<voices.length;j++){if(/^en/i.test(voices[j].lang))return voices[j]}
+ return null}
+function speakSay(btn){var t=btn.getAttribute('data-say');if(!t)return;
+ if(!('speechSynthesis' in window))return;
+ try{window.speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=.85;u.pitch=1.05;
+  var v=pickVoice();if(v)u.voice=v;
+  btn.classList.add('busy');u.onend=u.onerror=function(){btn.classList.remove('busy')};
+  window.speechSynthesis.speak(u)}catch(e){}}
+
+/* ================= confetti ================= */
+var CCOL=['#29C0B2','#4D96FF','#FFD166','#4FBF43','#9B5DE5','#FF6B6B'];
+function confetti(x,y,n){n=n||24;
+ for(var i=0;i<n;i++){var c=document.createElement('i');c.className='cf';
+  c.style.left=x+'px';c.style.top=y+'px';c.style.background=CCOL[Math.floor(Math.random()*CCOL.length)];
+  c.style.setProperty('--dx',(Math.random()*200-100)+'px');
+  c.style.animationDuration=(1+Math.random()*.9)+'s';
+  if(Math.random()<.4)c.style.borderRadius='50%';
+  document.body.appendChild(c);
+  (function(el){setTimeout(function(){el.remove()},2200)})(c)}}
+function burst(el,n){if(!el)return;var r=el.getBoundingClientRect();confetti(r.left+r.width/2,r.top+r.height/2,n||22)}
+function confettiRain(){for(var i=0;i<5;i++)setTimeout(function(){confetti(Math.random()*window.innerWidth,-10,26)},i*250)}
+
+/* ================= HUD ================= */
+var xpShown=0;
+function addXP(d){S.xp+=d;save();tweenXP()}
+function tweenXP(){var el=$('#xpN'),from=xpShown,to=S.xp,t0=performance.now(),dur=450;
+ function f(t){var k=Math.min(1,(t-t0)/dur);xpShown=Math.round(from+(to-from)*k);el.textContent=xpShown;if(k<1)requestAnimationFrame(f)}
+ requestAnimationFrame(f)}
+function streakUp(){S.streak++;
+ if(S.streak>=2){var h=$('#hudStreak');h.classList.add('on');$('#streakN').textContent='x'+S.streak;
+  h.classList.remove('pop');void h.offsetWidth;h.classList.add('pop')}
+ if(S.streak>0&&S.streak%4===0){addXP(5);toast('On Fire!','أداؤك مشتعل — واصل!','i-flame','var(--coral)');sfx('match')}}
+function streakCut(){S.streak=0;$('#hudStreak').classList.remove('on')}
+function renderHearts(){var h=$('#hudHearts');
+ var n=MODE==='boss'?B.hearts:(MODE==='level'?L.hearts:3);
+ h.innerHTML=[0,1,2].map(function(i){return '<span class="hh'+(i<n?'':' off')+'">'+IC('i-heart')+'</span>'}).join('')}
+function loseHeart(){sfx('heart');
+ if(MODE==='boss'){B.hearts=Math.max(0,B.hearts-1);renderHearts();
+  var el=$('#hudHearts');el.classList.remove('hpop');void el.offsetWidth;el.classList.add('hpop');
+  if(B.hearts<=0){setTimeout(bossFail,600)}return}
+ if(MODE!=='level')return;
+ L.hearts=Math.max(0,L.hearts-1);renderHearts();
+ var el=$('#hudHearts');el.classList.remove('hpop');void el.offsetWidth;el.classList.add('hpop')}
+
+/* ================= toasts / badges ================= */
+function toast(t,ar,ic,col){var w=$('#toasts');
+ if(w.children.length>2)w.firstChild.remove();
+ var d=document.createElement('div');d.className='toast';d.style.setProperty('--tc',col||'var(--gold)');
+ d.innerHTML='<span class="t-ic">'+IC(ic||'i-star')+'</span><span><b>'+t+'</b><span class="t-ar" dir="rtl">'+ar+'</span></span>';
+ w.appendChild(d);
+ setTimeout(function(){d.classList.add('out');setTimeout(function(){d.remove()},350)},2400)}
+var BADGES=[
+ {id:'words',t:'Climate Expert',ar:'خبير المناخ',ic:'i-earth',c:'var(--sky)'},
+ {id:'story',t:'Planet Reader',ar:'قارئ الكوكب',ic:'i-thermo',c:'var(--coral)'},
+ {id:'gram',t:'Logic Master',ar:'سيّد السبب والنتيجة',ic:'i-loop',c:'var(--sun)'},
+ {id:'forest',t:'Word Builder',ar:'بانِي الكلمات',ic:'i-leaf',c:'var(--grape)'},
+ {id:'ocean',t:'Ocean Hero',ar:'بطل المحيط',ic:'i-wave',c:'var(--mint)'},
+ {id:'create',t:'Bag Designer',ar:'مصمّم الحقائب',ic:'i-bag',c:'var(--pink)'},
+ {id:'boss',t:'Planet Saver',ar:'منقذ الكوكب',ic:'i-crown',c:'var(--gold)'}];
+var BMAP={1:'words',2:'story',3:'gram',4:'forest',5:'ocean',6:'create'};
+function award(id){if(S.badges.indexOf(id)>=0)return;
+ S.badges.push(id);save();
+ var b=BADGES.filter(function(x){return x.id===id})[0];
+ if(b){toast(b.t,b.ar,b.ic,b.c);sfx('unlock')}}
+
+/* ================= mascot (Sunny) ================= */
+function tabbySVG(){return '<svg class="tabby-svg" viewBox="0 0 120 134">'+
+ '<line x1="60" y1="22" x2="60" y2="8" stroke="#3D3450" stroke-width="4" stroke-linecap="round"/>'+
+ '<circle cx="60" cy="6" r="5" fill="#FFD166" stroke="#3D3450" stroke-width="2.5"/>'+
+ '<rect x="6" y="58" width="13" height="30" rx="6.5" fill="#3E9B4F"/>'+
+ '<rect x="101" y="58" width="13" height="30" rx="6.5" fill="#3E9B4F"/>'+
+ '<rect x="28" y="120" width="17" height="11" rx="5.5" fill="#3D3450"/>'+
+ '<rect x="75" y="120" width="17" height="11" rx="5.5" fill="#3D3450"/>'+
+ '<rect x="17" y="24" width="86" height="102" rx="20" fill="#5FC46F" stroke="#3D3450" stroke-width="4.5"/>'+
+ '<rect x="27" y="34" width="66" height="82" rx="13" fill="#F2FFF4"/>'+
+ '<circle cx="60" cy="41" r="2.4" fill="#3D3450"/>'+
+ '<g class="tabby-eyes"><circle cx="47" cy="59" r="5.6" fill="#3D3450"/><circle cx="73" cy="59" r="5.6" fill="#3D3450"/>'+
+ '<circle cx="49" cy="57" r="1.9" fill="#fff"/><circle cx="75" cy="57" r="1.9" fill="#fff"/></g>'+
+ '<circle cx="36" cy="70" r="4" fill="#FFB3C6" opacity=".85"/><circle cx="84" cy="70" r="4" fill="#FFB3C6" opacity=".85"/>'+
+ '<path class="tabby-mouth" d="M52 66 Q60 73 68 66" fill="none" stroke="#3D3450" stroke-width="3.5" stroke-linecap="round"/></svg>'}
+function mascotReact(mood){var scr=document.querySelector('.screen.on');if(!scr)return;
+ var slot=scr.querySelector('.tabby-slot');if(!slot)return;
+ var mouth=slot.querySelector('.tabby-mouth');if(!mouth)return;
+ if(mood==='happy'){mouth.setAttribute('d','M46 61 Q60 82 74 61 Z');mouth.setAttribute('fill','#3D3450')}
+ else{mouth.setAttribute('d','M52 72 Q60 63 68 72');mouth.setAttribute('fill','none')}
+ slot.classList.remove('jump','shake');void slot.offsetWidth;
+ slot.classList.add(mood==='happy'?'jump':'shake');
+ setTimeout(function(){mouth.setAttribute('d','M52 66 Q60 73 68 66');mouth.setAttribute('fill','none');
+  slot.classList.remove('jump','shake')},1300)}
+
+/* ================= screens ================= */
+var ovl=$('#ovl');
+function show(id){
+ var el=$('#scr-'+id);
+ $$('.screen').forEach(function(s){s.classList.remove('on')});
+ if(!el)return;
+ el.classList.add('on');
+ $('#hud').classList.toggle('on',id!=='title');
+ if(id!=='map')window.scrollTo(0,0);
+ if(id==='map'){MODE=null;$('#hudHearts').classList.add('hidden');renderMap();
+  setTimeout(function(){var c=$('#mapNodes .node.cur')||$('#mapNodes .node:not(.lock)');if(c)c.scrollIntoView({block:'center',behavior:'smooth'})},150)}}
+function hideOvl(){ovl.classList.remove('on')}
+
+/* ================= map ================= */
+var LEVELS=[
+ {name:'Climate Basics',ar:'أساسيات المناخ',c:'sky',ic:'i-earth'},
+ {name:'The Hot Planet',ar:'الكوكب الحارّ',c:'coral',ic:'i-thermo'},
+ {name:'Cause & Effect Lab',ar:'مختبر السبب والنتيجة',c:'sun',ic:'i-loop'},
+ {name:'Word Forest',ar:'غابة الكلمات',c:'grape',ic:'i-leaf'},
+ {name:'Ocean Rescue',ar:'إنقاذ المحيط',c:'mint',ic:'i-wave'},
+ {name:'Eco Studio',ar:'الاستوديو البيئي',c:'pink',ic:'i-bag'}];
+var POS=[{x:50,y:8.1},{x:24,y:21.9},{x:66,y:35.8},{x:26,y:49.6},{x:68,y:63.5},{x:30,y:77.3}];
+function renderMap(){
+ $('#mapStars').textContent=Object.keys(S.stars).reduce(function(a,k){return a+S.stars[k]},0);
+ $('#mapBadges').textContent=S.badges.length;
+ var h='';
+ LEVELS.forEach(function(lv,i){var n=i+1,unlocked=n<=S.unlocked,st=S.stars[n]||0,cur=(n===S.unlocked&&!st);
+  h+='<button class="node'+(unlocked?'':' lock')+(cur?' cur':'')+'" style="left:'+POS[i].x+'%;top:'+POS[i].y+'%" data-n="'+n+'">'+
+  (cur?'<span class="go-arrow">'+IC('i-arrowD')+'</span>':'')+
+  '<span class="node-face" style="--nc:var(--'+lv.c+');--ncd:var(--'+lv.c+'D)">'+(unlocked?IC(lv.ic):IC('i-lock'))+'<span class="node-num">'+n+'</span></span>'+
+  '<span class="node-stars">'+[1,2,3].map(function(s){return '<span class="nstar'+(s<=st?'':' off')+'">'+IC('i-star')+'</span>'}).join('')+'</span>'+
+  '<span class="node-name">'+lv.name+'<span class="nar" dir="rtl">'+lv.ar+'</span></span></button>'});
+ var bOpen=S.unlocked>=7, bCur=bOpen&&S.badges.indexOf('boss')<0;
+ h+='<button class="node boss-node'+(bOpen?'':' lock')+(bCur?' cur':'')+'" style="left:50%;top:92.3%" data-n="7">'+
+ (bCur?'<span class="go-arrow">'+IC('i-arrowD')+'</span>':'')+
+ '<span class="node-face" style="--nc:#3D3450;--ncd:#2A2440">'+(bOpen?IC('i-flame'):IC('i-lock'))+'</span>'+
+ '<span class="boss-ribbon">BOSS</span>'+
+ '<span class="node-name">The Heat Monster<span class="nar" dir="rtl">وحش الحرارة</span></span></button>';
+ $('#mapNodes').innerHTML=h}
+function nodeClick(nd){var n=+nd.getAttribute('data-n');
+ if(n===7){
+  if(S.unlocked>=7){sfx('click');startBoss()}else{locked(nd)}
+  return}
+ if(n<=S.unlocked){sfx('click');startLevel(n)}else{locked(nd)}}
+function locked(nd){sfx('wrong');nd.classList.remove('nshake');void nd.offsetWidth;nd.classList.add('nshake');
+ toast('Locked!','أكمل المرحلة السابقة أولًا','i-lock','var(--ink)')}
+
+/* ================= vocab data ================= */
+var V_L1=[
+ {w:'climate',ar:'المناخ',ic:'i-earth'},{w:'weather',ar:'الطقس',ic:'i-cloud'},
+ {w:'global warming',ar:'الاحترار العالمي',ic:'i-thermo'},{w:'drought',ar:'الجفاف',ic:'i-drop'},
+ {w:'flood',ar:'الفيضان',ic:'i-rain'},{w:'heat wave',ar:'موجة حرّارة',ic:'i-sun'},
+ {w:'sea level rise',ar:'ارتفاع مستوى البحر',ic:'i-wave'},{w:'ice caps',ar:'القمم الجليدية',ic:'i-snow'},
+ {w:'threat',ar:'تهديد',ic:'i-flame'},{w:'disaster',ar:'كارثة',ic:'i-bolt'}];
+var V_L2FLIP=[
+ {w:'greenhouse gases',ic:'i-cloud',en:'gases that trap heat in the atmosphere',ar:'غازات الدفيئة: تحبس الحرارة في الغلاف الجوي',ex:'These gases trap heat in the atmosphere.'},
+ {w:'fossil fuels',ic:'i-factory',en:'fuels such as coal, oil and gas',ar:'الوقود الأحفوري: كالفحم والنفط والغاز',ex:'When people burn fossil fuels, they release carbon dioxide.'},
+ {w:'atmosphere',ic:'i-earth',en:'the layer of gases around the Earth',ar:'الغلاف الجوي: طبقة الغازات حول الأرض',ex:'Greenhouse gases trap heat in the atmosphere.'},
+ {w:'extreme',ic:'i-flame',en:'very great or intense',ar:'متطرف / شديد جدًا',ex:'We are experiencing longer and more extreme heat waves.'},
+ {w:'release',ic:'i-bulb',en:'to let something out (gas, heat or light)',ar:'يُطلق: يخرج الغاز أو الحرارة أو الضوء',ex:'Burning fossil fuels releases carbon dioxide.'},
+ {w:'carbon footprint',ic:'i-leaf',en:'the amount of greenhouse gases we release',ar:'بصمة الكربون: كمية الغازات التي نطلقها',ex:'We must reduce our carbon footprint.'},
+ {w:'devastating',ic:'i-bolt',en:'causing great damage',ar:'مُدمِّر: يسبب ضررًا هائلًا',ex:'Climate change is having a devastating effect on our planet.'}];
+var V_L4=[
+ {w:'policy',ar:'خطة أو قانون رسمي',ic:'i-news'},{w:'emission',ar:'انبعاث (إطلاق غاز)',ic:'i-factory'},
+ {w:'responsibility',ar:'مسؤولية / واجب',ic:'i-person'},{w:'to regulate',ar:'ينظّم / يضبط',ic:'i-loop'},
+ {w:'consumer',ar:'مستهلك',ic:'i-bag'},{w:'eco-friendly',ar:'صديق للبيئة',ic:'i-leaf'}];
+
+/* ================= quiz data ================= */
+var Q1=[
+ {q:'What does the word climate mean?',ar:'ماذا تعني كلمة «المناخ»؟',opts:['the effect of global warming','changes in the weather each day','the weather in one place over a period of time'],ok:2,n:'Climate = the weather in one place over a period of time.',nar:'المناخ هو حالة الطقس في مكان ما عبر فترة زمنية.'},
+ {q:'Climate change refers to…',ar:'«تغيّر المناخ» يشير إلى…',opts:['a change or increase in average global temperatures','the daily weather forecast','the names of the four seasons'],ok:0,n:'It refers to changes in the Earth’s weather, especially global warming.',nar:'يشير إلى تغيّرات في طقس الأرض وخاصة الاحترار العالمي.'},
+ {q:'Which of these is an effect of climate change?',ar:'أيّ مما يلي يُعدّ من آثار تغيّر المناخ؟',opts:['oceans are warming','ice caps are melting','sea levels are rising','All of these!'],ok:3,n:'Oceans warming, melting ice caps and rising sea levels — all effects!',nar:'تسخين المحيطات وذوبان الجليد وارتفاع البحار — كلها آثار.'},
+ {q:'As a result of climate change, we are experiencing more…',ar:'نتيجة تغيّر المناخ نعاني المزيد من…',opts:['droughts, floods and heat waves','snow and cold waves','rainbows and sunshine'],ok:0,n:'An increase in droughts, floods, heat waves and other climate disasters.',nar:'زيادة في الجفاف والفيضانات وموجات الحر والكوارث المناخية.'},
+ {q:'A drought is…',ar:'«الجفاف» يعني…',opts:['a long period with little or no rain','a very big storm','a flood in a city'],ok:0,n:'In a drought, farmers cannot grow crops or find land for their animals.',nar:'في الجفاف لا يستطيع المزارعون زراعة محاصيلهم أو إيجاد مرعى لحيواناتهم.'},
+ {q:'What might happen if we do not take action now?',ar:'ماذا قد يحدث إذا لم نتخذ إجراءً الآن؟',opts:['nothing at all','we may all be in danger in the future','the weather will get cooler'],ok:1,n:'If we do not take action now, we may all be in danger in the future.',nar:'إن لم نتحرك الآن فقد نكون جميعًا في خطر مستقبلًا.'}];
+var Q2=[
+ {q:'The Earth is getting hotter because there are more…',ar:'الأرض تسخن لأن هناك المزيد من…',opts:['greenhouses on Earth','greenhouse gases in the atmosphere','ice caps melting'],ok:1,n:'More greenhouse gases trap more heat.',nar:'المزيد من غازات الدفيئة يحبس مزيدًا من الحرارة.'},
+ {q:'Greenhouse gases are produced by…',ar:'تنتَج غازات الدفيئة من…',opts:['the atmosphere','trapped heat','burning fossil fuels and bacteria'],ok:2,n:'Burning fossil fuels releases carbon dioxide; bacteria produce methane.',nar:'حرق الوقود الأحفوري يطلق ثاني أكسيد الكربون، والبكتيريا تنتج الميثان.'},
+ {q:'The metaphor compares greenhouse gases to…',ar:'يشبّه النصُّ غازاتِ الدفيئة بـ…',opts:['the glass walls of a greenhouse','growing plants in a greenhouse','the sun’s heat'],ok:0,n:'The gases trap heat, just like glass walls trap the sun’s heat.',nar:'تحبس الغازات الحرارة كما تفعل جدران الدفيئة الزجاجية.'},
+ {q:'Countries and cities at sea-level are at risk from…',ar:'البلدان والمدن الساحلية معرّضة لخطر…',opts:['heat waves','droughts','floods'],ok:2,n:'Rising sea levels — caused by melting ice caps — cause flooding.',nar:'ارتفاع مستوى البحر بفعل ذوبان الجليد يسبب الفيضانات.'},
+ {q:'If we do not stop climate change, there will be…',ar:'إذا لم نوقف تغيّر المناخ فستكون هناك…',opts:['more animals and plants','serious consequences','small changes'],ok:1,n:'The problems will probably get worse.',nar:'ستتفاقم المشكلات غالبًا وتكون نتائجها خطيرة.'},
+ {q:'The chart shows global temperature…',ar:'يوضّح الرسم أن حرارة الأرض…',opts:['going down','staying the same','rising over time'],ok:2,n:'From about 13.68°C to about 14.47°C!',nar:'ارتفعت من نحو 13.68 إلى نحو 14.47 درجة!'}];
+var Q3=[
+ {q:'Polar bears are dying ______ melting ice.',ar:'تموت الدببة القطبية ______ ذوبان الجليد.',opts:['because of','therefore','so'],ok:0,n:'because of + the cause (melting ice).',nar:'because of تأتي قبل السبب وتسبقها النتيجة.'},
+ {q:'The Earth is getting hotter. ______, ice caps are melting.',ar:'الأرض تسخن. ______ تذوب القمم الجليدية.',opts:['Because of','Therefore','Due to'],ok:1,n:'Cause first → therefore + effect.',nar:'السبب أولًا ثم therefore فالنتيجة.'},
+ {q:'One ______ of burning fossil fuels is global warming.',ar:'إحدى ______ حرق الوقود الأحفوري هي الاحترار العالمي.',opts:['effect','climate','weather'],ok:0,n:'One effect of + cause + is + effect.',nar:'One effect of ثم السبب ثم is فالنتيجة.'},
+ {q:'In the sentence “Cars release greenhouse gases, so temperatures rise” — the CAUSE is…',ar:'في جملة «السيارات تطلق غازات الدفيئة، لذا ترتفع الحرارة» — السبب هو…',opts:['temperatures rise','cars release greenhouse gases','so'],ok:1,n:'The cause makes something happen; the effect is the result.',nar:'السبب هو ما يُحدث الأمر، والنتيجة ما يحدث بعده.'},
+ {q:'Which sentence puts the EFFECT first?',ar:'أيّ جملة تقدّم النتيجة على السبب؟',opts:['Because of droughts, farmers cannot grow crops.','Farmers cannot grow crops because of droughts.','Droughts are very long.'],ok:1,n:'Effect (farmers cannot grow crops) + because of + cause (droughts).',nar:'النتيجة أولًا ثم because of ثم السبب.'},
+ {q:'Heavier rainfall causes severe ______.',ar:'الأمطار الغزيرة تسبب ______ شديدة.',opts:['droughts','floods','snow'],ok:1,n:'Heavier rainfall and severe floods.',nar:'أمطار أغزر وفيضانات أشد.'}];
+var Q4=[
+ {q:'An emission is…',ar:'«الانبعاث» هو…',opts:['the act of releasing gas, heat or light','the act of burning fossil fuels','a type of cloud'],ok:0,n:'Emission = the act of releasing gas, heat or light.',nar:'الانبعاث: إطلاق الغاز أو الحرارة أو الضوء.'},
+ {q:'If something is your responsibility, it is…',ar:'إذا كان شيءٌ مسؤوليتك فهو…',opts:['something you are paid to deal with','your job or duty to deal with','something you can ignore'],ok:1,n:'Responsibility = your job or duty.',nar:'المسؤولية: ما يجب عليك القيام به.'},
+ {q:'To regulate means…',ar:'«ينظّم» تعني…',opts:['to control something','to stop something','to buy something'],ok:0,n:'Regulate = to control something.',nar:'ينظّم أي يضبط ويتحكم في.'},
+ {q:'A consumer is…',ar:'«المستهلك» هو…',opts:['a person who sells goods or services','a person who buys goods or services','a person who makes laws'],ok:1,n:'Consumer = a person who buys goods or services.',nar:'المستهلك يشتري السلع والخدمات.'},
+ {q:'Eco-friendly means…',ar:'«صديق للبيئة» يعني…',opts:['designed not to damage the environment','very expensive','made of plastic'],ok:0,n:'Eco-friendly = designed not to damage the environment.',nar:'مصمم بحيث لا يضر البيئة.'},
+ {q:'“Thunderstorm”, “textbook” and “sunglasses” are compound nouns written…',ar:'«Thunderstorm» و«textbook» و«sunglasses» أسماء مركّبة تُكتب…',opts:['with a hyphen','as two separate words','as one joined word'],ok:2,n:'Joined: armchair, classmate, sunglasses, textbook, thunderstorm.',nar:'كلمة واحدة ملتصقة: مثل armchair وclassmate.'}];
+var Q5=[
+ {q:'Plastic waste is lightweight. How does it end up in the ocean?',ar:'نفايات البلاستيك خفيفة. كيف تصل إلى المحيط؟',opts:['It gets blown or washed into the ocean.','Fish carry it there.','Ships make it in the sea.'],ok:0,n:'It is lightweight, so it often gets blown or washed into the ocean.',nar:'خفّته تجعلها تُحمل بالريح أو تُجرف إلى البحر.'},
+ {q:'Which single-use plastic items are mentioned?',ar:'أيّ أدوات بلاستيكية تُستخدم مرة واحدة ذُكرت؟',opts:['old fridges and cookers','cups, straws, packaging and bottles','wooden furniture'],ok:1,n:'Packaging, cups, straws — and a million plastic bottles are sold every minute!',nar:'التغليف والأكواب والمصاصات — ومليون زجاجة تُباع كل دقيقة!'},
+ {q:'Why is ocean plastic also a threat to humans?',ar:'لماذا يشكّل بلاستيك المحيط خطرًا على البشر أيضًا؟',opts:['It makes the sea colder.','You may eat plastic pieces when you eat fish.','It changes the colour of the sea.'],ok:1,n:'Scientists discovered that fish may contain pieces of plastic.',nar:'اكتشف العلماء أن الأسماك قد تحتوي قطعًا من البلاستيك.'},
+ {q:'The author first states his or her opinion (“I believe…”) in…',ar:'يذكر الكاتب رأيه أول مرة («أعتقد…») في…',opts:['Paragraph 1','Paragraph 3','Paragraph 4'],ok:0,n:'In Paragraph 1: “I believe that we must use less plastic.”',nar:'في الفقرة الأولى: «أعتقد أننا يجب أن نقلل البلاستيك».'},
+ {q:'“To sum up, …” is used to…',ar:'تُستخدم عبارة «To sum up» من أجل…',opts:['start a new idea','summarise the points','ask a question'],ok:1,n:'It signals the conclusion of the essay.',nar:'إشارة إلى خاتمة المقال وتلخيص النقاط.'},
+ {q:'Instead of single-use bottles, we could use…',ar:'بدل الزجاجات التي تُستخدم مرة واحدة يمكننا استخدام…',opts:['reusable bottles','bigger plastic bottles','metal straws'],ok:0,n:'Reusable bottles help reduce plastic in the ocean.',nar:'الزجاجات القابلة لإعادة الاستخدام تقلل البلاستيك في المحيط.'}];
+var BOSSQ=[
+ {q:'Climate means…',ar:'«المناخ» يعني…',opts:['changes in the weather each day','the weather in one place over a period of time','the effect of floods'],ok:1},
+ {q:'Greenhouse gases ______ heat in the atmosphere.',ar:'غازات الدفيئة ______ الحرارة في الغلاف الجوي.',opts:['trap','cool','delete'],ok:0},
+ {q:'Burning fossil fuels such as coal, oil and gas releases…',ar:'حرق الوقود الأحفوري كالفحم والنفط والغاز يطلق…',opts:['oxygen','carbon dioxide','rainbows'],ok:1},
+ {q:'Polar bears are dying because of…',ar:'تموت الدببة القطبية بسبب…',opts:['melting ice','too many fish','cold weather'],ok:0},
+ {q:'Your carbon footprint is…',ar:'بصمتك الكربونية هي…',opts:['the amount of greenhouse gases you release','the size of your shoes','your electricity bill'],ok:0},
+ {q:'By 2050, there may be more ______ in the oceans than fish.',ar:'بحلول 2050 قد يصبح ______ في المحيطات أكثر من الأسماك.',opts:['plastic','ships','clouds'],ok:0},
+ {q:'Eco-friendly means…',ar:'«صديق للبيئة» يعني…',opts:['designed not to damage the environment','very expensive','made of gold'],ok:0},
+ {q:'Fighting climate change is…',ar:'مكافحة تغيّر المناخ هي…',opts:['only the government’s job','everyone’s responsibility','impossible'],ok:1}];
+
+/* ================= renderers ================= */
+function spk(t){return '<button class="spk" data-say="'+t+'">'+IC('i-speaker')+'</button>'}
+function renderVocab(mount,items){document.getElementById(mount).innerHTML=items.map(function(it){
+ return '<div class="wcard">'+spk(it.w)+IC(it.ic)+'<div class="w">'+it.w+'</div><div class="war" dir="rtl">'+it.ar+'</div></div>'}).join('')}
+function renderFlip(mount,items){document.getElementById(mount).innerHTML=items.map(function(it){
+ return '<div class="fc" tabindex="0"><div class="fi">'+
+ '<div class="ff">'+spk(it.w)+IC(it.ic)+'<div class="fw">'+it.w+'</div><div class="fhint">tap to flip<span class="ar" dir="rtl">انقر للقلب</span></div></div>'+
+ '<div class="fbk"><p class="den">'+it.en+'</p><p class="dar" dir="rtl">'+it.ar+'</p><p class="dex">'+it.ex+'</p></div>'+
+ '</div></div>'}).join('')}
+function renderQuiz(mount,list){var m=document.getElementById(mount);
+ m.innerHTML=list.map(function(it,i){
+ return '<div class="qz" data-i="'+i+'"><p class="qq">'+(i+1)+'. '+it.q+'</p><p class="qar" dir="rtl">'+it.ar+'</p>'+
+ '<div class="opts">'+it.opts.map(function(o,j){return '<button class="opt" data-j="'+j+'">'+o+'</button>'}).join('')+'</div>'+
+ '<div class="qfb"></div></div>'}).join('');
+ Array.prototype.forEach.call(m.querySelectorAll('.qz'),function(qz){
+  var tries=0,hurt=false,it=list[+qz.getAttribute('data-i')];
+  if(MODE==='level')L.qNeed++;
+  Array.prototype.forEach.call(qz.querySelectorAll('.opt'),function(opt){
+   opt.addEventListener('click',function(){
+    if(qz.classList.contains('lock'))return;
+    var j=+opt.getAttribute('data-j'),fb=qz.querySelector('.qfb');
+    if(j===it.ok){
+     qz.classList.add('lock');opt.classList.add('ok');
+     var first=(tries===0);
+     addXP(first?10:5);if(first)streakUp();
+     if(MODE==='level'){L.qDone++;updateFinishBtn()}
+     fb.className='qfb on good';
+     fb.innerHTML=IC('i-check')+'<b>'+(first?'Perfect! +10 XP':'Correct! +5 XP')+'</b>'+
+      '<span class="fb-ar" dir="rtl">إجابة صحيحة</span>'+
+      (it.n?'<span class="fn">'+it.n+'</span><span class="fb-ar" dir="rtl">'+(it.nar||'')+'</span>':'');
+     sfx('correct');burst(opt,18);mascotReact('happy');
+    }else{
+     tries++;opt.classList.add('no');setTimeout(function(){opt.classList.remove('no')},500);
+     sfx('wrong');mascotReact('sad');streakCut();
+     if(!hurt){hurt=true;if(MODE==='level'){L.wrongs++;loseHeart()}}
+     fb.className='qfb on bad';
+     fb.innerHTML='<b>Not quite — try again!</b><span class="fb-ar" dir="rtl">ليست الإجابة — حاول مرة أخرى</span>';
+    }})})})}
+
+/* ================= LINK GAME ================= */
+var LCOLORS=['#4D96FF','#29C0B2','#FFA62B','#9B5DE5','#F15BB5','#FF6B6B'];
+function LinkGame(rootId,pairs){
+ var root=document.getElementById(rootId);
+ root.classList.add('lg');
+ root.innerHTML='';
+ var grid=document.createElement('div');grid.className='lg-grid';
+ var colL=document.createElement('div');colL.className='lg-col';
+ var colR=document.createElement('div');colR.className='lg-col';
+ grid.appendChild(colL);grid.appendChild(colR);
+ var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+ svg.setAttribute('class','lg-svg');
+ var won=document.createElement('div');won.className='wonbar';
+ won.innerHTML=IC('i-check')+'<div><b>All connected! Great job!</b><span class="ar" dir="rtl">وصلت كل العناصر بنجاح!</span></div>';
+ root.appendChild(grid);root.appendChild(svg);root.appendChild(won);
+ shuffle(pairs).forEach(function(p){
+  var c=document.createElement('div');c.className='lg-chip';c.setAttribute('data-k',p.k);
+  c.innerHTML=p.a;colL.appendChild(c)});
+ shuffle(pairs).forEach(function(p){
+  var c=document.createElement('div');c.className='lg-chip';c.setAttribute('data-k',p.k);
+  c.innerHTML=p.b;colR.appendChild(c)});
+ var selL=null,selR=null,done=0,lines=[];
+ function anchor(el,side){var c=root.getBoundingClientRect(),r=el.getBoundingClientRect();
+  return side==='L'?{x:r.right-c.left,y:r.top-c.top+r.height/2}:{x:r.left-c.left,y:r.top-c.top+r.height/2}}
+ function pathD(a,b){var dx=Math.max(36,Math.abs(b.x-a.x)*.45);
+  return 'M'+a.x+' '+a.y+' C'+(a.x+dx)+' '+a.y+', '+(b.x-dx)+' '+b.y+', '+b.x+' '+b.y}
+ function solidPath(d,color){var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d',d);p.setAttribute('class','lg-line');p.setAttribute('stroke',color);
+  svg.appendChild(p);
+  var len=p.getTotalLength();
+  p.style.strokeDasharray=len;p.style.strokeDashoffset=len;
+  requestAnimationFrame(function(){p.style.transition='stroke-dashoffset .45s cubic-bezier(.3,.8,.3,1)';p.style.strokeDashoffset='0'});
+  setTimeout(function(){p.style.strokeDasharray='none';p.style.transition='none'},520);
+  return p}
+ function tempPath(d){var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d',d);p.setAttribute('class','lg-line lg-temp');p.setAttribute('stroke','#FF6B6B');
+  svg.appendChild(p);setTimeout(function(){p.remove()},680)}
+ function redraw(){if(!root.offsetWidth)return;
+  lines.forEach(function(o){o.p.setAttribute('d',pathD(anchor(o.a,'L'),anchor(o.b,'R')))})}
+ var rt=null;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(redraw,160)});
+ function evaluate(){var a=selL,b=selR;selL=selR=null;
+  if(a.getAttribute('data-k')===b.getAttribute('data-k')){
+   a.classList.remove('sel');b.classList.remove('sel');
+   a.classList.add('done');b.classList.add('done');
+   lines.push({a:a,b:b,p:solidPath(pathD(anchor(a,'L'),anchor(b,'R')),LCOLORS[done%LCOLORS.length])});
+   done++;addXP(8);streakUp();sfx('match');burst(b,14);
+   if(done===pairs.length){won.classList.add('on');sfx('fanfare');confettiRain();
+    if(MODE==='level'&&L.matchNeed){L.matchDone=true;updateFinishBtn()}}
+  }else{
+   sfx('wrong');streakCut();
+   if(MODE==='level')L.wrongs++;
+   tempPath(pathD(anchor(a,'L'),anchor(b,'R')));
+   [a,b].forEach(function(x){x.classList.remove('sel');x.classList.add('err')});
+   setTimeout(function(){[a,b].forEach(function(x){x.classList.remove('err')})},520)
+  }}
+ function wire(col,side){Array.prototype.forEach.call(col.children,function(chip){
+  chip.addEventListener('click',function(e){
+   if(e.target.closest('.spk'))return;
+   if(chip.classList.contains('done'))return;
+   sfx('pop');
+   Array.prototype.forEach.call(col.children,function(x){if(x!==chip)x.classList.remove('sel')});
+   var cur=(side==='L')?selL:selR;
+   if(cur===chip){chip.classList.remove('sel');if(side==='L')selL=null;else selR=null;return}
+   chip.classList.add('sel');
+   if(side==='L')selL=chip;else selR=chip;
+   if(selL&&selR)evaluate()})})}
+ wire(colL,'L');wire(colR,'R')}
+
+/* ================= bag builder ================= */
+var BAGCOL={blue:{fill:'#4D96FF',txt:'#fff',name:'Ocean Blue',arn:'أزرق المحيط'},
+ green:{fill:'#34A853',txt:'#fff',name:'Earth Green',arn:'أخضر الأرض'},
+ yellow:{fill:'#FFD166',txt:'#5A4500',name:'Sun Yellow',arn:'أصفر الشمس'},
+ pink:{fill:'#F15BB5',txt:'#fff',name:'Coral Pink',arn:'وردي المرجان'}};
+function wrapText(s,max){var words=s.split(' '),lines=[],cur='';
+ words.forEach(function(w){
+  if((cur+' '+w).trim().length<=max){cur=(cur+' '+w).trim()}
+  else{if(cur)lines.push(cur);cur=w}});
+ if(cur)lines.push(cur);
+ if(lines.length>3){lines=lines.slice(0,3);lines[2]=lines[2].slice(0,max-1)+'…'}
+ return lines}
+function buildBagSVG(colKey,slogan,msg){
+ var c=BAGCOL[colKey];
+ var sl=wrapText(slogan,17),ml=wrapText(msg,26).slice(0,2);
+ var sfs=sl.some(function(l){return l.length>15})?13:15;
+ var ys=[138,158,178].slice(0,sl.length);
+ var t='';
+ sl.forEach(function(l,i){t+='<text x="120" y="'+ys[i]+'" text-anchor="middle" font-family="Lilita One" font-size="'+sfs+'" fill="'+c.txt+'">'+l.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</text>'});
+ var t2='';
+ ml.forEach(function(l,i){t2+='<text x="120" y="'+(198+i*15)+'" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="11" fill="'+c.txt+'" opacity=".9">'+l.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</text>'});
+ return '<svg viewBox="0 0 240 250" style="width:min(230px,80vw);height:auto;filter:drop-shadow(0 7px 0 rgba(61,52,80,.15))">'+
+ '<path d="M88 64 C88 26 152 26 152 64" fill="none" stroke="#3D3450" stroke-width="9" stroke-linecap="round"/>'+
+ '<rect x="52" y="62" width="136" height="164" rx="16" fill="'+c.fill+'" stroke="#3D3450" stroke-width="5"/>'+
+ '<path d="M120 92c-9 0-16-7-17-16 9 0 16 7 17 16z" fill="'+c.txt+'" opacity=".85"/>'+
+ '<path d="M120 92c9 0 16-7 17-16-9 0-16 7-17 16z" fill="'+c.txt+'" opacity=".6"/>'+
+ t+t2+
+ '</svg>'}
+
+/* ================= level machinery ================= */
+function buildLevel(n){
+ switch(n){
+  case 1:
+   renderVocab('m-l1voc',V_L1);
+   L.matchNeed=true;
+   LinkGame('m-match',[
+    {k:'hw',a:spk('heat wave')+'<span>heat wave</span>',b:'<span class="ci">'+CL('i-sun')+'</span><span class="ar" dir="rtl">موجة حرّارة</span>'},
+    {k:'fl',a:spk('flood')+'<span>flood</span>',b:'<span class="ci">'+CL('i-rain')+'</span><span class="ar" dir="rtl">فيضان</span>'},
+    {k:'dr',a:spk('drought')+'<span>drought</span>',b:'<span class="ci">'+CL('i-drop')+'</span><span class="ar" dir="rtl">جفاف</span>'},
+    {k:'sl',a:spk('sea level rise')+'<span>sea level rise</span>',b:'<span class="ci">'+CL('i-wave')+'</span><span class="ar" dir="rtl">ارتفاع مستوى البحر</span>'},
+    {k:'ic',a:spk('ice caps')+'<span>ice caps</span>',b:'<span class="ci">'+CL('i-snow')+'</span><span class="ar" dir="rtl">القمم الجليدية</span>'},
+    {k:'cl',a:spk('climate')+'<span>climate</span>',b:'<span class="ci">'+CL('i-earth')+'</span><span class="ar" dir="rtl">المناخ</span>'}]);
+   renderQuiz('m-l1q',Q1);break;
+  case 2:
+   renderFlip('m-l2flip',V_L2FLIP);renderQuiz('m-l2q',Q2);break;
+  case 3:
+   renderQuiz('m-l3q',Q3);break;
+  case 4:
+   renderVocab('m-l4voc',V_L4);
+   L.matchNeed=true;
+   LinkGame('m-comp',[
+    {k:'sg',a:spk('sunglasses')+'<span>sunglasses</span>',b:'<span class="ci">'+CL('i-sun')+CL('i-glasses')+'</span><span class="ar" dir="rtl">نظارة شمسية</span>'},
+    {k:'ts',a:spk('thunderstorm')+'<span>thunderstorm</span>',b:'<span class="ci">'+CL('i-cloud')+CL('i-bolt')+'</span><span class="ar" dir="rtl">عاصفة رعدية</span>'},
+    {k:'tb',a:spk('textbook')+'<span>textbook</span>',b:'<span class="ci">'+CL('i-book')+CL('i-pen')+'</span><span class="ar" dir="rtl">كتاب مدرسي</span>'},
+    {k:'cm',a:spk('classmate')+'<span>classmate</span>',b:'<span class="ci">'+CL('i-person')+CL('i-person')+'</span><span class="ar" dir="rtl">زميل الصف</span>'},
+    {k:'ac',a:spk('alarm clock')+'<span>alarm clock</span>',b:'<span class="ci">'+CL('i-bell')+CL('i-clock')+'</span><span class="ar" dir="rtl">منبّه</span>'},
+    {k:'hw',a:spk('heat wave')+'<span>heat wave</span>',b:'<span class="ci">'+CL('i-sun')+CL('i-wave')+'</span><span class="ar" dir="rtl">موجة حرّارة</span>'}]);
+   renderQuiz('m-l4q',Q4);break;
+  case 5:
+   L.matchNeed=true;
+   LinkGame('m-essay',[
+    {k:'p1',a:'<span>Paragraph 1</span>',b:'Explain the topic &amp; state your opinion<span class="ar" dir="rtl">يشرح الموضوع ويعرض الرأي</span>'},
+    {k:'p2',a:'<span>Paragraph 2</span>',b:'Present an idea with examples<span class="ar" dir="rtl">فكرة مع أمثلة داعمة</span>'},
+    {k:'p3',a:'<span>Paragraph 3</span>',b:'Present another idea with examples<span class="ar" dir="rtl">فكرة أخرى مع أمثلة</span>'},
+    {k:'p4',a:'<span>Paragraph 4</span>',b:'Summarise your points<span class="ar" dir="rtl">يلخّص النقاط ويذكّر بالرأي</span>'}]);
+   renderQuiz('m-l5q',Q5);break;
+  case 6:
+   break}}
+function startLevel(n){
+ MODE='level';
+ L={lvl:n,step:0,hearts:3,wrongs:0,qNeed:0,qDone:0,matchNeed:false,matchDone:false,bag:false};
+ buildLevel(n);
+ show('l'+n);
+ var scr=$('#scr-l'+n);
+ if(!scr){show('map');return}
+ L.steps=scr.querySelectorAll('.step');
+ var dots=scr.querySelector('.lvl-dots');
+ dots.innerHTML='';
+ Array.prototype.forEach.call(L.steps,function(_,i){
+  var d=document.createElement('button');d.className='ldot';d.type='button';
+  d.addEventListener('click',function(){if(MODE==='level'&&i<=L.step){sfx('click');showStep(i)}});
+  dots.appendChild(d)});
+ Array.prototype.forEach.call(scr.querySelectorAll('.step-next'),function(b){b.remove()});
+ var last=L.steps.length-1;
+ Array.prototype.forEach.call(L.steps,function(s,i){
+  var b=document.createElement('button');b.type='button';b.className='btn step-next';
+  b.innerHTML='<span class="sn-en">Next</span><span class="b-ar sn-ar" dir="rtl">التالي</span>';
+  b.addEventListener('click',function(){sfx('click');
+   if(i<last)showStep(i+1);else finishLevel()});
+  s.appendChild(b)});
+ $('#hudHearts').classList.remove('hidden');
+ renderHearts();showStep(0)}
+function showStep(i){L.step=i;
+ var scr=$('#scr-l'+L.lvl);
+ Array.prototype.forEach.call(L.steps,function(s,j){s.classList.toggle('on',j===i)});
+ Array.prototype.forEach.call(scr.querySelectorAll('.ldot'),function(d,j){d.className='ldot'+(j===i?' cur':(j<i?' done':''))});
+ var st=L.steps[i];
+ scr.querySelector('.tip-en').textContent=st.getAttribute('data-tip')||'';
+ scr.querySelector('.tip-ar').textContent=st.getAttribute('data-tipar')||'';
+ var bub=scr.querySelector('.bubble');bub.classList.remove('bp');void bub.offsetWidth;bub.classList.add('bp');
+ updateFinishBtn();
+ window.scrollTo({top:0,behavior:'smooth'})}
+function reqState(){var left=0;
+ if(L.qNeed>L.qDone)left+=L.qNeed-L.qDone;
+ if(L.matchNeed&&!L.matchDone)left++;
+ if(L.lvl===6&&!L.bag)left++;
+ return{ok:left===0,left:left}}
+function updateFinishBtn(){
+ if(MODE!=='level'||!L.steps)return;
+ var b=L.steps[L.steps.length-1].querySelector('.step-next');if(!b)return;
+ var r=reqState(),en=b.querySelector('.sn-en'),ar=b.querySelector('.sn-ar');
+ if(r.ok){b.classList.remove('blocked');en.textContent='Finish Level!';ar.textContent='أنهِ المرحلة'}
+ else{b.classList.add('blocked');
+  en.textContent='Finish · '+r.left+' task'+(r.left>1?'s':'')+' left';
+  ar.textContent='أكمل المهام المتبقية'}}
+function finishLevel(){
+ var r=reqState();
+ if(!r.ok){sfx('wrong');
+  toast('Not so fast!','أجب عن جميع الأسئلة وأكمل الألعاب أولًا','i-flame','var(--ink)');
+  var b=L.steps[L.steps.length-1].querySelector('.step-next');
+  if(b){b.classList.remove('nshake');void b.offsetWidth;b.classList.add('nshake')}
+  return}
+ MODE=null;$('#hudHearts').classList.add('hidden');
+ var stars=Math.max(1,3-Math.min(2,L.wrongs));
+ S.stars[L.lvl]=Math.max(S.stars[L.lvl]||0,stars);
+ S.unlocked=Math.max(S.unlocked,L.lvl<6?L.lvl+1:7);
+ var bonus=15+stars*5;addXP(bonus);
+ award(BMAP[L.lvl]);
+ if(L.wrongs===0){addXP(10);toast('Perfect!','مرحلة كاملة بلا أخطاء!','i-star','var(--gold)')}
+ save();sfx('fanfare');showComplete(stars,bonus)}
+function showComplete(stars,bonus){
+ var lv=LEVELS[L.lvl-1];
+ var nextBtn=L.lvl<6
+  ?'<button class="btn" data-act="next" style="--bc:var(--'+lv.c+');--bcd:var(--'+lv.c+'D)"><span>Next Level</span><span class="b-ar" dir="rtl">المرحلة التالية</span></button>'
+  :'<button class="btn" data-act="boss" style="--bc:var(--green);--bcd:var(--greenD)"><span>Face the Boss!</span><span class="b-ar" dir="rtl">واجه الوحش!</span></button>';
+ ovl.innerHTML='<div class="ovl-card">'+
+ '<div class="ovl-kick" style="color:var(--'+lv.c+'D)">LEVEL '+L.lvl+' COMPLETE</div>'+
+ '<h3 class="ovl-t">Great job!</h3>'+
+ '<p class="ovl-ar ar" dir="rtl">أحسنت! أكملت «'+lv.ar+'»</p>'+
+ '<div class="big-stars">'+[0,1,2].map(function(){return '<span class="bst">'+IC('i-star')+'</span>'}).join('')+'</div>'+
+ '<p class="ovl-xp">'+IC('i-bolt')+' +'+bonus+' XP bonus</p>'+
+ '<div class="ovl-btns"><button class="btn ghost" data-act="map"><span>Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>'+nextBtn+'</div></div>';
+ ovl.classList.add('on');
+ Array.prototype.forEach.call(ovl.querySelectorAll('.bst'),function(s,i){
+  if(i<stars)setTimeout(function(){s.classList.add('lit');sfx('star',i)},600+i*420)})}
+
+/* ================= boss ================= */
+function startBoss(){
+ MODE='boss';B={q:0,hp:8,hearts:3};
+ show('boss');
+ $('#hudHearts').classList.remove('hidden');
+ var mon=$('#monSvg');mon.classList.remove('dead');
+ $('#hpFill').style.width='100%';
+ renderHearts();renderBossQ()}
+function renderBossQ(){
+ var it=BOSSQ[B.q],box=$('#bq');
+ box.innerHTML='<div class="qz"><p class="bprog">'+IC('i-flame')+' QUESTION '+(B.q+1)+' OF 8</p>'+
+ '<p class="qq">'+it.q+'</p><p class="qar" dir="rtl">'+it.ar+'</p>'+
+ '<div class="opts">'+it.opts.map(function(o,j){return '<button class="opt" data-j="'+j+'">'+o+'</button>'}).join('')+'</div>'+
+ '<div class="qfb"></div></div>';
+ var qz=box.querySelector('.qz'),hurt=false;
+ Array.prototype.forEach.call(box.querySelectorAll('.opt'),function(opt){
+  opt.addEventListener('click',function(){
+   if(qz.classList.contains('lock'))return;
+   var j=+opt.getAttribute('data-j'),fb=box.querySelector('.qfb');
+   if(j===it.ok){
+    qz.classList.add('lock');opt.classList.add('ok');
+    fb.className='qfb on good';
+    fb.innerHTML=IC('i-check')+'<b>Cooling hit! −1°</b><span class="fb-ar" dir="rtl">ضربة تبريد! حرارة الوحش تنخفض</span>';
+    sfx('cool');burst(opt,18);mascotReact('happy');addXP(15);bossHit();
+   }else{
+    sfx('wrong');mascotReact('sad');streakCut();
+    opt.classList.add('no');setTimeout(function(){opt.classList.remove('no')},500);
+    fb.className='qfb on bad';
+    fb.innerHTML='<b>Try again!</b><span class="fb-ar" dir="rtl">حاول مرة أخرى</span>';
+    if(!hurt){hurt=true;loseHeart()}
+   }})})}
+function bossHit(){
+ B.hp--;$('#hpFill').style.width=(B.hp/8*100)+'%';
+ var mon=$('#monSvg');mon.classList.remove('hit');void mon.offsetWidth;mon.classList.add('hit');
+ sfx('hit');
+ var d=document.createElement('span');d.className='dmg';d.textContent='−1°';
+ $('#monWrap').appendChild(d);setTimeout(function(){d.remove()},900);
+ if(B.hp<=0){bossWin()}
+ else{setTimeout(function(){B.q++;renderBossQ()},800)}}
+function bossWin(){
+ $('#monSvg').classList.add('dead');
+ $('#bq').innerHTML='<div class="gcard mondead">'+IC('i-snow')+'<p>PLANET COOLED!</p><p class="ar" dir="rtl">لقد برّدتَ الكوكب!</p></div>';
+ sfx('fanfare');confettiRain();award('boss');addXP(40);save();
+ setTimeout(function(){
+  ovl.innerHTML='<div class="ovl-card">'+
+  '<div class="ovl-kick" style="color:var(--skyD)">VICTORY!</div>'+
+  '<h3 class="ovl-t">You defeated the Heat Monster!</h3>'+
+  '<p class="ovl-ar ar" dir="rtl">انتصرت على وحش الحرارة!</p>'+
+  '<div class="big-stars">'+[0,1,2].map(function(){return '<span class="bst">'+IC('i-star')+'</span>'}).join('')+'</div>'+
+  '<div class="ovl-btns"><button class="btn ghost" data-act="map"><span>Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>'+
+  '<button class="btn" data-act="win" style="--bc:var(--gold);--bcd:var(--goldD);color:#7A5B00"><span>Claim Victory</span><span class="b-ar" dir="rtl">استلم نصرك</span></button></div></div>';
+  ovl.classList.add('on');
+  Array.prototype.forEach.call(ovl.querySelectorAll('.bst'),function(s,i){setTimeout(function(){s.classList.add('lit');sfx('star',i)},500+i*380)})
+ },1300)}
+function bossFail(){
+ MODE=null;$('#hudHearts').classList.add('hidden');sfx('wrong');
+ ovl.innerHTML='<div class="ovl-card">'+
+ '<div class="ovl-kick" style="color:var(--coralD)">TOO HOT!</div>'+
+ '<h3 class="ovl-t">The Heat Monster wins this round!</h3>'+
+ '<p class="ovl-ar ar" dir="rtl">انتصر وحش الحرارة هذه المرة!</p>'+
+ '<p class="ovl-p">Take a deep breath… and try again. You can cool him down!</p>'+
+ '<p class="ovl-ar ar" dir="rtl">خذ نفسًا عميقًا وحاول من جديد — أنت تستطيع تبريده!</p>'+
+ '<div class="ovl-btns"><button class="btn ghost" data-act="map"><span>Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>'+
+ '<button class="btn" data-act="retry" style="--bc:var(--sky);--bcd:var(--skyD)"><span>Retry</span><span class="b-ar" dir="rtl">حاول مجددًا</span></button></div></div>';
+ ovl.classList.add('on')}
+
+/* ================= win ================= */
+function showWin(){
+ MODE=null;$('#hudHearts').classList.add('hidden');
+ show('win');
+ $('#winXp').textContent=S.xp;
+ $('#winStars').textContent=Object.keys(S.stars).reduce(function(a,k){return a+S.stars[k]},0);
+ $('#winBdg').textContent=S.badges.length;
+ $('#winBadges').innerHTML=BADGES.map(function(b){
+  var has=S.badges.indexOf(b.id)>=0;
+  return '<div class="bdg'+(has?'':' lock')+'" style="--bc:'+b.c+'"><span class="bdg-ic">'+IC(has?b.ic:'i-lock')+'</span><b>'+b.t+'</b><span class="ar" dir="rtl">'+b.ar+'</span></div>'}).join('');
+ confettiRain();setTimeout(confettiRain,900);setTimeout(confettiRain,1800)}
+
+/* ================= global delegation ================= */
+document.addEventListener('click',function(e){
+ var sp=e.target.closest('.spk');if(sp){speakSay(sp);return}
+ var f=e.target.closest('.fc');if(f){f.classList.toggle('flip');sfx('pop');return}
+ var eco=e.target.closest('.ecochip');
+ if(eco&&!eco.classList.contains('bagcol')&&!eco.classList.contains('bagmat')){eco.classList.toggle('sel');sfx('pop');return}
+ var insp=e.target.closest('.insp');
+ if(insp){sfx('pop');$('#bagSlogan').value=insp.getAttribute('data-s');
+  Array.prototype.forEach.call($$('.insp'),function(x){x.classList.remove('sel')});
+  insp.classList.add('sel');return}
+ var bcol=e.target.closest('.bagcol');
+ if(bcol){sfx('pop');
+  Array.prototype.forEach.call($$('.bagcol'),function(x){x.classList.remove('sel')});
+  bcol.classList.add('sel');return}
+ var bmat=e.target.closest('.bagmat');
+ if(bmat){sfx('pop');
+  Array.prototype.forEach.call($$('.bagmat'),function(x){x.classList.remove('sel')});
+  bmat.classList.add('sel');return}
+ var rv=e.target.closest('.rvbtn');
+ if(rv&&!rv.getAttribute('id')){
+  var box=rv.closest('.talkcard'),t=box.querySelector('.rvt');
+  t.classList.toggle('on');var open=t.classList.contains('on');
+  rv.querySelector('.rv-en').textContent=open?'Hide':'Show';
+  rv.querySelector('.rv-ar').textContent=open?'إخفاء':'أظهر';sfx('pop');return}
+ var nd=e.target.closest('.node');if(nd){nodeClick(nd);return}});
+ovl.addEventListener('click',function(e){
+ var b=e.target.closest('[data-act]');if(!b)return;
+ sfx('click');var a=b.getAttribute('data-act');
+ if(a==='map'){hideOvl();show('map')}
+ else if(a==='next'){hideOvl();startLevel(L.lvl+1)}
+ else if(a==='boss'){hideOvl();startBoss()}
+ else if(a==='retry'){hideOvl();startBoss()}
+ else if(a==='win'){hideOvl();showWin()}
+ else if(a==='resetNo'){hideOvl()}
+ else if(a==='resetYes'){doReset()}});
+document.addEventListener('keydown',function(e){
+ if(MODE!=='level'||!L||!L.steps)return;
+ if(e.key==='ArrowRight'&&L.step<L.steps.length-1)showStep(L.step+1);
+ else if(e.key==='ArrowLeft'&&L.step>0)showStep(L.step-1)});
+
+/* ================= bag create ================= */
+ $('#bagGo').addEventListener('click',function(){
+ sfx('click');
+ var msg=$('#bagMsg').value.trim();
+ var slogan=$('#bagSlogan').value.trim();
+ var colEl=document.querySelector('.bagcol.sel');
+ var matEl=document.querySelector('.bagmat.sel');
+ if(!msg||!slogan||!colEl||!matEl){
+  sfx('wrong');
+  toast('Complete your design!','أكمل الرسالة والشعار واللون والخامة أولًا','i-bag','var(--ink)');
+  var b=$('#bagGo');b.classList.remove('nshake');void b.offsetWidth;
+  b.style.animation='none';b.classList.remove('nshake');
+  return}
+ var colKey=colEl.getAttribute('data-col');
+ var mat=matEl.getAttribute('data-mat');
+ var c=BAGCOL[colKey];
+ $('#bagBody').innerHTML=buildBagSVG(colKey,slogan,msg)+
+ '<p class="bag-note" style="color:'+c.fill+'">Colour: '+c.name+' · Material: '+mat+
+ '<span class="ar" dir="rtl">اللون: '+c.arn+' · الخامة: '+(mat==='Recycled plastic bottles'?'زجاجات معاد تدويرها':mat==='Cotton'?'قطن':'ورق معاد تدويره')+'</span></p>';
+ $('#bagPrev').classList.add('ready');
+ burst($('#bagPrev'),26);sfx('fanfare');
+ if(MODE==='level'&&!L.bag){L.bag=true;addXP(15);toast('Bag Designer!','صممت حقيبتك البيئية الأولى!','i-bag','var(--pink)')}
+ updateFinishBtn()});
+
+/* ================= reset ================= */
+function confirmReset(){sfx('click');
+ ovl.innerHTML='<div class="ovl-card"><h3 class="ovl-t">Reset progress?</h3>'+
+ '<p class="ovl-ar ar" dir="rtl">هل تريد حذف كل التقدم والبدء من جديد؟</p>'+
+ '<div class="ovl-btns"><button class="btn ghost" data-act="resetNo"><span>No</span><span class="b-ar" dir="rtl">لا</span></button>'+
+ '<button class="btn" data-act="resetYes" style="--bc:var(--coral);--bcd:var(--coralD)"><span>Yes, reset</span><span class="b-ar" dir="rtl">نعم، احذف</span></button></div></div>';
+ ovl.classList.add('on')}
+function doReset(){try{localStorage.removeItem(KEY)}catch(e){}
+ S={xp:0,stars:{},unlocked:1,badges:[],streak:0};xpShown=0;$('#xpN').textContent='0';
+ hideOvl();show('title')}
+
+/* ================= init ================= */
+Array.prototype.forEach.call($$('.tabby-slot'),function(s){s.innerHTML=tabbySVG()});
+var tkWords=V_L1.map(function(v){return v.w}).concat(['greenhouse gases','fossil fuels','atmosphere','carbon footprint','recycle','eco-friendly','emission']);
+ $('#tk').innerHTML=tkWords.concat(tkWords).map(function(w){return '<span class="tkchip">'+w+'</span>'}).join('');
+ $('#startBtn').addEventListener('click',function(){initAudio();sfx('click');show('map')});
+ $('#hudHome').addEventListener('click',function(){sfx('click');show('map')});
+ $('#mapReset').addEventListener('click',confirmReset);
+ $('#winMapBtn').addEventListener('click',function(){sfx('click');show('map')});
+ $('#winAgainBtn').addEventListener('click',confirmReset);
+ $('#sndBtn').addEventListener('click',function(){
+ muted=!muted;
+ $('#sndUse').setAttribute('href',muted?'#i-voloff':'#i-vol');
+ if(!muted)sfx('click')});
+show('title');
+tweenXP();
+})();
+</script>
+</body>
+</html>

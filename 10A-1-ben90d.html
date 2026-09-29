@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>New Media Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka:wght@400;500;600;700&family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+--paper:#FBF3E4;--paper2:#FFFDF6;--ink:#3D3450;--ink2:#8B829E;
+--ar:#0E8074;
+--mint:#29C0B2;--mintD:#1B9C8F;--coral:#FF6B6B;--coralD:#E14F4F;
+--sun:#FFA62B;--sunD:#E08700;--sky:#4D96FF;--skyD:#3677D9;
+--grape:#9B5DE5;--grapeD:#7C3FD3;--pink:#F15BB5;--pinkD:#CF3E96;
+--gold:#FFD166;--goldD:#E5B84B;--green:#4FBF43;--greenD:#3AA334;
+--bord:#F1E7D0;--sh:0 5px 0 rgba(61,52,80,.08);
+}
+body{font-family:'Fredoka',sans-serif;color:var(--ink);min-height:100vh;overflow-x:hidden;
+background-color:var(--paper);
+background-image:radial-gradient(rgba(61,52,80,.055) 2.2px,transparent 2.3px);
+background-size:30px 30px;
+-webkit-user-select:none;user-select:none}
+input{-webkit-user-select:text;user-select:text}
+button{font-family:inherit;touch-action:manipulation}
+.ar{font-family:'Baloo Bhaijaan 2',sans-serif;color:var(--ar);font-weight:600}
+.hidden{display:none!important}
+.ico{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;flex-direction:column;align-items:center;line-height:1.15;gap:1px;
+font-family:'Lilita One';font-size:1.05rem;letter-spacing:.6px;color:#fff;text-transform:uppercase;
+background:var(--bc,var(--mint));border:none;border-radius:999px;padding:12px 26px 13px;cursor:pointer;
+box-shadow:0 6px 0 var(--bcd,var(--mintD)),0 14px 26px rgba(61,52,80,.16);transition:transform .12s,box-shadow .12s}
+.btn:active{transform:translateY(6px);box-shadow:0 0 0 var(--bcd,var(--mintD)),0 4px 10px rgba(61,52,80,.15)}
+.btn .b-ar{font-family:'Baloo Bhaijaan 2';font-size:.82rem;font-weight:600;opacity:.95;text-transform:none}
+.btn.ghost{--bc:#fff;--bcd:#E3D7C0;color:var(--ink)}
+
+/* ---------- HUD ---------- */
+#hud{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:90;display:none;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;
+background:rgba(255,253,246,.95);border:3px solid var(--bord);border-radius:999px;padding:6px 10px;
+box-shadow:var(--sh);max-width:calc(100vw - 20px)}
+#hud.on{display:flex}
+.hchip{display:flex;align-items:center;gap:6px;font-family:'Lilita One';font-size:.95rem;background:#fff;
+border:2.5px solid var(--bord);border-radius:999px;padding:4px 12px}
+.hchip .ico{width:17px;height:17px}
+.hbtn{cursor:pointer;transition:transform .12s}
+.hbtn:active{transform:scale(.92)}
+#hudXp{background:#FFF3D6;border-color:var(--gold)} #hudXp .ico{color:var(--sunD)}
+#hudStreak{display:none;background:#FFE3E3;border-color:#FFB3B3;color:#D64545}
+#hudStreak.on{display:flex}
+#hudStreak.pop{animation:hpop .35s}
+#hudHearts .ico{width:18px;height:18px}
+.hh{color:var(--coral);display:inline-flex}
+.hh.off .ico{color:#E0D5C0}
+#hudHearts.hpop{animation:hpop .4s}
+@keyframes hpop{40%{transform:scale(1.18)}}
+.spacer{flex:1}
+@media(max-width:520px){.hchip{font-size:.8rem;padding:3px 9px}.hchip .ico{width:14px;height:14px}#hud{gap:5px;padding:5px 8px}}
+
+/* ---------- screens ---------- */
+.wrap{max-width:920px;margin:0 auto;padding:86px 16px 40px}
+.level .wrap{padding-bottom:60px}
+.screen{display:none}
+.screen.on{display:block;animation:scrIn .45s cubic-bezier(.2,.8,.3,1) both}
+@keyframes scrIn{from{opacity:0;transform:translateY(22px) scale(.985)}}
+
+/* ---------- title ---------- */
+.title-wrap{text-align:center;position:relative;padding-top:26px}
+.kick{display:inline-block;background:#fff;border:3px solid var(--bord);border-radius:999px;padding:5px 18px;
+font-family:'Lilita One';letter-spacing:2px;font-size:.8rem;color:var(--ink2);box-shadow:var(--sh)}
+.logo{font-family:'Lilita One';font-size:clamp(3rem,10vw,4.7rem);line-height:.95;margin-top:18px;display:flex;justify-content:center;flex-wrap:wrap}
+.logo span{display:inline-block;animation:wig 2.6s ease-in-out infinite;animation-delay:calc(var(--i)*.13s);text-shadow:0 4px 0 rgba(61,52,80,.14)}
+.logo .sp{width:.45em}
+@keyframes wig{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-9px) rotate(3deg)}}
+.ribbon{display:inline-block;background:var(--coral);color:#fff;font-family:'Lilita One';font-size:1.35rem;letter-spacing:4px;
+padding:5px 22px 6px;border-radius:14px;transform:rotate(-2deg);margin-top:12px;box-shadow:0 5px 0 var(--coralD)}
+.t-sub{margin-top:16px;font-weight:500;color:var(--ink2)}
+.t-sub-ar{margin-top:4px;font-size:1.1rem}
+.title-tabby{width:150px;margin:20px auto 0}
+.howto{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px}
+.howchip{background:#fff;border:3px solid var(--bord);border-radius:999px;padding:6px 16px;font-weight:600;box-shadow:var(--sh);font-size:.9rem;display:flex;align-items:center;gap:7px}
+.howchip .ico{color:var(--mintD);width:17px;height:17px}
+.f-ico{position:absolute;animation:floaty 6s ease-in-out infinite;opacity:.9}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-20px) rotate(5deg)}}
+.ticker{overflow:hidden;background:#fff;border-top:3px solid var(--bord);border-bottom:3px solid var(--bord);margin-top:30px}
+.tk{display:flex;gap:12px;width:max-content;animation:tick 40s linear infinite;padding:10px 0}
+@keyframes tick{to{transform:translateX(-50%)}}
+.tkchip{background:#FFF3D6;border:2.5px solid var(--gold);color:#7A5B00;font-weight:600;font-size:.85rem;border-radius:999px;padding:4px 14px;white-space:nowrap}
+
+/* ---------- map ---------- */
+.map-head{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.map-logo{font-family:'Lilita One';font-size:1.7rem}
+.map-logo i{font-style:normal;color:var(--coral)}
+.map-wrap{position:relative;width:min(460px,94vw);height:1310px;margin:10px auto 0}
+.map-path{position:absolute;inset:0;width:100%;height:100%}
+.deco{position:absolute;pointer-events:none}
+#mapNodes{position:absolute;inset:0}
+.node{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;z-index:2;padding:6px}
+.node-face{position:relative;width:78px;height:78px;border-radius:26px;background:var(--nc,var(--mint));border:4px solid #fff;
+box-shadow:0 7px 0 var(--ncd,var(--mintD)),0 16px 26px rgba(61,52,80,.2);display:flex;align-items:center;justify-content:center;color:#fff;transition:transform .2s}
+.node-face .ico{width:34px;height:34px}
+.node:hover .node-face{transform:translateY(-5px) rotate(-3deg) scale(1.05)}
+.node-num{position:absolute;top:-9px;left:-9px;width:27px;height:27px;background:var(--gold);border:3px solid #fff;border-radius:50%;
+font-family:'Lilita One';font-size:.9rem;color:#7A5B00;display:flex;align-items:center;justify-content:center}
+.node.lock .node-face{background:#CFC6B4;box-shadow:0 7px 0 #B4AA96;color:#8B829E}
+.node.cur .node-face::after{content:'';position:absolute;inset:-9px;border:4px solid var(--nc,var(--mint));border-radius:34px;animation:ring 1.6s infinite}
+@keyframes ring{from{transform:scale(.92);opacity:1}to{transform:scale(1.4);opacity:0}}
+.go-arrow{position:absolute;top:-52px;color:var(--coral);animation:bob 1s infinite}
+.go-arrow .ico{width:26px;height:26px}
+@keyframes bob{50%{transform:translateY(8px)}}
+.node-stars{display:flex;gap:3px}
+.nstar .ico{width:14px;height:14px;color:var(--gold)}
+.nstar.off .ico{color:#E7DCC8}
+.node-name{font-family:'Lilita One';font-size:.82rem;background:#fff;border:2.5px solid var(--bord);border-radius:999px;padding:2px 12px 4px;box-shadow:var(--sh);text-align:center}
+.node-name .nar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.72rem;display:block}
+.node.nshake{animation:nsh .4s}
+@keyframes nsh{25%{transform:translate(-50%,-50%) translateX(-7px)}75%{transform:translate(-50%,-50%) translateX(7px)}}
+.boss-node .node-face{width:104px;height:104px;border-radius:32px;background:#3D3450;box-shadow:0 8px 0 #2A2440,0 18px 30px rgba(61,52,80,.3)}
+.boss-node .node-face .ico{width:46px;height:46px;color:#FF6B6B}
+.boss-node.cur .node-face::after{border-color:#FF6B6B}
+.boss-ribbon{background:var(--coral);color:#fff;font-family:'Lilita One';font-size:.7rem;letter-spacing:2px;padding:2px 12px 3px;border-radius:99px}
+.map-foot{text-align:center;margin-top:8px;font-weight:600;color:var(--ink2)}
+.map-foot .ar{display:block;margin-top:2px}
+
+/* ---------- level head + dots ---------- */
+.lvl-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#fff;border:3px solid var(--bord);border-radius:24px;padding:14px 16px;box-shadow:var(--sh);margin-bottom:12px}
+.lvl-num{width:54px;height:54px;border-radius:18px;background:var(--lc);color:#fff;font-family:'Lilita One';font-size:1.6rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 var(--lcd);flex:none}
+.lt{font-family:'Lilita One';font-size:1.65rem;line-height:1.05}
+.lvl-ar{color:var(--ar);font-weight:600;font-size:1rem}
+.head-tabby{margin-left:auto;display:flex;align-items:center;gap:10px;max-width:340px}
+.tabby-slot{width:74px;flex:none}
+.tabby-slot.jump{animation:tjump .6s}
+.tabby-slot.shake{animation:nsh .4s}
+@keyframes tjump{30%{transform:translateY(-14px)}60%{transform:translateY(0)}80%{transform:translateY(-6px)}}
+.bubble{position:relative;background:#FFFDF6;border:2.5px dashed var(--lc);border-radius:16px;padding:8px 12px;font-size:.83rem}
+.bubble::after{content:'';position:absolute;left:-9px;top:18px;border:7px solid transparent;border-right-color:var(--lc)}
+.bubble.bp{animation:bp .4s}
+@keyframes bp{from{transform:scale(.9);opacity:.4}}
+.tip-en{display:block;font-weight:600}
+.tip-ar{display:block;text-align:right;font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.8rem}
+.lvl-dots{display:flex;justify-content:center;gap:9px;margin:0 0 16px}
+.ldot{width:14px;height:14px;border-radius:50%;background:#EFE6D4;border:3px solid #E3D7C0;cursor:pointer;padding:0;transition:.2s;touch-action:manipulation}
+.ldot.cur{background:var(--lc,var(--mint));border-color:var(--lcd,var(--mintD));transform:scale(1.35)}
+.ldot.done{background:var(--gold);border-color:var(--goldD)}
+
+/* ---------- steps ---------- */
+.step{display:none}
+.step.on{display:block;animation:stepIn .4s ease both}
+@keyframes stepIn{from{opacity:0;transform:translateX(28px)}}
+.step-next{margin-top:20px;width:100%;font-size:1.12rem;--bc:var(--lc,var(--mint));--bcd:var(--lcd,var(--mintD))}
+.step-next.blocked{--bc:#CFC6B4;--bcd:#B4AA96}
+.step-next.nshake{animation:nsh2 .4s}
+@keyframes nsh2{25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+.sh{font-family:'Lilita One';font-size:1.3rem;display:flex;align-items:center;gap:9px;margin:4px 0 2px}
+.sh .ico{color:var(--lcd)}
+.sh-ar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;text-align:right;margin-bottom:10px;display:block}
+
+/* ---------- cards / quiz ---------- */
+.gcard{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:18px;box-shadow:var(--sh)}
+.qz{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px 18px;margin:14px 0;box-shadow:var(--sh)}
+.qq{font-weight:600;font-size:1.05rem}
+.qar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.95rem;text-align:right;margin-top:3px}
+.opts{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.opt{font-weight:600;font-size:.95rem;color:var(--ink);background:#FFFDF6;border:3px solid #EFE4CE;border-radius:14px;padding:9px 16px;cursor:pointer;box-shadow:0 4px 0 rgba(61,52,80,.08);transition:.15s;touch-action:manipulation}
+.opt:hover{transform:translateY(-2px);border-color:var(--lc,var(--mint))}
+.opt.ok{background:#DDF6D2;border-color:var(--green);color:#2C6B1F}
+.opt.no{background:#FDE0E0;border-color:var(--coral);color:#A31515;animation:shk .4s}
+.qz.lock .opt{pointer-events:none;opacity:.5}
+.qz.lock .opt.ok{opacity:1}
+.qfb{margin-top:10px;display:none;border-radius:12px;padding:9px 12px;font-weight:600;font-size:.9rem;align-items:center;gap:8px}
+.qfb.on{display:flex;flex-wrap:wrap;animation:pp .3s}
+.qfb.good{background:#DDF6D2;color:#2C6B1F;border:2.5px solid #A9DE98}
+.qfb.bad{background:#FDE0E0;color:#A31515;border:2.5px solid #FFB3B3}
+.qfb .fb-ar{display:block;width:100%;text-align:right;font-family:'Baloo Bhaijaan 2';font-weight:600;margin-top:2px}
+.qfb .fn{display:block;width:100%;font-size:.85rem;margin-top:2px}
+@keyframes shk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes pp{from{transform:scale(.93);opacity:0}}
+.bprog{font-family:'Lilita One';font-size:.72rem;letter-spacing:1.5px;color:var(--ink2);display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.bprog .ico{width:14px;height:14px;color:var(--coral)}
+
+/* ---------- vocab ---------- */
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px}
+.wcard{position:relative;background:#fff;border:3px solid var(--bord);border-radius:18px;padding:18px 8px 12px;text-align:center;box-shadow:var(--sh);transition:transform .2s}
+.wcard:hover{transform:translateY(-5px) rotate(-1.2deg);border-color:var(--lc)}
+.wcard .ico{width:36px;height:36px;color:var(--lcd)}
+.wcard .w{font-weight:600;font-size:.98rem;margin-top:6px}
+.wcard .war{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.95rem}
+.spk{position:absolute;top:6px;right:6px;width:30px;height:30px;border-radius:50%;border:2.5px solid var(--bord);background:#fff;color:var(--lcd);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;z-index:2;touch-action:manipulation}
+.spk .ico{width:15px;height:15px}
+.spk:hover{background:var(--lc);color:#fff;transform:scale(1.12)}
+.spk.busy{animation:spkb 1s ease}
+@keyframes spkb{50%{transform:scale(1.2);background:var(--coral);color:#fff}}
+
+/* ---------- flip cards ---------- */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:16px}
+.fc{perspective:1000px;height:225px;cursor:pointer;outline:none}
+.fi{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,1.4,.4,1)}
+.fc.flip .fi{transform:rotateY(180deg)}
+.ff,.fbk{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px}
+.ff{background:#fff;border:3px solid var(--bord);box-shadow:var(--sh)}
+.ff .ico{width:36px;height:36px;color:var(--lcd)}
+.fw{font-family:'Lilita One';font-size:1.2rem;margin-top:8px}
+.fhint{margin-top:12px;font-size:.7rem;color:var(--ink2);font-weight:600}
+.fhint .ar{display:block;font-weight:600}
+.fbk{background:linear-gradient(150deg,var(--lc),var(--lcd));color:#fff;transform:rotateY(180deg);box-shadow:0 6px 0 rgba(61,52,80,.18)}
+.den{font-weight:600;font-size:.92rem;line-height:1.3}
+.dar{font-family:'Baloo Bhaijaan 2';font-weight:600;font-size:1rem;margin-top:8px;color:#D9FBF7}
+.dex{margin-top:10px;background:rgba(255,255,255,.18);border-radius:12px;padding:6px 10px;font-size:.83rem;font-style:italic}
+
+/* ---------- LINK GAME (connect with lines) ---------- */
+.lg{position:relative}
+.lg-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 60px;position:relative;z-index:2}
+.lg-col{display:flex;flex-direction:column;gap:10px}
+.lg-chip{position:relative;display:flex;align-items:center;gap:9px;background:#fff;border:3px solid #EFE4CE;border-radius:14px;padding:9px 12px;min-height:56px;cursor:pointer;font-weight:600;font-size:.95rem;box-shadow:0 4px 0 rgba(61,52,80,.08);transition:transform .15s,border-color .15s,background .15s;text-align:left;touch-action:manipulation}
+.lg-chip:hover{transform:translateY(-2px);border-color:var(--lc)}
+.lg-chip.sel{border-color:var(--lc);background:#F0FCFA;transform:scale(1.03)}
+.lg-chip.done{background:#DDF6D2;border-color:var(--green);color:#2C6B1F;animation:pp .4s}
+.lg-chip.done .ar{color:#1E6B4F}
+.lg-chip.err{animation:shk .4s;border-color:var(--coral)}
+.lg-chip .spk{position:static;flex:none;width:27px;height:27px}
+.lg-chip .ico{width:26px;height:26px;color:var(--lcd)}
+.lg-chip svg.mico{width:42px;height:42px;flex:none}
+.lg-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:1}
+.lg-line{fill:none;stroke-width:5;stroke-linecap:round}
+.lg-temp{stroke-dasharray:9 7;animation:lgfade .65s forwards}
+@keyframes lgfade{0%{opacity:0}25%{opacity:1}70%{opacity:1}100%{opacity:0}}
+.wonbar{display:none;margin-top:14px;background:#DDF6D2;border:3px solid var(--green);border-radius:16px;padding:12px 16px;align-items:center;gap:10px;font-weight:600;color:#2C6B1F}
+.wonbar .ico{width:26px;height:26px;color:var(--greenD)}
+.wonbar.on{display:flex;animation:pp .4s}
+.wonbar .ar{color:#1E6B4F}
+@media(max-width:520px){.lg-grid{gap:10px 40px}.lg-chip{padding:8px 9px;font-size:.85rem;min-height:52px}}
+
+/* ---------- phone feed ---------- */
+.l2grid{display:grid;grid-template-columns:minmax(290px,400px) 1fr;gap:20px;align-items:start}
+.phone{background:#3D3450;border-radius:34px;padding:11px;box-shadow:0 9px 0 rgba(61,52,80,.2)}
+.phone-screen{background:var(--paper2);border-radius:24px;overflow:hidden;border:3px solid #2A2440}
+.phone-top{display:flex;justify-content:space-between;padding:7px 14px;font-size:.7rem;font-weight:600;color:var(--ink2);background:#F7F0DF}
+.feed{padding:12px;display:flex;flex-direction:column;gap:10px;max-height:540px;overflow:auto}
+.msg{background:#fff;border:2.5px solid var(--bord);border-radius:16px;border-top-left-radius:4px;padding:10px 12px;box-shadow:0 3px 0 rgba(61,52,80,.06);position:relative}
+.step.on .msg{animation:msgIn .5s both;animation-delay:var(--d,0s)}
+@keyframes msgIn{from{opacity:0;transform:translateY(16px) scale(.96)}}
+.men{font-weight:500;font-size:.92rem;line-height:1.5;padding-right:34px}
+.men b{font-weight:700;color:var(--lcd,var(--coralD))}
+.mar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.88rem;text-align:right;margin-top:6px;border-top:2px dashed var(--bord);padding-top:6px}
+.statcard{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px;box-shadow:var(--sh);display:flex;gap:16px;align-items:center}
+.donut{width:128px;flex:none}
+.dnum{font-family:'Lilita One';font-size:2.1rem;fill:var(--coral)}
+.dlbl{font-size:.65rem;fill:var(--ink2);font-weight:600}
+.dfill{stroke-dasharray:351.9;stroke-dashoffset:351.9}
+.step.on .dfill{animation:donutGo 1.2s .4s cubic-bezier(.3,.8,.3,1) forwards}
+@keyframes donutGo{to{stroke-dashoffset:88}}
+.plats{margin-top:14px}
+.prow{display:grid;grid-template-columns:92px 1fr 56px;align-items:center;gap:8px;margin:9px 0}
+.pname{font-weight:600;font-size:.85rem;display:flex;gap:6px;align-items:center}
+.pname .ico{width:16px;height:16px;color:var(--pc)}
+.ptrack{height:18px;background:#F3EBDA;border-radius:99px;overflow:hidden;border:2.5px solid #EFE4CE}
+.pfill{height:100%;border-radius:99px;background:var(--pc);transform-origin:left;transform:scaleX(0)}
+.step.on .pfill{animation:pGrow .9s .3s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes pGrow{to{transform:scaleX(1)}}
+.pmin{font-family:'Lilita One';font-size:.9rem;text-align:right}
+.keybox{margin-top:14px;background:linear-gradient(135deg,#FFF3D6,#F0FCFA);border:3px solid var(--gold);border-radius:18px;padding:14px 16px;display:flex;gap:10px;align-items:flex-start}
+.keybox .ico{width:26px;height:26px;color:var(--sunD);flex:none;margin-top:2px}
+.keybox p{font-weight:600;font-size:.95rem}
+.keybox .ar{display:block;margin-top:4px;font-size:.9rem}
+
+/* ---------- grammar ---------- */
+.fchips{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px;box-shadow:var(--sh);margin:12px 0}
+.fch{font-family:'Lilita One';font-size:1rem;padding:8px 15px;border-radius:12px;color:#fff;box-shadow:0 4px 0 rgba(61,52,80,.16)}
+.step.on .fch{animation:chipIn .45s both;animation-delay:var(--d,0s)}
+@keyframes chipIn{from{opacity:0;transform:scale(.5) rotate(-7deg)}}
+.fplus{font-family:'Lilita One';color:#B7AD9C;font-size:1.4rem}
+.f-eq{font-family:'Lilita One';color:#B7AD9C;font-size:1.2rem}
+.c-adj{background:var(--sky)} .c-er{background:var(--sun)} .c-than{background:var(--coral)}
+.c-more{background:var(--grape)} .c-the{background:var(--coral)} .c-est{background:var(--grape)}
+.hl{padding:1px 6px;border-radius:8px;font-weight:700}
+.hl-sky{background:#E3EEFF;color:#2557B0} .hl-sun{background:#FFEBD1;color:#9A5B00}
+.hl-coral{background:#FFE1E1;color:#C0392B} .hl-grape{background:#EFE0FC;color:#6B2FB3}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:14px;margin-top:12px}
+.rcard{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px;box-shadow:var(--sh);border-top:7px solid var(--rc)}
+.rtag{display:inline-block;background:var(--rc);color:#fff;font-family:'Lilita One';font-size:.72rem;letter-spacing:1px;padding:3px 12px;border-radius:99px}
+.rname{font-family:'Lilita One';font-size:1.05rem;margin-left:8px}
+.rar{display:block;font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.9rem;text-align:right;margin-top:4px}
+.rf{margin:11px 0;background:#FBF9F2;border:2.5px dashed var(--rc);border-radius:12px;padding:9px;text-align:center;font-weight:600;font-size:1rem}
+.rex{background:#FFF8E8;border:2.5px solid #FFE3A1;border-radius:12px;padding:9px 12px}
+.rex .en{font-weight:600;font-size:.93rem;color:#6B4E00;display:block}
+.rex .ar{display:block;margin-top:5px;font-size:.9rem}
+.watch{background:#FFF0F0;border:3px solid #FFC9C9;border-radius:16px;padding:11px 14px;color:#B02A2A;font-weight:600;display:flex;gap:10px;align-items:center;margin-top:14px}
+.watch .ico{width:24px;height:24px;flex:none}
+.watch .ar{display:block;font-weight:600;color:#BE3A3A;text-align:right;margin-top:2px;font-size:.9rem}
+.vsbox{display:flex;align-items:center;justify-content:center;gap:22px;background:#fff;border:3px solid var(--bord);border-radius:20px;padding:20px;box-shadow:var(--sh);flex-wrap:wrap}
+.vs-side{text-align:center}
+.vs-side .nm{display:block;font-weight:600;font-size:.85rem;margin-top:6px;color:var(--ink2)}
+.vs-badge{font-family:'Lilita One';background:var(--ink);color:var(--gold);border-radius:12px;padding:7px 13px;font-size:1.1rem;transform:rotate(-4deg);box-shadow:0 4px 0 #2A2440}
+.vs-cap{text-align:center;margin-top:12px;font-size:1.1rem;font-weight:600}
+.vs-cap .ar{display:block;margin-top:4px}
+.asgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.asbox{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:18px;text-align:center;box-shadow:var(--sh)}
+.asbox .pair{display:flex;align-items:flex-end;justify-content:center;gap:18px;min-height:76px;color:var(--sky)}
+.as-eq{font-family:'Lilita One';font-size:2.1rem;color:var(--coral);margin-top:6px}
+.asbox .cap{font-weight:600;margin-top:4px}
+.asbox .ar{display:block;margin-top:4px;font-size:.9rem}
+.podium-wrap{display:flex;gap:20px;align-items:center;flex-wrap:wrap;background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px;box-shadow:var(--sh)}
+.podium{width:230px;flex:none}
+.pod-note{font-weight:600}
+.pod-note .ar{display:block;margin-top:4px}
+
+/* ---------- chart ---------- */
+.chartbox{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:14px;box-shadow:var(--sh)}
+.fchart{width:100%;height:auto}
+.cname{font-family:'Fredoka';font-weight:600;font-size:13px;fill:var(--ink);text-anchor:middle}
+.cval{font-family:'Lilita One';font-size:13px;fill:var(--ink2);text-anchor:middle}
+.cgrid{stroke:#EDE3CE;stroke-dasharray:5 6}
+.caxis{stroke:#D9CDB4;stroke-width:3}
+.clab{font-family:'Fredoka';font-size:11px;fill:var(--ink2)}
+.fam{cursor:pointer}
+.cbar{transform-box:fill-box;transform-origin:bottom;transform:scaleY(0)}
+.step.on .cbar{animation:grow .7s var(--bd,0s) cubic-bezier(.2,.8,.3,1) both}
+.gb{fill:var(--mint)} .tb{fill:var(--coral)}
+@keyframes grow{to{transform:scaleY(1)}}
+.fam:hover .cbar{filter:brightness(1.12)}
+.fleg{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:10px;font-weight:600;font-size:.9rem}
+.sw{display:inline-block;width:13px;height:13px;border-radius:4px;margin-right:6px;vertical-align:-2px}
+.swg{background:var(--mint)} .swt{background:var(--coral)}
+.chart-info{margin-top:12px;background:#F0FCFA;border:2.5px dashed var(--skyD);border-radius:14px;padding:10px 14px;font-weight:600;text-align:center}
+.chart-info .ar{display:block;margin-top:3px;font-size:.9rem}
+.chart-info.idle{color:var(--ink2)}
+.tl{stroke-dasharray:700;stroke-dashoffset:700}
+.step.on .tl{animation:draw 1.4s .4s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.tfng{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.tfn{background:#fff;border-radius:14px;padding:9px 12px;box-shadow:var(--sh);text-align:center;border-bottom:5px solid;font-family:'Lilita One'}
+.tfn .ar{font-family:'Baloo Bhaijaan 2';font-weight:600;font-size:.78rem;display:block}
+.tfn.ok{border-color:var(--green)} .tfn.no{border-color:var(--coral)} .tfn.ng{border-color:#94a3b8}
+.datastrip{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.dschip{background:#FFF3D6;border:2.5px solid var(--gold);border-radius:999px;padding:5px 14px;font-weight:600;font-size:.85rem;color:#7A5B00}
+.mico{width:44px;height:44px}
+
+/* ---------- comic (L5) ---------- */
+.comic{margin-top:16px}
+.comic-scene{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.liftbox{flex:0 0 150px;background:linear-gradient(160deg,#F0FCFA,#DFF5F1);border:3px solid var(--mintD);border-radius:14px;padding:18px 10px 10px;position:relative;text-align:center}
+.lifttag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--mintD);color:#fff;font-family:'Lilita One';font-size:.72rem;letter-spacing:2px;padding:3px 13px;border-radius:99px}
+.lift-people{display:flex;justify-content:center;gap:14px;color:var(--mintD)}
+.lift-people .ico{width:42px;height:42px}
+.cbubbles{flex:1;display:flex;flex-direction:column;gap:10px;min-width:250px}
+.cbub{background:#fff;border:2.5px solid #C7D2FE;border-radius:16px;padding:10px 14px;font-weight:600;color:#3730A3;position:relative}
+.cbub::after{content:'';position:absolute;left:-11px;top:16px;border:6px solid transparent;border-right-color:#C7D2FE}
+.cbub.alt{border-color:#FBCFE8;color:#9D174D}
+.cbub.alt::after{border-right-color:#FBCFE8}
+.cmean{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mbox{border-radius:14px;padding:10px 14px}
+.mbox .m-en{font-weight:600;display:block}
+.mbox .ar{display:block;text-align:right;margin-top:3px;font-size:.9rem}
+.m1{background:#ECFDF5;border:2.5px solid #A7F3D0;color:#065F46} .m1 .ar{color:#0F766E}
+.m2{background:#FFF7ED;border:2.5px solid #FED7AA;color:#9A3412} .m2 .ar{color:#C2410C}
+.cpunch{margin-top:12px;font-weight:600;color:var(--ink2)}
+.cpunch-ar{text-align:right;color:var(--ar);font-weight:600;margin-top:4px}
+
+/* ---------- phrases / builder / blog (L6) ---------- */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px}
+.pgroup{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:14px;box-shadow:var(--sh);border-top:7px solid var(--pc)}
+.pg-h{font-family:'Lilita One';font-size:1rem;color:var(--ink)}
+.pg-h .ar{font-size:.85rem;display:block}
+.pchip{background:#FBF9F2;border:2.5px solid #EFE4CE;border-radius:12px;padding:7px 11px;margin-top:8px}
+.pchip .en{display:block;font-weight:600;font-size:.9rem}
+.pchip .ar{display:block;text-align:right;font-size:.82rem}
+.srow{display:flex;align-items:flex-start;gap:12px;margin-top:12px;flex-wrap:wrap}
+.slab{flex:0 0 88px;font-family:'Lilita One';color:var(--ink);padding-top:8px}
+.slab .ar{font-size:.75rem;display:block}
+.schips{display:flex;flex-wrap:wrap;gap:8px}
+.schip{border:3px solid #EFE4CE;background:#fff;border-radius:999px;padding:7px 14px;font-weight:600;cursor:pointer;font-size:.88rem;transition:.15s;box-shadow:0 3px 0 rgba(61,52,80,.07);touch-action:manipulation}
+.schip:hover{border-color:var(--pink)}
+.schip.sel{background:var(--pink);color:#fff;border-color:var(--pinkD);transform:scale(1.04)}
+.sbar{min-height:60px;background:#FBF9F2;border:3px dashed #D9CDB4;border-radius:16px;padding:12px 16px;font-weight:600;font-size:1rem;display:flex;align-items:center;transition:.3s}
+.sbar.done{background:#DDF6D2;border-color:var(--green);color:#1E5B14}
+.sbar .ph{color:var(--ink2);font-weight:500}
+.talkcard{margin-top:14px}
+.rvbtn{display:inline-flex;flex-direction:column;align-items:center;background:#FFF3D6;border:2.5px solid var(--gold);color:#7A5B00;border-radius:12px;padding:7px 18px;cursor:pointer;font-weight:600;transition:.2s;margin-top:10px;touch-action:manipulation}
+.rvbtn:hover{background:var(--gold)}
+.rvbtn .rv-ar{font-family:'Baloo Bhaijaan 2';font-size:.82rem;font-weight:600}
+.rvt{display:none;margin-top:10px;background:linear-gradient(135deg,#FEFCE8,#F0FCFA);border:2.5px dashed var(--gold);border-radius:14px;padding:11px 15px;font-weight:600}
+.rvt.on{display:block;animation:pp .35s}
+.rvt .ar{display:block;text-align:right;margin-top:4px;font-size:.9rem}
+.browser{background:#fff;border-radius:16px;box-shadow:var(--sh);overflow:hidden;border:3px solid var(--bord)}
+.bbar{display:flex;align-items:center;gap:6px;background:#F1EAD9;padding:9px 12px}
+.bdot{width:10px;height:10px;border-radius:50%}
+.burl{flex:1;background:#fff;border-radius:999px;font-size:.72rem;color:var(--ink2);padding:4px 12px;font-weight:600}
+.binner{padding:18px;text-align:center}
+.binner .ico{width:44px;height:44px;color:var(--pinkD)}
+.btitle{font-family:'Lilita One';font-size:1.5rem;color:#BE185D;margin-top:6px}
+.bsub{color:var(--ink2);font-weight:600;font-size:.85rem;margin-top:2px}
+.bpost{margin-top:12px;background:#FDF2F8;border-radius:12px;padding:12px;text-align:left;font-size:.87rem;color:#475569;font-style:italic;line-height:1.5}
+.tipgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.tipcard{background:#fff;border-radius:16px;padding:14px;box-shadow:var(--sh);border-top:5px solid var(--tc)}
+.tipcard h4{font-family:'Lilita One';color:var(--ink);display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.tipcard h4 .ar{font-size:.82rem;font-weight:600}
+.tipitem{display:flex;align-items:flex-start;gap:8px;margin-top:10px;font-weight:600;color:#475569;font-size:.88rem}
+.tipitem .ico{width:15px;height:15px;color:var(--tc);margin-top:3px;flex:none}
+.tipitem .ti-ar{display:block;color:var(--ar);font-weight:600;font-size:.82rem;text-align:right}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+.field label{display:block;font-weight:600;text-align:left}
+.field .f-ar{display:block;color:var(--ar);font-weight:600;font-size:.88rem;text-align:right}
+.field input{width:100%;margin-top:6px;border:3px solid #EFE4CE;border-radius:14px;padding:10px 14px;font-family:'Fredoka';font-weight:600;font-size:1rem;color:var(--ink);outline:none;background:#fff;transition:.2s}
+.field input:focus{border-color:var(--pink)}
+#blogPrev{margin-top:14px;text-align:center;border:3px dashed #D9CDB4;border-radius:20px;padding:14px}
+#blogPrev .bp-h{color:var(--ink2);font-weight:600}
+#blogPrev .bp-arh{font-weight:600;margin-top:2px}
+#blogPrev .bp-body{display:none;padding:4px}
+#blogPrev.ready{background:linear-gradient(135deg,#FDF2F8,#F0FCFA);border-color:var(--pink)}
+#blogPrev.ready .bp-h,#blogPrev.ready .bp-arh{display:none}
+#blogPrev.ready .bp-body{display:block;animation:pp .4s}
+.bp-body .ico{width:44px;height:44px;color:var(--pinkD)}
+.bp-title{font-family:'Lilita One';font-size:1.6rem;color:#BE185D;margin-top:6px}
+.bp-topic{color:var(--ink2);font-weight:600;margin-top:4px}
+
+/* ---------- boss ---------- */
+.mon-wrap{text-align:center;position:relative;padding:6px 0}
+#monSvg{width:min(280px,68vw);filter:drop-shadow(0 10px 0 rgba(61,52,80,.12))}
+#monSvg.hit{animation:mhit .45s}
+@keyframes mhit{20%{transform:translateX(-13px) rotate(-2deg)}55%{transform:translateX(11px)}80%{transform:translateX(-6px)}}
+#monSvg.dead{animation:mdead 1s forwards}
+@keyframes mdead{to{transform:rotate(9deg) translateY(16px);filter:grayscale(1);opacity:.45}}
+.m-dead{display:none}
+#monSvg.dead .m-eyes{display:none}
+#monSvg.dead .m-dead{display:block}
+.hpbar{max-width:430px;margin:12px auto 4px;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:5px}
+.hpfill{height:16px;border-radius:99px;background:linear-gradient(90deg,var(--coral),var(--sun));width:100%;transition:width .5s cubic-bezier(.3,.8,.3,1)}
+.hplbl{font-family:'Lilita One';font-size:.75rem;letter-spacing:2px;color:var(--ink2)}
+.dmg{position:absolute;top:26%;left:58%;font-family:'Lilita One';color:#FF4D4D;font-size:1.5rem;animation:dmgUp .9s forwards;pointer-events:none}
+@keyframes dmgUp{to{transform:translateY(-52px) scale(1.4);opacity:0}}
+.mondead{text-align:center;padding:20px}
+.mondead .ico{width:64px;height:64px;color:var(--gold)}
+.mondead p{font-family:'Lilita One';font-size:1.5rem;margin-top:8px}
+
+/* ---------- win ---------- */
+.done-wrap{text-align:center;padding-top:20px}
+.trophy-big{width:100px;height:100px;color:var(--gold);filter:drop-shadow(0 8px 0 rgba(229,184,75,.4))}
+.done-title{font-family:'Lilita One';font-size:3rem;background:linear-gradient(90deg,var(--coral),var(--grape));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.done-sub{margin-top:10px;font-weight:500;color:var(--ink2)}
+.done-sub-ar{text-align:center;margin-top:6px;font-size:1.05rem}
+.statpills{display:flex;justify-content:center;gap:14px;margin:20px 0;flex-wrap:wrap}
+.statpill{background:#fff;border-radius:999px;padding:10px 22px;box-shadow:var(--sh);font-family:'Lilita One';font-size:1.05rem;display:flex;align-items:center;gap:8px;border:3px solid var(--bord)}
+.statpill .ico{color:var(--sunD)}
+.bdg-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:10px}
+.bdg{background:#fff;border:3px solid var(--bord);border-radius:18px;padding:12px 16px;text-align:center;box-shadow:var(--sh);min-width:130px}
+.bdg-ic{width:46px;height:46px;border-radius:14px;background:var(--bc);display:flex;align-items:center;justify-content:center;margin:0 auto;color:#fff}
+.bdg-ic .ico{width:24px;height:24px}
+.bdg b{font-family:'Lilita One';font-size:.8rem;display:block;margin-top:6px}
+.bdg .ar{font-size:.75rem;display:block;font-weight:600}
+.bdg.lock{opacity:.45;filter:grayscale(.8)}
+.bdg.lock .bdg-ic{background:#CFC6B4}
+.done-btns{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:22px}
+
+/* ---------- overlay / toasts / confetti ---------- */
+#ovl{position:fixed;inset:0;background:rgba(46,38,66,.55);backdrop-filter:blur(3px);z-index:120;display:none;align-items:center;justify-content:center;padding:20px}
+#ovl.on{display:flex;animation:fdi .3s}
+@keyframes fdi{from{opacity:0}}
+.ovl-card{background:var(--paper2);border:4px solid #fff;border-radius:28px;padding:28px;max-width:440px;width:100%;text-align:center;box-shadow:0 12px 0 rgba(61,52,80,.25),0 30px 60px rgba(0,0,0,.28);animation:ovlPop .5s cubic-bezier(.3,1.5,.4,1);max-height:calc(100vh - 40px);overflow:auto}
+@keyframes ovlPop{from{transform:scale(.7);opacity:0}}
+.ovl-kick{font-family:'Lilita One';letter-spacing:2px;font-size:.85rem}
+.ovl-t{font-family:'Lilita One';font-size:2rem;margin-top:4px}
+.ovl-ar{text-align:center;margin-top:4px;font-size:1.05rem}
+.ovl-p{margin-top:12px;font-weight:600;color:var(--ink2)}
+.big-stars{display:flex;justify-content:center;gap:12px;margin:16px 0}
+.bst .ico{width:58px;height:58px;color:#E7DCC8}
+.bst.lit .ico{color:var(--gold);animation:starPop .5s cubic-bezier(.3,1.8,.4,1);filter:drop-shadow(0 4px 0 rgba(229,184,75,.5))}
+@keyframes starPop{from{transform:scale(0) rotate(-100deg)}}
+.ovl-xp{font-family:'Lilita One';color:var(--sunD);display:flex;justify-content:center;gap:6px;align-items:center}
+.ovl-btns{display:flex;justify-content:center;gap:12px;margin-top:20px;flex-wrap:wrap}
+#toasts{position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:130;display:flex;flex-direction:column;gap:8px;pointer-events:none;align-items:center;width:max-content;max-width:92vw}
+.toast{display:flex;align-items:center;gap:10px;background:var(--ink);color:#fff;border-radius:16px;padding:10px 16px;box-shadow:0 8px 20px rgba(0,0,0,.3);animation:toastIn .4s cubic-bezier(.3,1.4,.4,1)}
+.toast .t-ic{width:36px;height:36px;border-radius:12px;background:var(--tc,var(--gold));display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+.toast .t-ic .ico{width:19px;height:19px}
+.toast b{font-family:'Lilita One';letter-spacing:.5px;display:block;font-size:.92rem}
+.toast .t-ar{font-family:'Baloo Bhaijaan 2';font-weight:600;font-size:.85rem;color:#C9F5EF;display:block;text-align:right}
+.toast.out{animation:toastOut .3s forwards}
+@keyframes toastIn{from{transform:translateY(-26px) scale(.9);opacity:0}}
+@keyframes toastOut{to{transform:translateY(-16px);opacity:0}}
+.cf{position:fixed;width:9px;height:14px;border-radius:2px;z-index:200;pointer-events:none;animation:cfall 1.6s ease-in forwards}
+@keyframes cfall{to{transform:translate(var(--dx,60px),70vh) rotate(720deg);opacity:.1}}
+
+/* ---------- responsive ---------- */
+@media(max-width:860px){.l2grid{grid-template-columns:1fr}}
+@media(max-width:640px){
+.lvl-head .head-tabby{width:100%;margin-left:0}
+.asgrid{grid-template-columns:1fr}
+.cmean{grid-template-columns:1fr}
+.fields{grid-template-columns:1fr}
+.tfng{grid-template-columns:1fr}
+.prow{grid-template-columns:78px 1fr 50px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ ICONS ============ -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+ <symbol id="i-news" viewBox="0 0 24 24"><rect x="4" y="4.5" width="16" height="15" rx="1.8"/><line x1="7.5" y1="8.5" x2="13.5" y2="8.5"/><line x1="7.5" y1="12" x2="13.5" y2="12"/><line x1="7.5" y1="15.5" x2="13.5" y2="15.5"/><line x1="16.5" y1="8.5" x2="16.5" y2="15.5"/></symbol>
+ <symbol id="i-magazine" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1.8"/><rect x="7" y="7" width="5.5" height="4.5" rx="1"/><line x1="14.5" y1="7.5" x2="17" y2="7.5"/><line x1="14.5" y1="10" x2="17" y2="10"/><line x1="7" y1="15" x2="17" y2="15"/><line x1="7" y1="17.5" x2="17" y2="17.5"/></symbol>
+ <symbol id="i-radio" viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="11" rx="2"/><path d="M8.5 9 16 3.8"/><circle cx="8" cy="14.5" r="2.4"/><line x1="14" y1="13" x2="18.5" y2="13"/><line x1="14" y1="16.5" x2="18.5" y2="16.5"/></symbol>
+ <symbol id="i-tv" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="12" rx="2"/><path d="M8 3.5 12 6.5 16 3.5"/><line x1="9" y1="22" x2="15" y2="22"/></symbol>
+ <symbol id="i-stereo" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="12" cy="13.5" r="4"/><circle cx="12" cy="13.5" r="1" fill="currentColor" stroke="none"/><line x1="8.5" y1="6.5" x2="15.5" y2="6.5"/></symbol>
+ <symbol id="i-camera" viewBox="0 0 24 24"><path d="M9.2 6.5 10.4 5h3.2l1.2 1.5H20A1.5 1.5 0 0 1 21.5 8v10A1.5 1.5 0 0 1 20 19.5H4A1.5 1.5 0 0 1 2.5 18V8A1.5 1.5 0 0 1 4 6.5z"/><circle cx="12" cy="12.7" r="3.2"/></symbol>
+ <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><line x1="10.5" y1="18" x2="13.5" y2="18"/></symbol>
+ <symbol id="i-tablet" viewBox="0 0 24 24"><rect x="4.5" y="3" width="15" height="18" rx="2.5"/><circle cx="12" cy="17.6" r=".7" fill="currentColor" stroke="none"/></symbol>
+ <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><ellipse cx="12" cy="12" rx="3.7" ry="8.5"/><line x1="3.5" y1="12" x2="20.5" y2="12"/></symbol>
+ <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.7 3.3a2.15 2.15 0 0 1 3 3L7.4 18.6 3 20l1.4-4.4z"/></symbol>
+ <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3.5 20.5l1.4-5.2A8.5 8.5 0 1 1 21 11.5z"/><path d="M8.3 12h.01M12 12h.01M15.7 12h.01" stroke-width="2.4"/></symbol>
+ <symbol id="i-game" viewBox="0 0 24 24"><path d="M7 7h10a5 5 0 0 1 5 5.5l-.7 5a2.5 2.5 0 0 1-4.4 1.2L15 16.5H9l-1.9 2.2a2.5 2.5 0 0 1-4.4-1.2L2 12.5A5 5 0 0 1 7 7z"/><path d="M8 10v4M6 12h4"/><circle cx="15.5" cy="11" r=".9" fill="currentColor" stroke="none"/><circle cx="18" cy="13" r=".9" fill="currentColor" stroke="none"/></symbol>
+ <symbol id="i-play" viewBox="0 0 24 24"><rect x="2.5" y="4.5" width="19" height="13.5" rx="2.5"/><path d="M10.3 8.6v5.3l4.9-2.65z" fill="currentColor" stroke="none"/></symbol>
+ <symbol id="i-watch" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5.8"/><path d="M9.3 6.6 9 2.8h6l-.3 3.8M9.3 17.4 9 21.2h6l-.3-3.8"/></symbol>
+ <symbol id="i-speaker" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
+ <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.9 6.4.7-4.8 4.3 1.3 6.3-5.7-3.2-5.7 3.2 1.3-6.3L2.8 9.4l6.4-.7z"/></symbol>
+ <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21C12 21 3 15.5 3 9.5C3 6.5 5.5 4 8.5 4C10 4 11.3 4.8 12 6C12.7 4.8 14 4 15.5 4C18.5 4 21 6.5 21 9.5C21 15.5 12 21 12 21Z"/></symbol>
+ <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></symbol>
+ <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5 9.5 17.5 19.5 6.5"/></symbol>
+ <symbol id="i-arrowR" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></symbol>
+ <symbol id="i-arrowD" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></symbol>
+ <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 3.5l8 7V20a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 20z"/><path d="M9.5 21.5v-6h5v6"/></symbol>
+ <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></symbol>
+ <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 22a6.5 6.5 0 0 0 6.5-6.5c0-2.8-1.9-4.5-3.3-6.4C13.7 7 13 5 13 2.5c-3 2-4.3 4.5-4.3 6.3 0 1.2.4 2 .4 2S7.2 9.6 6.5 8.2A6.4 6.4 0 0 0 5.5 15.5C5.5 19.1 8.4 22 12 22z"/></symbol>
+ <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17.5V21M7 4h10v4.5a5 5 0 0 1-10 0z"/><path d="M7 5.5H4v1.7a3.3 3.3 0 0 0 3.3 3.3M17 5.5h3v1.7a3.3 3.3 0 0 1-3.3 3.3"/></symbol>
+ <symbol id="i-medal" viewBox="0 0 24 24"><circle cx="12" cy="14.5" r="5.5"/><path d="M9 10 6.5 3h4L12 7l1.5-4h4L15 10"/></symbol>
+ <symbol id="i-crown" viewBox="0 0 24 24"><path d="M4 8.5 8 11.5l4-6 4 6 4-3-1.2 10.5H5.2z"/></symbol>
+ <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3.5 20.5h17"/><line x1="7" y1="20" x2="7" y2="12.5"/><line x1="12" y1="20" x2="12" y2="6.5"/><line x1="17" y1="20" x2="17" y2="10"/></symbol>
+ <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+ <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.8"/><path d="M4.5 21c0-4.1 3.4-7 7.5-7s7.5 2.9 7.5 7"/></symbol>
+ <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0"/><line x1="12" y1="18" x2="12" y2="21"/></symbol>
+ <symbol id="i-robot" viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="10" rx="3"/><circle cx="9.5" cy="12.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="14.5" cy="12.5" r="1.1" fill="currentColor" stroke="none"/><path d="M12 8V5"/><circle cx="12" cy="3.6" r="1.1" fill="currentColor" stroke="none"/><path d="M9.3 15.4h5.4M5 11.5H2.5M21.5 11.5H19"/></symbol>
+ <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v4.5l3.2 1.9"/></symbol>
+ <symbol id="i-loop" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 1 2.2 5.3"/><path d="M4.5 20v-4.7h4.7"/></symbol>
+ <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></symbol>
+ <symbol id="i-vol" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></symbol>
+ <symbol id="i-voloff" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></symbol>
+ <symbol id="i-flag" viewBox="0 0 24 24"><line x1="5" y1="21.5" x2="5" y2="3"/><path d="M5 4h13l-3.5 4L18 12H5"/></symbol>
+</svg>
+
+<!-- ============ HUD ============ -->
+<div id="hud">
+ <button id="hudHome" class="hchip hbtn" title="Map"><svg class="ico"><use href="#i-home"/></svg></button>
+ <div id="hudHearts" class="hchip hidden"></div>
+ <div class="spacer"></div>
+ <div id="hudStreak" class="hchip"><svg class="ico"><use href="#i-flame"/></svg><span id="streakN">x2</span></div>
+ <div id="hudXp" class="hchip"><svg class="ico"><use href="#i-bolt"/></svg><span id="xpN">0</span>&nbsp;XP</div>
+ <button id="sndBtn" class="hchip hbtn" title="Sound"><svg class="ico"><use id="sndUse" href="#i-vol"/></svg></button>
+</div>
+
+<div id="toasts"></div>
+<div id="ovl"></div>
+
+<!-- ============ TITLE ============ -->
+<section class="screen on" id="scr-title">
+ <div class="wrap title-wrap">
+  <div class="f-ico" style="top:6%;left:5%;color:var(--sky)"><svg class="ico" style="width:38px;height:38px"><use href="#i-phone"/></svg></div>
+  <div class="f-ico" style="top:10%;right:6%;color:var(--coral);animation-delay:-1.5s"><svg class="ico" style="width:44px;height:44px"><use href="#i-tv"/></svg></div>
+  <div class="f-ico" style="bottom:24%;left:7%;color:var(--mintD);animation-delay:-3s"><svg class="ico" style="width:36px;height:36px"><use href="#i-game"/></svg></div>
+  <div class="f-ico" style="bottom:20%;right:9%;color:var(--grape);animation-delay:-2s"><svg class="ico" style="width:40px;height:40px"><use href="#i-chat"/></svg></div>
+  <div class="f-ico" style="top:44%;left:2%;color:var(--pink);animation-delay:-4s"><svg class="ico" style="width:30px;height:30px"><use href="#i-camera"/></svg></div>
+  <div class="f-ico" style="top:46%;right:2%;color:var(--sun);animation-delay:-5s"><svg class="ico" style="width:32px;height:32px"><use href="#i-play"/></svg></div>
+  <span class="kick">UNIT 1 · NEW MEDIA</span>
+  <h1 class="logo">
+   <span style="--i:0;color:var(--coral)">N</span><span style="--i:1;color:var(--sun)">E</span><span style="--i:2;color:var(--mint)">W</span><span class="sp"></span><span style="--i:3;color:var(--sky)">M</span><span style="--i:4;color:var(--grape)">E</span><span style="--i:5;color:var(--pink)">D</span><span style="--i:6;color:var(--coral)">I</span><span style="--i:7;color:var(--sun)">A</span>
+  </h1>
+  <span class="ribbon">QUEST</span>
+  <p class="t-sub">A playful journey through screens, words, and grammar</p>
+  <p class="t-sub-ar ar" dir="rtl">رحلة مرحة عبر الشاشات والكلمات والقواعد</p>
+  <div class="title-tabby tabby-slot"></div>
+  <div class="howto">
+   <span class="howchip"><svg class="ico"><use href="#i-book"/></svg>Play the levels</span>
+   <span class="howchip"><svg class="ico"><use href="#i-star"/></svg>Earn stars</span>
+   <span class="howchip"><svg class="ico"><use href="#i-robot"/></svg>Beat the boss</span>
+  </div>
+  <p class="t-sub-ar ar" dir="rtl" style="margin-top:8px">العب المراحل · اجمع النجوم · اهزم الوحش</p>
+  <button id="startBtn" class="btn" style="--bc:var(--coral);--bcd:var(--coralD);font-size:1.3rem;padding:15px 42px 16px;margin-top:24px">
+   <span>Press Start</span><span class="b-ar" dir="rtl">ابدأ اللعب</span>
+  </button>
+  <div class="ticker"><div class="tk" id="tk"></div></div>
+ </div>
+</section>
+
+<!-- ============ MAP ============ -->
+<section class="screen" id="scr-map">
+ <div class="wrap">
+  <div class="map-head">
+   <div class="map-logo">NEW MEDIA <i>QUEST</i></div>
+   <div class="hchip"><svg class="ico" style="color:var(--sunD)"><use href="#i-star"/></svg><span id="mapStars">0</span>/18</div>
+   <div class="hchip"><svg class="ico" style="color:var(--grapeD)"><use href="#i-medal"/></svg><span id="mapBadges">0</span>/7</div>
+   <button id="mapReset" class="hchip hbtn" title="Reset"><svg class="ico"><use href="#i-loop"/></svg></button>
+  </div>
+  <div class="map-wrap">
+   <svg class="map-path" viewBox="0 0 400 1300" preserveAspectRatio="none">
+    <path d="M200 105 C200 190 96 185 96 285 C96 385 264 380 264 465 C264 555 104 555 104 645 C104 745 272 740 272 825 C272 915 120 915 120 1005 C120 1095 200 1100 200 1200" fill="none" stroke="#E9DCC2" stroke-width="24" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+    <path d="M200 105 C200 190 96 185 96 285 C96 385 264 380 264 465 C264 555 104 555 104 645 C104 745 272 740 272 825 C272 915 120 915 120 1005 C120 1095 200 1100 200 1200" fill="none" stroke="#FBF3E4" stroke-width="14" stroke-linecap="round" stroke-dasharray="1 24" vector-effect="non-scaling-stroke"/>
+   </svg>
+   <svg class="deco" style="right:2%;top:1%;width:64px" viewBox="0 0 64 64"><circle cx="32" cy="32" r="14" fill="#FFD166" stroke="#E5B84B" stroke-width="4"/><g stroke="#FFA62B" stroke-width="4" stroke-linecap="round"><line x1="32" y1="4" x2="32" y2="12"/><line x1="32" y1="52" x2="32" y2="60"/><line x1="4" y1="32" x2="12" y2="32"/><line x1="52" y1="32" x2="60" y2="32"/></g></svg>
+   <svg class="deco" style="left:4%;top:6%;width:80px" viewBox="0 0 80 40"><path d="M20 32a12 12 0 0 1 2-23 14 14 0 0 1 26 2 11 11 0 0 1 12 21z" fill="#fff" stroke="#E9DCC2" stroke-width="3"/></svg>
+   <svg class="deco" style="right:6%;top:28%;width:70px" viewBox="0 0 80 40"><path d="M20 32a12 12 0 0 1 2-23 14 14 0 0 1 26 2 11 11 0 0 1 12 21z" fill="#fff" stroke="#E9DCC2" stroke-width="3"/></svg>
+   <svg class="deco" style="left:5%;top:56%;width:64px" viewBox="0 0 80 40"><path d="M20 32a12 12 0 0 1 2-23 14 14 0 0 1 26 2 11 11 0 0 1 12 21z" fill="#fff" stroke="#E9DCC2" stroke-width="3"/></svg>
+   <svg class="deco" style="left:8%;top:90%;width:46px" viewBox="0 0 40 52"><rect x="17" y="26" width="6" height="22" rx="3" fill="#B0895A"/><circle cx="20" cy="18" r="14" fill="#8EE3D8" stroke="#1B9C8F" stroke-width="3"/></svg>
+   <svg class="deco" style="right:8%;top:76%;width:40px" viewBox="0 0 40 52"><rect x="17" y="26" width="6" height="22" rx="3" fill="#B0895A"/><circle cx="20" cy="18" r="14" fill="#FFB3C1" stroke="#E14F4F" stroke-width="3"/></svg>
+   <div id="mapNodes"></div>
+  </div>
+  <div class="map-foot">
+   Complete all six levels to open the Boss Gate!
+   <span class="ar" dir="rtl">أكمل المراحل الست لفتح بوابة الوحش!</span>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 1 ============ -->
+<section class="screen level" id="scr-l1" style="--lc:var(--mint);--lcd:var(--mintD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">1</span>
+   <div><h2 class="lt">Word Island</h2><span class="lvl-ar" dir="rtl">جزيرة الكلمات</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Hi! I am Tabby! Let us collect media words!" data-tipar="مرحبًا! أنا تابي! هيا نجمع كلمات الوسائط!">
+    <h3 class="sh"><svg class="ico"><use href="#i-globe"/></svg>What is New Media?</h3>
+    <span class="sh-ar" dir="rtl">ما هي الوسائط الجديدة؟</span>
+    <div class="gcard" style="background:linear-gradient(135deg,#F0FCFA,#FDF2F8)">
+     <p style="font-size:1.1rem;font-weight:600;line-height:1.5">New media describes forms of media that are <b class="hl hl-sky">interactive</b> and allow users to <b class="hl hl-sky">digitally communicate</b> with each other.</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:8px">الوسائط الجديدة أشكال إعلام <b>تفاعلية</b> تتيح للمستخدمين <b>التواصل رقميًا</b> مع بعضهم.</p>
+    </div>
+    <div class="rgrid">
+     <div class="rcard" style="--rc:var(--skyD)"><svg class="ico" style="color:var(--skyD)"><use href="#i-phone"/></svg><p style="font-weight:600;margin-top:8px">You can access it on computers, smartphones and tablets.</p><p class="rar" dir="rtl">تستخدمها عبر الحاسوب والهاتف الذكي والجهاز اللوحي.</p></div>
+     <div class="rcard" style="--rc:var(--grapeD)"><svg class="ico" style="color:var(--grapeD)"><use href="#i-chat"/></svg><p style="font-weight:600;margin-top:8px">It includes social media, blogs, video games and online news sites.</p><p class="rar" dir="rtl">تشمل وسائل التواصل والمدونات وألعاب الفيديو ومواقع الأخبار.</p></div>
+     <div class="rcard" style="--rc:var(--mintD)"><svg class="ico" style="color:var(--mintD)"><use href="#i-globe"/></svg><p style="font-weight:600;margin-top:8px">It makes it easy to share our lives and connect with people all over the world.</p><p class="rar" dir="rtl">تسهّل مشاركة حياتنا والتواصل مع الناس حول العالم.</p></div>
+    </div>
+   </div>
+   <div class="step" data-tip="Old-school media first — no internet needed!" data-tipar="نبدأ بالوسائط القديمة — دون إنترنت!">
+    <h3 class="sh"><svg class="ico"><use href="#i-news"/></svg>Traditional Media</h3>
+    <span class="sh-ar" dir="rtl">الوسائط التقليدية — كانت موجودة قبل عصر الإنترنت</span>
+    <div class="wgrid" id="m-trad"></div>
+   </div>
+   <div class="step" data-tip="Now the digital stars of today!" data-tipar="والآن نجوم العصر الرقمي!">
+    <h3 class="sh"><svg class="ico"><use href="#i-phone"/></svg>New Media</h3>
+    <span class="sh-ar" dir="rtl">الوسائط الجديدة — رقمية وتفاعلية</span>
+    <div class="wgrid" id="m-new"></div>
+   </div>
+   <div class="step" data-tip="Tap a word, then tap its picture to connect them!" data-tipar="انقر الكلمة ثم انقر صورتها لتتصل بهما!">
+    <h3 class="sh"><svg class="ico"><use href="#i-search"/></svg>Connect!</h3>
+    <span class="sh-ar" dir="rtl">وصّل كل كلمة بصورتها — انقر الكلمة ثم الصورة فيُرسم خط بينهما</span>
+    <div id="m-match"></div>
+   </div>
+   <div class="step" data-tip="Last check — show me what you learned!" data-tipar="اختبار أخير — أرني ما تعلمته!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Quick Check</h3>
+    <span class="sh-ar" dir="rtl">تحقّق سريع — اختر الإجابة الصحيحة</span>
+    <div id="m-l1q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 2 ============ -->
+<section class="screen level" id="scr-l2" style="--lc:var(--coral);--lcd:var(--coralD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">2</span>
+   <div><h2 class="lt">Screenagers Valley</h2><span class="lvl-ar" dir="rtl">وادي جيل الشاشات</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Read the story on my phone!" data-tipar="اقرأ القصة على هاتفي!">
+    <h3 class="sh"><svg class="ico"><use href="#i-tv"/></svg>The Screenagers Story</h3>
+    <span class="sh-ar" dir="rtl">قصة «جيل الشاشات» — اقرأ الرسائل ثم انظر للأرقام</span>
+    <div class="l2grid">
+     <div class="phone">
+      <div class="phone-screen">
+       <div class="phone-top"><span>9:41</span><span>Screenagers News</span><span>100%</span></div>
+       <div class="feed">
+        <div class="msg" style="--d:.1s">
+         <button class="spk" data-say="What is the longest time you have gone without using your phone? Could you spend a whole day without checking it?"><svg class="ico"><use href="#i-speaker"/></svg></button>
+         <p class="men"><svg class="ico" style="width:16px;height:16px;color:var(--coralD);vertical-align:-3px"><use href="#i-clock"/></svg> What is the longest time you have gone without using your phone? Could you spend a whole day without checking it?</p>
+         <p class="mar" dir="rtl">ما أطول فترة بقيتَها دون هاتفك؟ هل تستطيع قضاء يوم كامل دون أن تتفقّده؟</p>
+        </div>
+        <div class="msg" style="--d:.5s">
+         <button class="spk" data-say="Technology is a big part of our lives. Teenagers today are digital natives. They grew up with technology, and many are addicted to their mobile devices."><svg class="ico"><use href="#i-speaker"/></svg></button>
+         <p class="men">Technology is a big part of our lives. Teenagers today are <b>digital natives</b> — they grew up with technology, and many are <b>addicted</b> to their mobile devices.</p>
+         <p class="mar" dir="rtl">التقنية جزء كبير من حياتنا. مراهقو اليوم <b>مواطنون رقميون</b> نشؤوا مع التقنية، وكثيرون منهم <b>مدمنون</b> على أجهزتهم.</p>
+        </div>
+        <div class="msg" style="--d:.9s">
+         <button class="spk" data-say="They are glued to their screens. A recent study showed that teenagers spend nearly nine hours a day in front of a screen."><svg class="ico"><use href="#i-speaker"/></svg></button>
+         <p class="men">They are <b>glued</b> to their screens. A recent study showed that teenagers spend nearly <b>nine hours</b> a day in front of a screen.</p>
+         <p class="mar" dir="rtl">هم <b>ملتصقون</b> بشاشاتهم. أظهرت دراسة حديثة أن المراهقين يقضون قرابة <b>تسع ساعات</b> يوميًا أمام الشاشة.</p>
+        </div>
+        <div class="msg" style="--d:1.3s">
+         <button class="spk" data-say="How do they spend the time? Watching YouTube is number one, over 40 minutes a day. Facebook takes 35 minutes, Snapchat 25, and Instagram 15. Twitter is the least popular."><svg class="ico"><use href="#i-speaker"/></svg></button>
+         <p class="men">How do they spend the time? Watching <b>YouTube</b> is number one — over <b>40 minutes</b> a day. Facebook takes 35, Snapchat 25, and Instagram 15. Twitter is the least popular.</p>
+         <p class="mar" dir="rtl">كيف يقضون الوقت؟ <b>يوتيوب</b> في المقدمة بأكثر من <b>40 دقيقة</b> يوميًا، ثم فيسبوك 35، وسناب شات 25، وإنستغرام 15. أما تويتر فهو الأقل شعبية.</p>
+        </div>
+        <div class="msg" style="--d:1.7s">
+         <button class="spk" data-say="Careful! Excessive screen time can harm the development of young brains and decrease your attention span. Also, 80 percent of video games contain violent content."><svg class="ico"><use href="#i-speaker"/></svg></button>
+         <p class="men">Careful! <b>Excessive</b> screen time can harm the development of young brains and decrease your <b>attention span</b>. Also, 80% of video games contain violent content.</p>
+         <p class="mar" dir="rtl">احذر! <b>الإفراط</b> في وقت الشاشة قد يضر بنموّ الدماغ ويقلّل <b>فترة الانتباه</b>. كما أن 80% من ألعاب الفيديو تحتوي محتوى عنيفًا.</p>
+        </div>
+        <div class="msg" style="--d:2.1s">
+         <button class="spk" data-say="But there is good news: games where you help others can make you more helpful. And remember, the content of your screen time matters more than the amount of time!"><svg class="ico"><use href="#i-speaker"/></svg></button>
+         <p class="men">But there is good news: games where you <b>help others</b> can make you more helpful. And remember — the <b>content</b> of your screen time matters more than the amount of time!</p>
+         <p class="mar" dir="rtl">لكن ثمة خبر جيد: الألعاب التي <b>تساعد فيها الآخرين</b> تجعلك أكثر تعاونًا. وتذكّر — <b>نوع المحتوى</b> أهم من عدد الساعات!</p>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div>
+      <div class="statcard">
+       <svg class="donut" viewBox="0 0 140 140">
+        <circle cx="70" cy="70" r="56" fill="none" stroke="#F1E7D8" stroke-width="16"/>
+        <circle class="dfill" cx="70" cy="70" r="56" fill="none" stroke="var(--coral)" stroke-width="16" stroke-linecap="round" transform="rotate(-90 70 70)"/>
+        <text class="dnum" x="70" y="70" text-anchor="middle">9h</text>
+        <text class="dlbl" x="70" y="92" text-anchor="middle">A DAY</text>
+       </svg>
+       <div>
+        <p style="font-weight:600">Teenagers spend nearly <b>nine hours</b> a day in front of a screen.</p>
+        <p class="ar" dir="rtl" style="text-align:right;margin-top:6px">يقضي المراهقون قرابة تسع ساعات يوميًا أمام الشاشة.</p>
+       </div>
+      </div>
+      <div class="gcard plats">
+       <p style="font-family:'Lilita One';font-size:.85rem;letter-spacing:1px;color:var(--ink2)">MINUTES PER DAY</p>
+       <div class="prow" style="--pc:var(--coral)"><span class="pname"><svg class="ico"><use href="#i-play"/></svg>YouTube</span><span class="ptrack"><span class="pfill" style="width:100%"></span></span><span class="pmin">40</span></div>
+       <div class="prow" style="--pc:var(--sky)"><span class="pname"><svg class="ico"><use href="#i-chat"/></svg>Facebook</span><span class="ptrack"><span class="pfill" style="width:87%"></span></span><span class="pmin">35</span></div>
+       <div class="prow" style="--pc:var(--sun)"><span class="pname"><svg class="ico"><use href="#i-camera"/></svg>Snapchat</span><span class="ptrack"><span class="pfill" style="width:62%"></span></span><span class="pmin">25</span></div>
+       <div class="prow" style="--pc:var(--pink)"><span class="pname"><svg class="ico"><use href="#i-camera"/></svg>Instagram</span><span class="ptrack"><span class="pfill" style="width:38%"></span></span><span class="pmin">15</span></div>
+       <p class="ar" dir="rtl" style="text-align:right;margin-top:8px">دقائق الاستخدام اليومي لكل منصة — وتويتر هو الأقل شعبية.</p>
+      </div>
+      <div class="keybox">
+       <svg class="ico"><use href="#i-bolt"/></svg>
+       <div>
+        <p><b>Remember:</b> the content and context of your screen time is more important than the amount of time.</p>
+        <p class="ar" dir="rtl">تذكّر: نوع المحتوى وسياق استخدامه أهم من عدد الساعات.</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="step" data-tip="Flip the cards to learn the new words!" data-tipar="اقلب البطاقات لتتعلم الكلمات الجديدة!">
+    <h3 class="sh"><svg class="ico"><use href="#i-book"/></svg>New Words</h3>
+    <span class="sh-ar" dir="rtl">كلمات جديدة — انقر البطاقة لتقلبها</span>
+    <div class="fgrid" id="m-screen"></div>
+   </div>
+   <div class="step" data-tip="Time to check your understanding!" data-tipar="حان وقت اختبار فهمك!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Check Your Understanding</h3>
+    <span class="sh-ar" dir="rtl">تحقّق من فهمك — البيانات أمامك</span>
+    <div class="datastrip">
+     <span class="dschip">9 hours / day</span><span class="dschip">YouTube 40 min</span><span class="dschip">Facebook 35</span><span class="dschip">Snapchat 25</span><span class="dschip">Instagram 15</span>
+    </div>
+    <div id="m-l2q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 3 ============ -->
+<section class="screen level" id="scr-l3" style="--lc:var(--sun);--lcd:var(--sunD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">3</span>
+   <div><h2 class="lt">Grammar Lab</h2><span class="lvl-ar" dir="rtl">مختبر القواعد</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Compare two things with: er + than!" data-tipar="قارن شيئين: نضيف er ثم than!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Comparatives</h3>
+    <span class="sh-ar" dir="rtl">صيغة المقارنة — عند مقارنة شيئين معًا</span>
+    <div class="vsbox">
+     <div class="vs-side"><svg class="ico" style="width:38px;height:38px;color:var(--sky)"><use href="#i-phone"/></svg><span class="nm">smartphone</span></div>
+     <div class="vs-badge">VS</div>
+     <div class="vs-side"><svg class="ico" style="width:62px;height:62px;color:var(--sky)"><use href="#i-tablet"/></svg><span class="nm">tablet</span></div>
+    </div>
+    <p class="vs-cap">A smartphone is <b class="hl hl-sun">smaller</b> <b class="hl hl-coral">than</b> a tablet.
+     <span class="ar" dir="rtl">الهاتف الذكي أصغر من الجهاز اللوحي.</span></p>
+    <div class="fchips">
+     <span class="fch c-adj" style="--d:.1s">adjective</span><span class="fplus">+</span><span class="fch c-er" style="--d:.25s">-er</span><span class="fplus">+</span><span class="fch c-than" style="--d:.4s">than</span>
+     <span class="f-eq">or</span>
+     <span class="fch c-more" style="--d:.55s">more</span><span class="fplus">+</span><span class="fch c-adj" style="--d:.7s">adjective</span><span class="fplus">+</span><span class="fch c-than" style="--d:.85s">than</span>
+    </div>
+    <div class="rgrid">
+     <div class="rcard" style="--rc:var(--skyD)"><div><span class="rtag">RULE 1</span><span class="rname">Short adjectives</span><span class="rar" dir="rtl">الصفات القصيرة — كلمة واحدة</span></div>
+      <div class="rf"><b class="hl hl-sky">large</b> → large<b class="hl hl-sun">r</b> <b class="hl hl-coral">than</b></div>
+      <div class="rex"><span class="en">TV screens are <b class="hl hl-sun">larger</b> <b class="hl hl-coral">than</b> computer screens.</span><span class="ar" dir="rtl">شاشات التلفاز أكبر من شاشات الحاسوب.</span></div></div>
+     <div class="rcard" style="--rc:var(--grapeD)"><div><span class="rtag">RULE 2</span><span class="rname">Long adjectives</span><span class="rar" dir="rtl">الصفات الطويلة — كلمتان أو أكثر</span></div>
+      <div class="rf"><b class="hl hl-grape">more</b> <b class="hl hl-sky">popular</b> <b class="hl hl-coral">than</b></div>
+      <div class="rex"><span class="en">Watching TV is <b class="hl hl-grape">more</b> <b class="hl hl-sky">popular</b> <b class="hl hl-coral">than</b> video games.</span><span class="ar" dir="rtl">مشاهدة التلفاز أكثر شعبية من ألعاب الفيديو.</span></div></div>
+     <div class="rcard" style="--rc:var(--coralD)"><div><span class="rtag">RULE 3</span><span class="rname">Irregular!</span><span class="rar" dir="rtl">صفات شاذّة — احفظها كما هي!</span></div>
+      <div class="rf"><b class="hl hl-sky">good</b> → <b class="hl hl-grape">better</b> · <b class="hl hl-sky">bad</b> → <b class="hl hl-grape">worse</b></div>
+      <div class="rex"><span class="en">Reading books is <b class="hl hl-grape">better</b> <b class="hl hl-coral">than</b> watching TV.</span><span class="ar" dir="rtl">قراءة الكتب أفضل من مشاهدة التلفاز.</span></div></div>
+    </div>
+    <div class="watch"><svg class="ico"><use href="#i-flame"/></svg><div>Never say more better!
+     <span class="ar" dir="rtl">لا نقول أبدًا more better — كلمة better وحدها كافية.</span></div></div>
+   </div>
+   <div class="step" data-tip="Who is number ONE? Use: the ... est!" data-tipar="من هو الأول؟ استخدم the ثم الصيغة الخاصة!">
+    <h3 class="sh"><svg class="ico"><use href="#i-crown"/></svg>Superlatives</h3>
+    <span class="sh-ar" dir="rtl">صيغة التفضيل — عندما نقارن شيئًا واحدًا مع كل الباقي</span>
+    <div class="podium-wrap">
+     <svg class="podium" viewBox="0 0 260 165">
+      <rect x="20" y="88" width="70" height="60" rx="10" fill="#D8CFF5"/><rect x="95" y="48" width="70" height="100" rx="10" fill="#FFD166"/><rect x="170" y="108" width="70" height="40" rx="10" fill="#FFC9A3"/>
+      <text x="55" y="124" text-anchor="middle" font-family="Lilita One" font-size="24" fill="#5B4E9E">2</text>
+      <text x="130" y="86" text-anchor="middle" font-family="Lilita One" font-size="26" fill="#9A6B00">1</text>
+      <text x="205" y="136" text-anchor="middle" font-family="Lilita One" font-size="24" fill="#A05A2C">3</text>
+      <path d="M116 34l3.6 7.2 8 .9-6 5.4 1.7 7.9-7.3-4-7.3 4 1.7-7.9-6-5.4 8-.9z" fill="#FFA62B"/>
+     </svg>
+     <p class="pod-note">The superlative is the gold medal — number ONE of all!
+      <span class="ar" dir="rtl">صيغة التفضيل هي الميدالية الذهبية — الأفضل بين الجميع.</span></p>
+    </div>
+    <div class="fchips">
+     <span class="fch c-the" style="--d:.1s">the</span><span class="fplus">+</span><span class="fch c-adj" style="--d:.25s">adjective</span><span class="fplus">+</span><span class="fch c-est" style="--d:.4s">-est</span>
+     <span class="f-eq">or</span>
+     <span class="fch c-the" style="--d:.55s">the</span><span class="fplus">+</span><span class="fch c-more" style="--d:.7s">most</span><span class="fplus">+</span><span class="fch c-adj" style="--d:.85s">adjective</span>
+    </div>
+    <div class="rgrid">
+     <div class="rcard" style="--rc:var(--skyD)"><div><span class="rtag">RULE 1</span><span class="rname">Short adjectives</span><span class="rar" dir="rtl">الصفات القصيرة</span></div>
+      <div class="rf"><b class="hl hl-coral">the</b> larg<b class="hl hl-grape">est</b></div>
+      <div class="rex"><span class="en">The TV in my room is <b class="hl hl-coral">the</b> larg<b class="hl hl-grape">est</b> in the house.</span><span class="ar" dir="rtl">تلفاز غرفتي هو الأكبر في المنزل.</span></div></div>
+     <div class="rcard" style="--rc:var(--grapeD)"><div><span class="rtag">RULE 2</span><span class="rname">Long adjectives</span><span class="rar" dir="rtl">الصفات الطويلة</span></div>
+      <div class="rf"><b class="hl hl-coral">the</b> <b class="hl hl-grape">most</b> <b class="hl hl-sky">popular</b></div>
+      <div class="rex"><span class="en"><b class="hl hl-coral">The</b> <b class="hl hl-grape">most</b> <b class="hl hl-sky">popular</b> TV shows are comedy shows.</span><span class="ar" dir="rtl">أكثر البرامج شعبية هي البرامج الكوميدية.</span></div></div>
+     <div class="rcard" style="--rc:var(--coralD)"><div><span class="rtag">RULE 3</span><span class="rname">Irregular!</span><span class="rar" dir="rtl">صفات شاذّة — احفظها!</span></div>
+      <div class="rf"><b class="hl hl-sky">good</b> → <b class="hl hl-coral">the</b> <b class="hl hl-grape">best</b></div>
+      <div class="rex"><span class="en">Reading books is <b class="hl hl-coral">the</b> <b class="hl hl-grape">best</b> hobby.</span><span class="ar" dir="rtl">قراءة الكتب هي أفضل هواية.</span></div></div>
+    </div>
+    <div class="watch"><svg class="ico"><use href="#i-flame"/></svg><div>Do not forget the before a superlative!
+     <span class="ar" dir="rtl">لا تنسَ كلمة the قبل صيغة التفضيل.</span></div></div>
+   </div>
+   <div class="step" data-tip="Equal or not equal? Use: as ... as!" data-tipar="متساويان أم لا؟ استخدم as ثم الصفة ثم as!">
+    <h3 class="sh"><svg class="ico"><use href="#i-loop"/></svg>as … as</h3>
+    <span class="sh-ar" dir="rtl">التساوي في الصفة — متساويان أم غير متساويين؟</span>
+    <div class="asgrid">
+     <div class="asbox">
+      <div class="pair"><svg class="ico" style="width:46px;height:46px"><use href="#i-tv"/></svg><svg class="ico" style="width:46px;height:46px"><use href="#i-tv"/></svg></div>
+      <div class="as-eq">=</div>
+      <p class="cap"><b class="hl hl-mint" style="background:#DFF5F1;color:#0F766E">as</b> large <b class="hl hl-mint" style="background:#DFF5F1;color:#0F766E">as</b></p>
+      <p class="ar" dir="rtl">بنفس الحجم تمامًا — الشيئان متساويان</p>
+     </div>
+     <div class="asbox">
+      <div class="pair"><svg class="ico" style="width:28px;height:28px"><use href="#i-tv"/></svg><svg class="ico" style="width:64px;height:64px"><use href="#i-tv"/></svg></div>
+      <div class="as-eq">≠</div>
+      <p class="cap"><b class="hl hl-coral">not as</b> large <b class="hl hl-mint" style="background:#DFF5F1;color:#0F766E">as</b></p>
+      <p class="ar" dir="rtl">ليس بنفس الحجم — غير متساويين</p>
+     </div>
+    </div>
+    <div class="rgrid">
+     <div class="rcard" style="--rc:var(--mintD)"><div><span class="rtag">RULE 1</span><span class="rname">Equal</span><span class="rar" dir="rtl">عندما يكون الشيئان متساويين</span></div>
+      <div class="rf"><b class="hl hl-mint" style="background:#DFF5F1;color:#0F766E">as</b> + adjective + <b class="hl hl-mint" style="background:#DFF5F1;color:#0F766E">as</b></div>
+      <div class="rex"><span class="en">My computer screen is <b>as</b> large <b>as</b> my TV screen.</span><span class="ar" dir="rtl">شاشة حاسوبي بنفس حجم شاشة تلفازي.</span></div></div>
+     <div class="rcard" style="--rc:var(--pinkD)"><div><span class="rtag">RULE 2</span><span class="rname">Not equal</span><span class="rar" dir="rtl">عندما يكونان غير متساويين</span></div>
+      <div class="rf"><b class="hl hl-coral">not as</b> + adjective + <b class="hl hl-mint" style="background:#DFF5F1;color:#0F766E">as</b></div>
+      <div class="rex"><span class="en">Watching TV is <b class="hl hl-coral">not as</b> popular <b>as</b> video games.</span><span class="ar" dir="rtl">مشاهدة التلفاز ليست بنفس شعبية ألعاب الفيديو.</span></div></div>
+    </div>
+    <div class="watch"><svg class="ico"><use href="#i-flame"/></svg><div>The adjective never changes here — no -er!
+     <span class="ar" dir="rtl">لا نضيف er للصفة بين as و as أبدًا.</span></div></div>
+   </div>
+   <div class="step" data-tip="Grammar battle — good luck!" data-tipar="معركة القواعد — بالتوفيق!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Grammar Battle</h3>
+    <span class="sh-ar" dir="rtl">تدريب على القواعد — اختبر قوتك</span>
+    <div id="m-l3q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 4 ============ -->
+<section class="screen level" id="scr-l4" style="--lc:var(--sky);--lcd:var(--skyD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">4</span>
+   <div><h2 class="lt">Data Mountain</h2><span class="lvl-ar" dir="rtl">جبل البيانات</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Numbers can tell stories too!" data-tipar="الأرقام تحكي قصصًا أيضًا!">
+    <h3 class="sh"><svg class="ico"><use href="#i-chart"/></svg>Charts Tell Stories</h3>
+    <span class="sh-ar" dir="rtl">الرسوم البيانية تحكي القصص — أولًا وصّل كل رسم باسمه</span>
+    <div id="m-ct"></div>
+    <h3 class="sh" style="margin-top:20px"><svg class="ico"><use href="#i-person"/></svg>Patrick's Family</h3>
+    <span class="sh-ar" dir="rtl">عائلة باتريك — انقر على أي شخص لاستكشاف أرقامه</span>
+    <div class="chartbox" id="chartA">
+     <p style="text-align:center;font-weight:600">Hours per week on video games and TV</p>
+     <p class="ar" dir="rtl" style="text-align:center;margin:2px 0 6px">ساعات الأسبوع على ألعاب الفيديو والتلفاز</p>
+     <div class="chart-mount"></div>
+     <div class="fleg"><span><i class="sw swg"></i>Playing video games</span><span><i class="sw swt"></i>Watching TV</span></div>
+     <div class="chart-info idle" dir="ltr">Tap any name to inspect the numbers!
+      <span class="ar" dir="rtl">انقر على أي اسم لاستكشاف الأرقام!</span></div>
+    </div>
+   </div>
+   <div class="step" data-tip="Let us visit the news world!" data-tipar="هيا بنا لعالم الأخبار!">
+    <h3 class="sh"><svg class="ico"><use href="#i-news"/></svg>News Corner</h3>
+    <span class="sh-ar" dir="rtl">زاوية الأخبار — كلمات من عالم الصحافة</span>
+    <div class="chartbox">
+     <p style="text-align:center;font-weight:600">Number of newspapers sold vs people reading online</p>
+     <p class="ar" dir="rtl" style="text-align:center;margin:2px 0 6px">عدد الصحف المبيعة مقابل قرائها الإلكترونيين</p>
+     <svg viewBox="0 0 520 215" style="width:100%;height:auto">
+      <line x1="45" y1="185" x2="500" y2="185" stroke="#D9CDB4" stroke-width="3"/>
+      <polyline class="tl" points="60,60 190,90 320,125 450,165" fill="none" stroke="var(--coral)" stroke-width="5" stroke-linecap="round"/>
+      <polyline class="tl" points="60,150 190,125 320,80 450,45" fill="none" stroke="var(--mint)" stroke-width="5" stroke-linecap="round" style="animation-delay:.6s"/>
+      <circle cx="60" cy="60" r="5" fill="var(--coralD)"/><circle cx="190" cy="90" r="5" fill="var(--coralD)"/><circle cx="320" cy="125" r="5" fill="var(--coralD)"/><circle cx="450" cy="165" r="5" fill="var(--coralD)"/>
+      <circle cx="60" cy="150" r="5" fill="var(--mintD)"/><circle cx="190" cy="125" r="5" fill="var(--mintD)"/><circle cx="320" cy="80" r="5" fill="var(--mintD)"/><circle cx="450" cy="45" r="5" fill="var(--mintD)"/>
+      <text class="cname" x="60" y="205">2015</text><text class="cname" x="190" y="205">2016</text><text class="cname" x="320" y="205">2017</text><text class="cname" x="450" y="205">2018</text>
+     </svg>
+     <div class="fleg"><span><i class="sw swt"></i>Newspapers sold</span><span><i class="sw swg"></i>Reading online</span></div>
+     <p style="text-align:center;font-weight:600;margin-top:10px">The number of people reading <b>electronic newspapers</b> is increasing!</p>
+     <p class="ar" dir="rtl" style="text-align:center;margin-top:4px">عدد قراء الصحف الإلكترونية في تزايد مستمر!</p>
+    </div>
+    <div class="wgrid" id="m-news" style="margin-top:14px"></div>
+    <div class="gcard talkcard" style="margin-top:14px">
+     <p style="font-weight:600"><svg class="ico" style="width:18px;height:18px;color:var(--skyD);vertical-align:-3px"><use href="#i-chat"/></svg> Do you think printed newspapers will disappear soon?</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">هل تعتقد أن الصحف الورقية ستختفي قريبًا؟</p>
+     <button class="rvbtn"><span class="rv-en">Show ideas</span><span class="rv-ar" dir="rtl">أظهر الأفكار</span></button>
+     <div class="rvt"><span class="rvv">Maybe not soon — but every year, more people read their news online.</span>
+      <span class="ar" dir="rtl">ربما ليس قريبًا — لكن كل عام يزداد عدد من يقرأ الأخبار عبر الإنترنت.</span></div>
+    </div>
+   </div>
+   <div class="step" data-tip="True, False, or Not Given?" data-tipar="صحيح، خطأ، أم غير مذكور؟">
+    <h3 class="sh"><svg class="ico"><use href="#i-check"/></svg>True or False?</h3>
+    <span class="sh-ar" dir="rtl">صحيح أم خطأ أم غير مذكور؟ — الرسم أمامك</span>
+    <div class="tfng">
+     <div class="tfn ok">True<span class="ar" dir="rtl">الرسم يؤكد العبارة</span></div>
+     <div class="tfn no">False<span class="ar" dir="rtl">الرسم ينفي العبارة</span></div>
+     <div class="tfn ng">Not Given<span class="ar" dir="rtl">الرسم لا يخبرنا</span></div>
+    </div>
+    <div class="chartbox" id="chartB" style="margin-bottom:12px">
+     <div class="chart-mount"></div>
+     <div class="fleg"><span><i class="sw swg"></i>Video games</span><span><i class="sw swt"></i>TV</span></div>
+    </div>
+    <div id="m-l4q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 5 ============ -->
+<section class="screen level" id="scr-l5" style="--lc:var(--grape);--lcd:var(--grapeD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">5</span>
+   <div><h2 class="lt">Phrasal Cave</h2><span class="lvl-ar" dir="rtl">كهف الأفعال</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="These verbs have secret meanings!" data-tipar="هذه الأفعال تحمل معاني سرّية!">
+    <h3 class="sh"><svg class="ico"><use href="#i-search"/></svg>Phrasal Verbs</h3>
+    <span class="sh-ar" dir="rtl">الأفعال المركّبة — أفعال بمعانٍ سرّية!</span>
+    <div class="fchips">
+     <span class="fch c-adj" style="--d:.1s">verb</span><span class="fplus">+</span><span class="fch c-er" style="--d:.25s">small word</span><span class="fplus">=</span><span class="fch c-more" style="--d:.4s">NEW meaning!</span>
+    </div>
+    <div class="gcard">
+     <p style="font-weight:600;font-size:1.05rem"><b>look</b> (ينظر) + <b>after</b> → <b class="hl hl-grape">look after</b> = to take care of (يعتني بـ)</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:8px">المعنى يتغيّر تمامًا عندما نضيف حرفًا صغيرًا — لا يمكن تخمينه كلمة بكلمة!</p>
+    </div>
+    <div class="gcard comic">
+     <h3 class="sh" style="margin:0"><svg class="ico"><use href="#i-chat"/></svg>Funny moment: bring up</h3>
+     <div class="comic-scene">
+      <div class="liftbox">
+       <span class="lifttag">LIFT</span>
+       <div class="lift-people"><svg class="ico"><use href="#i-person"/></svg><svg class="ico"><use href="#i-person"/></svg></div>
+      </div>
+      <div class="cbubbles">
+       <div class="cbub">Why did you call me son? You are not my father!</div>
+       <div class="cbub alt">I brought you up, didn't I?</div>
+      </div>
+     </div>
+     <div class="cmean">
+      <div class="mbox m1"><span class="m-en"><b>bring up (1)</b> = to raise and care for a child</span><span class="ar" dir="rtl">يربّي طفلًا ويرعاه</span></div>
+      <div class="mbox m2"><span class="m-en"><b>bring up (2)</b> = to lift something up</span><span class="ar" dir="rtl">يرفع شيئًا إلى الأعلى</span></div>
+     </div>
+     <p class="cpunch">Inside the lift, I brought you up sounds like I lifted you — but Dad means I raised you!</p>
+     <p class="cpunch-ar ar" dir="rtl">داخل المصعد يبدو أن الأب يقصد «رفعتُك» — لكنه يقصد «ربّيتُك»!</p>
+    </div>
+   </div>
+   <div class="step" data-tip="Flip the cards, collect the verbs!" data-tipar="اقلب البطاقات واجمع الأفعال!">
+    <h3 class="sh"><svg class="ico"><use href="#i-book"/></svg>Your Verb Collection</h3>
+    <span class="sh-ar" dir="rtl">مجموعة الأفعال المركّبة — انقر لقلب كل بطاقة</span>
+    <div class="fgrid" id="m-phr"></div>
+   </div>
+   <div class="step" data-tip="Use the meanings in brackets!" data-tipar="استعن بالمعاني بين الأقواس!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Verb Challenge</h3>
+    <span class="sh-ar" dir="rtl">تحدي الأفعال — اختر الفعل المناسب للمعنى المذكور</span>
+    <div id="m-l5q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 6 ============ -->
+<section class="screen level" id="scr-l6" style="--lc:var(--pink);--lcd:var(--pinkD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">6</span>
+   <div><h2 class="lt">Creation Studio</h2><span class="lvl-ar" dir="rtl">استوديو الإبداع</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Magic phrases for your opinions!" data-tipar="عبارات سحرية لإبداء رأيك!">
+    <h3 class="sh"><svg class="ico"><use href="#i-mic"/></svg>Speak Your Mind</h3>
+    <span class="sh-ar" dir="rtl">أبْدِ رأيك بثقة — عبارات مفيدة مع ترجمتها</span>
+    <div class="pgrid">
+     <div class="pgroup" style="--pc:var(--coralD)"><div class="pg-h">Giving your opinion<span class="ar" dir="rtl">إبداء الرأي</span></div>
+      <div class="pchip"><span class="en">In my opinion, …</span><span class="ar" dir="rtl">في رأيي…</span></div>
+      <div class="pchip"><span class="en">I think / believe / feel that …</span><span class="ar" dir="rtl">أعتقد / أومن / أشعر أنّ…</span></div>
+      <div class="pchip"><span class="en">Based on my own experience, …</span><span class="ar" dir="rtl">بناءً على تجربتي الخاصة…</span></div></div>
+     <div class="pgroup" style="--pc:var(--mintD)"><div class="pg-h">Agreeing<span class="ar" dir="rtl">الموافقة</span></div>
+      <div class="pchip"><span class="en">I agree.</span><span class="ar" dir="rtl">أوافق.</span></div>
+      <div class="pchip"><span class="en">I have the same opinion.</span><span class="ar" dir="rtl">لديّ الرأي نفسه.</span></div>
+      <div class="pchip"><span class="en">You're exactly right!</span><span class="ar" dir="rtl">أنت محق تمامًا!</span></div></div>
+     <div class="pgroup" style="--pc:var(--grapeD)"><div class="pg-h">Disagreeing<span class="ar" dir="rtl">المخالفة بلطف</span></div>
+      <div class="pchip"><span class="en">I'm sorry, but I don't agree.</span><span class="ar" dir="rtl">عذرًا، لكنّي لا أوافق.</span></div>
+      <div class="pchip"><span class="en">I see what you're saying, but …</span><span class="ar" dir="rtl">أفهم ما تقصد، لكن…</span></div>
+      <div class="pchip"><span class="en">That's true, but …</span><span class="ar" dir="rtl">هذا صحيح، لكن…</span></div></div>
+     <div class="pgroup" style="--pc:var(--sunD)"><div class="pg-h">Giving reasons<span class="ar" dir="rtl">ذكر الأسباب</span></div>
+      <div class="pchip"><span class="en">I think this because …</span><span class="ar" dir="rtl">أعتقد هذا لأنّ…</span></div>
+      <div class="pchip"><span class="en">The reason for this is …</span><span class="ar" dir="rtl">السبب في ذلك هو…</span></div></div>
+     <div class="pgroup" style="--pc:var(--skyD)"><div class="pg-h">Giving examples<span class="ar" dir="rtl">ذكر الأمثلة</span></div>
+      <div class="pchip"><span class="en">For example, …</span><span class="ar" dir="rtl">على سبيل المثال…</span></div>
+      <div class="pchip"><span class="en">For instance, …</span><span class="ar" dir="rtl">على سبيل المثال…</span></div>
+      <div class="pchip"><span class="en">One example of this is …</span><span class="ar" dir="rtl">أحد الأمثلة على ذلك…</span></div></div>
+    </div>
+   </div>
+   <div class="step" data-tip="Build your own super sentence!" data-tipar="ابنِ جملتك الخارقة!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Opinion Sentence Builder</h3>
+    <span class="sh-ar" dir="rtl">اصنع جملة رأي كاملة — انقر عبارة من كل صف</span>
+    <div class="sbar" id="bSentence"><span class="ph">Your sentence will appear here…</span></div>
+    <div id="m-rows"></div>
+    <button id="bClear" class="rvbtn" style="margin-top:14px"><span class="rv-en">Start again</span><span class="rv-ar" dir="rtl">ابدأ من جديد</span></button>
+    <div class="gcard talkcard">
+     <p style="font-weight:600"><svg class="ico" style="width:18px;height:18px;color:var(--pinkD);vertical-align:-3px"><use href="#i-chat"/></svg> Why do teenagers spend too much time in front of screens?</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">لماذا يقضي المراهقون وقتًا طويلًا أمام الشاشات برأيك؟</p>
+     <button class="rvbtn"><span class="rv-en">Show ideas</span><span class="rv-ar" dir="rtl">أظهر الأفكار</span></button>
+     <div class="rvt"><span class="rvv">Games and videos are fun · everything is on the phone · they chat with friends online.</span>
+      <span class="ar" dir="rtl">الألعاب والمقاطع ممتعة · كل شيء على الهاتف · الدردشة مع الأصدقاء.</span></div>
+    </div>
+   </div>
+   <div class="step" data-tip="Meet Noora and her robot blog!" data-tipar="تعرّف على نورا ومدونتها عن الروبوتات!">
+    <h3 class="sh"><svg class="ico"><use href="#i-robot"/></svg>Noora's Blog</h3>
+    <span class="sh-ar" dir="rtl">مدونة نورا — انظر إلى تصميمها ومحتواها</span>
+    <div class="browser">
+     <div class="bbar"><i class="bdot" style="background:#FF8A8A"></i><i class="bdot" style="background:#FFD166"></i><i class="bdot" style="background:#7DE2A5"></i><span class="burl">robotdiaries.com</span></div>
+     <div class="binner">
+      <svg class="ico"><use href="#i-robot"/></svg>
+      <div class="btitle">Robot DiaRies</div>
+      <div class="bsub">Building Robots · by Noora A.S.</div>
+      <div class="bpost">Hi everyone! Today I want to tell you about building a robot with Raspberry Pi. It's quite difficult when you're a beginner — but don't give up! Have you ever tried it? Leave a comment below!</div>
+     </div>
+    </div>
+    <p class="ar" dir="rtl" style="text-align:center;margin-top:8px">نورا تكتب مدونة عن بناء الروبوتات وتشارك نصائحها مع القرّاء.</p>
+    <div class="tipgrid">
+     <div class="tipcard" style="--tc:var(--mintD)"><h4><span>Content</span><span class="ar" dir="rtl">المحتوى</span></h4>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Blog about things you love<span class="ti-ar" dir="rtl">اكتب عمّا تحب</span></span></div>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Blog regularly<span class="ti-ar" dir="rtl">انشر بانتظام</span></span></div>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Include lots of photos<span class="ti-ar" dir="rtl">أضف صورًا كثيرة</span></span></div></div>
+     <div class="tipcard" style="--tc:var(--grapeD)"><h4><span>Design</span><span class="ar" dir="rtl">التصميم</span></h4>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Choose attractive colours<span class="ti-ar" dir="rtl">اختر ألوانًا جاذبة</span></span></div>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Use a font that is easy to read<span class="ti-ar" dir="rtl">استخدم خطًا سهل القراءة</span></span></div>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Choose a design theme<span class="ti-ar" dir="rtl">اختر قالب تصميم</span></span></div></div>
+     <div class="tipcard" style="--tc:var(--skyD)"><h4><span>Technical</span><span class="ar" dir="rtl">التقني</span></h4>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Get hosted and choose a name<span class="ti-ar" dir="rtl">احصل على استضافة واختر اسمًا</span></span></div>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Add social media and like buttons<span class="ti-ar" dir="rtl">أضف أزرار المشاركة والإعجاب</span></span></div>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Don't post personal details!<span class="ti-ar" dir="rtl">لا تنشر معلوماتك الشخصية!</span></span></div></div>
+    </div>
+   </div>
+   <div class="step" data-tip="Now create YOUR blog card!" data-tipar="والآن أنشئ بطاقة مدونتك أنت!">
+    <h3 class="sh"><svg class="ico"><use href="#i-pen"/></svg>Your Turn: Build Your Blog</h3>
+    <span class="sh-ar" dir="rtl">دورك الآن — خطّط لمدونتك الخاصة!</span>
+    <div class="gcard">
+     <div class="fields">
+      <div class="field"><label>Blog name</label><span class="f-ar" dir="rtl">اسم مدونتك</span><input id="blogName" placeholder="e.g. Ahmed's World" maxlength="30"></div>
+      <div class="field"><label>What is it about?</label><span class="f-ar" dir="rtl">عمّا ستتحدث؟</span><input id="blogTopic" placeholder="e.g. football, books, travel" maxlength="40"></div>
+     </div>
+     <button id="blogGo" class="btn" style="--bc:var(--pink);--bcd:var(--pinkD);margin-top:14px"><span>Create my blog card</span><span class="b-ar" dir="rtl">أنشئ بطاقة مدونتي</span></button>
+     <div id="blogPrev">
+      <p class="bp-h">Your blog card appears here</p>
+      <p class="bp-arh ar" dir="rtl">ستظهر بطاقة مدونتك هنا</p>
+      <div class="bp-body">
+       <svg class="ico"><use href="#i-pen"/></svg>
+       <div class="bp-title" id="blogPT"></div>
+       <div class="bp-topic" id="blogPTopic"></div>
+       <p class="ar" dir="rtl" style="margin-top:8px">مدونتك جاهزة — واصل الكتابة!</p>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ BOSS ============ -->
+<section class="screen level" id="scr-boss" style="--lc:#3D3450;--lcd:#2A2440">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num" style="background:#3D3450;box-shadow:0 4px 0 #2A2440"><svg class="ico" style="width:26px;height:26px"><use href="#i-robot"/></svg></span>
+   <div><h2 class="lt">The Screen Monster</h2><span class="lvl-ar" dir="rtl">وحش الشاشات</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en">This is it! Defeat the Screen Monster!</span><span class="tip-ar" dir="rtl">لحظة الحسم! اهزم وحش الشاشات!</span></div></div>
+  </header>
+  <div class="mon-wrap" id="monWrap">
+   <svg id="monSvg" viewBox="0 0 240 205">
+    <path d="M75 42 L62 10 L96 28 Z" fill="#FF6B6B" stroke="#E14F4F" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M165 42 L178 10 L144 28 Z" fill="#FF6B6B" stroke="#E14F4F" stroke-width="3" stroke-linejoin="round"/>
+    <rect x="4" y="92" width="28" height="15" rx="7.5" fill="#3D3450"/>
+    <rect x="208" y="92" width="28" height="15" rx="7.5" fill="#3D3450"/>
+    <rect x="66" y="158" width="22" height="16" rx="8" fill="#3D3450"/>
+    <rect x="152" y="158" width="22" height="16" rx="8" fill="#3D3450"/>
+    <rect x="28" y="34" width="184" height="130" rx="24" fill="#3D3450" stroke="#2A2440" stroke-width="6"/>
+    <rect x="46" y="52" width="148" height="94" rx="14" fill="#181227"/>
+    <line x1="60" y1="60" x2="86" y2="60" stroke="#5B4E7E" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+    <line x1="160" y1="140" x2="182" y2="140" stroke="#5B4E7E" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+    <g class="m-eyes">
+     <path d="M64 74 L98 82" stroke="#FF6B6B" stroke-width="7" stroke-linecap="round"/>
+     <path d="M176 74 L142 82" stroke="#FF6B6B" stroke-width="7" stroke-linecap="round"/>
+     <rect x="68" y="84" width="30" height="20" rx="8" fill="#fff"/>
+     <rect x="142" y="84" width="30" height="20" rx="8" fill="#fff"/>
+     <circle cx="83" cy="94" r="6" fill="#E14F4F"/><circle cx="157" cy="94" r="6" fill="#E14F4F"/>
+    </g>
+    <g class="m-dead">
+     <path d="M70 84 L94 104 M94 84 L70 104" stroke="#8B829E" stroke-width="6" stroke-linecap="round"/>
+     <path d="M146 84 L170 104 M170 84 L146 104" stroke="#8B829E" stroke-width="6" stroke-linecap="round"/>
+    </g>
+    <path class="m-mouth" d="M85 128 L95 120 L105 128 L115 120 L125 128 L135 120 L145 128" fill="none" stroke="#FF6B6B" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+   </svg>
+   <div class="hpbar"><div class="hpfill" id="hpFill"></div></div>
+   <p class="hplbl">MONSTER HP · صحة الوحش</p>
+   <p style="font-weight:600;margin-top:10px">Answer 8 questions to defeat it — every correct answer is a direct hit!</p>
+   <p class="ar" dir="rtl" style="text-align:center;margin-top:4px">أجب عن 8 أسئلة لتهزمه — كل إجابة صحيحة ضربة مباشرة!</p>
+  </div>
+  <div id="bq"></div>
+ </div>
+</section>
+
+<!-- ============ WIN ============ -->
+<section class="screen" id="scr-win">
+ <div class="wrap done-wrap">
+  <svg class="trophy-big"><use href="#i-trophy"/></svg>
+  <h2 class="done-title">YOU WIN!</h2>
+  <p class="done-sub">You defeated the Screen Monster and mastered the world of New Media.</p>
+  <p class="done-sub-ar ar" dir="rtl">هزمت وحش الشاشات وأتقنت عالم الوسائط الجديدة — أحسنت!</p>
+  <div class="statpills">
+   <div class="statpill"><svg class="ico"><use href="#i-bolt"/></svg><span id="winXp">0</span>&nbsp;XP</div>
+   <div class="statpill"><svg class="ico"><use href="#i-star"/></svg><span id="winStars">0</span>/18</div>
+   <div class="statpill"><svg class="ico"><use href="#i-medal"/></svg><span id="winBdg">0</span>/7</div>
+  </div>
+  <h3 class="sh" style="justify-content:center"><svg class="ico"><use href="#i-medal"/></svg>Your Badges</h3>
+  <span class="sh-ar" dir="rtl" style="text-align:center">أوسمتك — اجمعها كلها!</span>
+  <div class="bdg-grid" id="winBadges"></div>
+  <div class="done-btns">
+   <button id="winMapBtn" class="btn ghost"><span>Back to Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>
+   <button id="winAgainBtn" class="btn" style="--bc:var(--coral);--bcd:var(--coralD)"><span>Play Again</span><span class="b-ar" dir="rtl">العب من جديد</span></button>
+  </div>
+ </div>
+</section>
+
+<script>
+(function(){
+'use strict';
+/* ================= helpers ================= */
+var $=function(s){return document.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+var IC=function(n){return '<svg class="ico"><use href="#'+n+'"/></svg>'};
+var shuffle=function(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t}return b};
+
+/* ================= audio ================= */
+var actx=null,muted=false;
+function initAudio(){if(actx)return;try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}
+function tone(f,d,type,v,dl){if(!actx||muted)return;type=type||'sine';v=v||.12;dl=dl||0;
+ var t=actx.currentTime+dl,o=actx.createOscillator(),g=actx.createGain();
+ o.type=type;o.frequency.setValueAtTime(f,t);
+ g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+ o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+d+.05)}
+function sfx(n,i){switch(n){
+ case 'click':tone(560,.07,'triangle',.06);break;
+ case 'pop':tone(340,.06,'sine',.08);break;
+ case 'correct':tone(660,.12,'sine',.12);tone(880,.16,'sine',.12,.09);break;
+ case 'wrong':tone(220,.18,'sawtooth',.06);tone(160,.22,'sawtooth',.05,.09);break;
+ case 'match':tone(523,.09,'sine',.1);tone(659,.09,'sine',.1,.08);tone(784,.14,'sine',.1,.16);break;
+ case 'heart':tone(392,.12,'sine',.1);tone(294,.18,'sine',.09,.1);break;
+ case 'hit':tone(130,.14,'square',.09);tone(90,.2,'square',.07,.05);break;
+ case 'unlock':tone(600,.1,'triangle',.09);tone(900,.16,'triangle',.09,.09);break;
+ case 'star':tone(700+(i||0)*160,.16,'sine',.12);break;
+ case 'fanfare':[523,659,784,1046].forEach(function(f,k){tone(f,.16,'triangle',.11,k*.13)});tone(1318,.3,'triangle',.1,.55);break;
+}}
+document.addEventListener('pointerdown',function once(){initAudio();document.removeEventListener('pointerdown',once)});
+
+/* ================= state ================= */
+var KEY='nmq3';
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY));
+ if(d&&typeof d.xp==='number')return{xp:d.xp,stars:d.stars||{},unlocked:d.unlocked||1,badges:d.badges||[],streak:0}}catch(e){}
+ return{xp:0,stars:{},unlocked:1,badges:[],streak:0}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({xp:S.xp,stars:S.stars,unlocked:S.unlocked,badges:S.badges}))}catch(e){}}
+var S=load();
+var MODE=null,L=null,B=null;
+
+/* ================= speech ================= */
+var voices=[];
+function loadVoices(){try{voices=window.speechSynthesis.getVoices()}catch(e){}}
+if('speechSynthesis' in window){loadVoices();window.speechSynthesis.addEventListener('voiceschanged',loadVoices)}
+var VPREF=['Google UK English Female','Microsoft Sonia','Microsoft Libby','Microsoft Aria','Microsoft Michelle','Samantha','Serena','Kate','Moira','Zira','Victoria','Google US English'];
+function pickVoice(){var i,j;
+ for(i=0;i<VPREF.length;i++){for(j=0;j<voices.length;j++){if(voices[j].name===VPREF[i])return voices[j]}}
+ for(j=0;j<voices.length;j++){if(/female/i.test(voices[j].name))return voices[j]}
+ for(j=0;j<voices.length;j++){if(/^en/i.test(voices[j].lang))return voices[j]}
+ return null}
+function speakSay(btn){var t=btn.getAttribute('data-say');if(!t)return;
+ if(!('speechSynthesis' in window))return;
+ try{window.speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=.85;u.pitch=1.05;
+  var v=pickVoice();if(v)u.voice=v;
+  btn.classList.add('busy');u.onend=u.onerror=function(){btn.classList.remove('busy')};
+  window.speechSynthesis.speak(u)}catch(e){}}
+
+/* ================= confetti ================= */
+var CCOL=['#FF6B6B','#FFD166','#29C0B2','#4D96FF','#9B5DE5','#F15BB5'];
+function confetti(x,y,n){n=n||24;
+ for(var i=0;i<n;i++){var c=document.createElement('i');c.className='cf';
+  c.style.left=x+'px';c.style.top=y+'px';c.style.background=CCOL[Math.floor(Math.random()*CCOL.length)];
+  c.style.setProperty('--dx',(Math.random()*200-100)+'px');
+  c.style.animationDuration=(1+Math.random()*.9)+'s';
+  if(Math.random()<.4)c.style.borderRadius='50%';
+  document.body.appendChild(c);
+  (function(el){setTimeout(function(){el.remove()},2200)})(c)}}
+function burst(el,n){if(!el)return;var r=el.getBoundingClientRect();confetti(r.left+r.width/2,r.top+r.height/2,n||22)}
+function confettiRain(){for(var i=0;i<5;i++)setTimeout(function(){confetti(Math.random()*window.innerWidth,-10,26)},i*250)}
+
+/* ================= HUD ================= */
+var xpShown=0;
+function addXP(d){S.xp+=d;save();tweenXP()}
+function tweenXP(){var el=$('#xpN'),from=xpShown,to=S.xp,t0=performance.now(),dur=450;
+ function f(t){var k=Math.min(1,(t-t0)/dur);xpShown=Math.round(from+(to-from)*k);el.textContent=xpShown;if(k<1)requestAnimationFrame(f)}
+ requestAnimationFrame(f)}
+function streakUp(){S.streak++;
+ if(S.streak>=2){var h=$('#hudStreak');h.classList.add('on');$('#streakN').textContent='x'+S.streak;
+  h.classList.remove('pop');void h.offsetWidth;h.classList.add('pop')}
+ if(S.streak>0&&S.streak%4===0){addXP(5);toast('On Fire!','أداؤك مشتعل — واصل!','i-flame','var(--coral)');sfx('match')}}
+function streakCut(){S.streak=0;$('#hudStreak').classList.remove('on')}
+function renderHearts(){var h=$('#hudHearts');
+ var n=MODE==='boss'?B.hearts:(MODE==='level'?L.hearts:3);
+ h.innerHTML=[0,1,2].map(function(i){return '<span class="hh'+(i<n?'':' off')+'">'+IC('i-heart')+'</span>'}).join('')}
+function loseHeart(){sfx('heart');
+ if(MODE==='boss'){B.hearts=Math.max(0,B.hearts-1);renderHearts();
+  var el=$('#hudHearts');el.classList.remove('hpop');void el.offsetWidth;el.classList.add('hpop');
+  if(B.hearts<=0){setTimeout(bossFail,600)}return}
+ if(MODE!=='level')return;
+ L.hearts=Math.max(0,L.hearts-1);renderHearts();
+ var el=$('#hudHearts');el.classList.remove('hpop');void el.offsetWidth;el.classList.add('hpop')}
+
+/* ================= toasts / badges ================= */
+function toast(t,ar,ic,col){var w=$('#toasts');
+ if(w.children.length>2)w.firstChild.remove();
+ var d=document.createElement('div');d.className='toast';d.style.setProperty('--tc',col||'var(--gold)');
+ d.innerHTML='<span class="t-ic">'+IC(ic||'i-star')+'</span><span><b>'+t+'</b><span class="t-ar" dir="rtl">'+ar+'</span></span>';
+ w.appendChild(d);
+ setTimeout(function(){d.classList.add('out');setTimeout(function(){d.remove()},350)},2400)}
+var BADGES=[
+ {id:'words',t:'Word Master',ar:'سيّد الكلمات',ic:'i-book',c:'var(--mint)'},
+ {id:'story',t:'Story Explorer',ar:'مستكشف القصة',ic:'i-tv',c:'var(--coral)'},
+ {id:'gram',t:'Grammar Wizard',ar:'ساحر القواعد',ic:'i-bolt',c:'var(--sun)'},
+ {id:'data',t:'Data Champion',ar:'بطل البيانات',ic:'i-chart',c:'var(--sky)'},
+ {id:'verbs',t:'Verb Hunter',ar:'صيّاد الأفعال',ic:'i-search',c:'var(--grape)'},
+ {id:'create',t:'Creative Mind',ar:'عقلٌ مبدع',ic:'i-pen',c:'var(--pink)'},
+ {id:'boss',t:'Monster Tamer',ar:'مروّض الوحوش',ic:'i-crown',c:'var(--gold)'}];
+var BMAP={1:'words',2:'story',3:'gram',4:'data',5:'verbs',6:'create'};
+function award(id){if(S.badges.indexOf(id)>=0)return;
+ S.badges.push(id);save();
+ var b=BADGES.filter(function(x){return x.id===id})[0];
+ if(b){toast(b.t,b.ar,b.ic,b.c);sfx('unlock')}}
+
+/* ================= mascot ================= */
+function tabbySVG(){return '<svg class="tabby-svg" viewBox="0 0 120 134">'+
+ '<line x1="60" y1="22" x2="60" y2="8" stroke="#3D3450" stroke-width="4" stroke-linecap="round"/>'+
+ '<circle cx="60" cy="6" r="5" fill="#FFD166" stroke="#3D3450" stroke-width="2.5"/>'+
+ '<rect x="6" y="58" width="13" height="30" rx="6.5" fill="#1B9C8F"/>'+
+ '<rect x="101" y="58" width="13" height="30" rx="6.5" fill="#1B9C8F"/>'+
+ '<rect x="28" y="120" width="17" height="11" rx="5.5" fill="#3D3450"/>'+
+ '<rect x="75" y="120" width="17" height="11" rx="5.5" fill="#3D3450"/>'+
+ '<rect x="17" y="24" width="86" height="102" rx="20" fill="var(--tabby,#29C0B2)" stroke="#3D3450" stroke-width="4.5"/>'+
+ '<rect x="27" y="34" width="66" height="82" rx="13" fill="#F2FFFD"/>'+
+ '<circle cx="60" cy="41" r="2.4" fill="#3D3450"/>'+
+ '<g class="tabby-eyes"><circle cx="47" cy="59" r="5.6" fill="#3D3450"/><circle cx="73" cy="59" r="5.6" fill="#3D3450"/>'+
+ '<circle cx="49" cy="57" r="1.9" fill="#fff"/><circle cx="75" cy="57" r="1.9" fill="#fff"/></g>'+
+ '<circle cx="36" cy="70" r="4" fill="#FFB3C6" opacity=".85"/><circle cx="84" cy="70" r="4" fill="#FFB3C6" opacity=".85"/>'+
+ '<path class="tabby-mouth" d="M52 66 Q60 73 68 66" fill="none" stroke="#3D3450" stroke-width="3.5" stroke-linecap="round"/></svg>'}
+function mascotReact(mood){var scr=document.querySelector('.screen.on');if(!scr)return;
+ var slot=scr.querySelector('.tabby-slot');if(!slot)return;
+ var mouth=slot.querySelector('.tabby-mouth');if(!mouth)return;
+ if(mood==='happy'){mouth.setAttribute('d','M46 61 Q60 82 74 61 Z');mouth.setAttribute('fill','#3D3450')}
+ else{mouth.setAttribute('d','M52 72 Q60 63 68 72');mouth.setAttribute('fill','none')}
+ slot.classList.remove('jump','shake');void slot.offsetWidth;
+ slot.classList.add(mood==='happy'?'jump':'shake');
+ setTimeout(function(){mouth.setAttribute('d','M52 66 Q60 73 68 66');mouth.setAttribute('fill','none');
+  slot.classList.remove('jump','shake')},1300)}
+
+/* ================= screens ================= */
+var ovl=$('#ovl');
+function show(id){
+ var el=$('#scr-'+id);
+ $$('.screen').forEach(function(s){s.classList.remove('on')});
+ if(!el)return;
+ el.classList.add('on');
+ $('#hud').classList.toggle('on',id!=='title');
+ if(id!=='map')window.scrollTo(0,0);
+ if(id==='map'){MODE=null;$('#hudHearts').classList.add('hidden');renderMap();
+  setTimeout(function(){var c=$('#mapNodes .node.cur')||$('#mapNodes .node:not(.lock)');if(c)c.scrollIntoView({block:'center',behavior:'smooth'})},150)}}
+function hideOvl(){ovl.classList.remove('on')}
+
+/* ================= map ================= */
+var LEVELS=[
+ {name:'Word Island',ar:'جزيرة الكلمات',c:'mint',ic:'i-book'},
+ {name:'Screenagers Valley',ar:'وادي جيل الشاشات',c:'coral',ic:'i-tv'},
+ {name:'Grammar Lab',ar:'مختبر القواعد',c:'sun',ic:'i-bolt'},
+ {name:'Data Mountain',ar:'جبل البيانات',c:'sky',ic:'i-chart'},
+ {name:'Phrasal Cave',ar:'كهف الأفعال',c:'grape',ic:'i-search'},
+ {name:'Creation Studio',ar:'استوديو الإبداع',c:'pink',ic:'i-pen'}];
+var POS=[{x:50,y:8.1},{x:24,y:21.9},{x:66,y:35.8},{x:26,y:49.6},{x:68,y:63.5},{x:30,y:77.3}];
+function renderMap(){
+ $('#mapStars').textContent=Object.keys(S.stars).reduce(function(a,k){return a+S.stars[k]},0);
+ $('#mapBadges').textContent=S.badges.length;
+ var h='';
+ LEVELS.forEach(function(lv,i){var n=i+1,unlocked=n<=S.unlocked,st=S.stars[n]||0,cur=(n===S.unlocked&&!st);
+  h+='<button class="node'+(unlocked?'':' lock')+(cur?' cur':'')+'" style="left:'+POS[i].x+'%;top:'+POS[i].y+'%" data-n="'+n+'">'+
+  (cur?'<span class="go-arrow">'+IC('i-arrowD')+'</span>':'')+
+  '<span class="node-face" style="--nc:var(--'+lv.c+');--ncd:var(--'+lv.c+'D)">'+(unlocked?IC(lv.ic):IC('i-lock'))+'<span class="node-num">'+n+'</span></span>'+
+  '<span class="node-stars">'+[1,2,3].map(function(s){return '<span class="nstar'+(s<=st?'':' off')+'">'+IC('i-star')+'</span>'}).join('')+'</span>'+
+  '<span class="node-name">'+lv.name+'<span class="nar" dir="rtl">'+lv.ar+'</span></span></button>'});
+ var bOpen=S.unlocked>=7, bCur=bOpen&&S.badges.indexOf('boss')<0;
+ h+='<button class="node boss-node'+(bOpen?'':' lock')+(bCur?' cur':'')+'" style="left:50%;top:92.3%" data-n="7">'+
+ (bCur?'<span class="go-arrow">'+IC('i-arrowD')+'</span>':'')+
+ '<span class="node-face" style="--nc:#3D3450;--ncd:#2A2440">'+(bOpen?IC('i-robot'):IC('i-lock'))+'</span>'+
+ '<span class="boss-ribbon">BOSS</span>'+
+ '<span class="node-name">The Screen Monster<span class="nar" dir="rtl">وحش الشاشات</span></span></button>';
+ $('#mapNodes').innerHTML=h}
+function nodeClick(nd){var n=+nd.getAttribute('data-n');
+ if(n===7){
+  if(S.unlocked>=7){sfx('click');startBoss()}else{locked(nd)}
+  return}
+ if(n<=S.unlocked){sfx('click');startLevel(n)}else{locked(nd)}}
+function locked(nd){sfx('wrong');nd.classList.remove('nshake');void nd.offsetWidth;nd.classList.add('nshake');
+ toast('Locked!','أكمل المرحلة السابقة أولًا','i-lock','var(--ink)')}
+
+/* ================= vocab data ================= */
+var V_TRAD=[
+ {w:'newspaper',ar:'صحيفة',ic:'i-news'},{w:'magazine',ar:'مجلة',ic:'i-magazine'},
+ {w:'radio',ar:'راديو',ic:'i-radio'},{w:'TV',ar:'تلفاز',ic:'i-tv'},
+ {w:'stereo',ar:'نظام صوتي',ic:'i-stereo'},{w:'camera',ar:'كاميرا',ic:'i-camera'}];
+var V_NEW=[
+ {w:'smartphone',ar:'هاتف ذكي',ic:'i-phone'},{w:'tablet',ar:'جهاز لوحي',ic:'i-tablet'},
+ {w:'website',ar:'موقع إلكتروني',ic:'i-globe'},{w:'blog',ar:'مدونة',ic:'i-pen'},
+ {w:'social media platforms',ar:'منصات التواصل',ic:'i-chat'},{w:'video game',ar:'لعبة فيديو',ic:'i-game'},
+ {w:'video streaming',ar:'بثّ الفيديو',ic:'i-play'},{w:'smart watch',ar:'ساعة ذكية',ic:'i-watch'}];
+var V_SCREEN=[
+ {w:'digital native',ic:'i-person',en:'a person born or grown up since digital technology became common',ar:'مواطن رقمي: نشأ مع انتشار التقنية الرقمية',ex:'Today’s teenagers are digital natives.'},
+ {w:'addiction',ic:'i-bolt',en:'using something uncontrollably, e.g. smartphones or gaming',ar:'الإدمان: استخدام شيء بلا سيطرة عليه',ex:'Many teenagers have an addiction to their phones.'},
+ {w:'glued to',ic:'i-tv',en:'paying very close attention to something',ar:'ملتصق بـ: يولي انتباهًا شديدًا لشيء',ex:'He is glued to his screen all day.'},
+ {w:'attention span',ic:'i-clock',en:'the length of time you can concentrate on an activity',ar:'فترة الانتباه: مدة قدرتك على التركيز',ex:'Too much screen time decreases your attention span.'},
+ {w:'excessive',ic:'i-flame',en:'more than necessary or normal',ar:'مفرط: أكثر من اللازم أو المعتاد',ex:'Excessive screen time can harm young brains.'},
+ {w:'consequence',ic:'i-loop',en:'something that happens as a result of an action',ar:'النتيجة: أمر يحدث بسبب فعل معيّن',ex:'Excessive screen time has negative consequences.'},
+ {w:'streaming',ic:'i-play',en:'playing videos online without downloading them',ar:'البث: تشغيل الفيديو دون تنزيله',ex:'I spend hours streaming videos every day.'}];
+var V_PHRASAL=[
+ {w:'come across',ic:'i-loop',en:'to find something by chance',ar:'يعثر على شيء بالصدفة',ex:'I came across this information on the Internet.'},
+ {w:'make up',ic:'i-pen',en:'to lie about something; to invent',ar:'يختلق / يلفّق',ex:'The thief made up the whole story.'},
+ {w:'hurry up',ic:'i-bolt',en:'to move faster',ar:'يسرع / يستعجل',ex:'Hurry up! We don’t want to be late.'},
+ {w:'go into',ic:'i-book',en:'to talk about something in detail',ar:'يتحدث بالتفصيل عن',ex:'The report did not go into the details.'},
+ {w:'click on',ic:'i-phone',en:'to select something with a computer mouse',ar:'ينقر / يضغط على',ex:'I clicked on an advert by mistake.'},
+ {w:'log in',ic:'i-person',en:'to connect to your account',ar:'يسجّل الدخول إلى حسابه',ex:'To log in, enter your username and password.'},
+ {w:'go online',ic:'i-globe',en:'to connect to the Internet',ar:'يتصل بالإنترنت',ex:'I go online to check the news.'}];
+var V_NEWS=[
+ {w:'journalism',ar:'الصحافة',ic:'i-news'},{w:'reporter',ar:'مراسل صحفي',ic:'i-person'},
+ {w:'fake news',ar:'الأخبار الزائفة',ic:'i-chat'},{w:'source',ar:'مصدر',ic:'i-globe'},
+ {w:'digital age',ar:'العصر الرقمي',ic:'i-phone'},{w:'disappear',ar:'يختفي',ic:'i-tv'},
+ {w:'trust',ar:'ثقة',ic:'i-star'}];
+
+/* ================= quiz data ================= */
+var Q1=[
+ {q:'Which one is a type of new media?',ar:'أيّ مما يلي يُعدّ من الوسائط الجديدة؟',opts:['newspaper','blog','magazine','radio'],ok:1,n:'A blog is interactive and digital.',nar:'المدونة رقمية وتفاعلية.'},
+ {q:'You wear it on your wrist, and it sends messages and counts your steps.',ar:'تلبسه على معصمك، ويرسل الرسائل ويعدّ خطواتك.',opts:['stereo','smart watch','tablet','camera'],ok:1,n:'A smart watch is a tiny computer on your wrist!',nar:'الساعة الذكية حاسوب صغير على معصمك!'},
+ {q:'You read it on paper, and it comes out every morning with the news.',ar:'تقرؤه على الورق، ويصدر كل صباح مع الأخبار.',opts:['website','blog','video game','newspaper'],ok:3,n:'A newspaper is traditional media.',nar:'الصحيفة من الوسائط التقليدية.'},
+ {q:'Watching videos online without downloading them is called…',ar:'مشاهدة الفيديو عبر الإنترنت دون تنزيله تُسمّى…',opts:['streaming','texting','printing','scanning'],ok:0,n:'You stream videos on YouTube.',nar:'أنت تبثّ الفيديو عند مشاهدته على يوتيوب.'},
+ {q:'Which one is a traditional medium?',ar:'أيّ مما يلي يُعدّ وسيلة إعلام تقليدية؟',opts:['tablet','website','radio','smartphone'],ok:2,n:'Radio works without the internet.',nar:'الراديو يعمل دون إنترنت.'}];
+var Q2=[
+ {q:'On average, how many hours a day do teenagers spend in front of a screen?',ar:'كم ساعة يقضي المراهقون يوميًا أمام الشاشة في المتوسط؟',opts:['about 3 hours','about 6 hours','nearly 9 hours','about 12 hours'],ok:2,n:'Nearly nine hours a day!',nar:'قرابة تسع ساعات يوميًا!'},
+ {q:'What is the most popular way to spend time online?',ar:'ما الطريقة الأكثر شعبية لقضاء الوقت على الإنترنت؟',opts:['Twitter','YouTube','Facebook','Instagram'],ok:1,n:'YouTube consumes over 40 minutes a day.',nar:'يوتيوب يستهلك أكثر من 40 دقيقة يوميًا.'},
+ {q:'Too much screen time can cause a decrease in your…',ar:'الإفراط في وقت الشاشة قد يسبب انخفاضًا في…',opts:['your height','your attention span','your shoe size'],ok:1,n:'Research shows a decrease in attention span.',nar:'تشير الدراسات إلى انخفاض فترة الانتباه.'},
+ {q:'Do all video games contain violent content?',ar:'هل تحتوي كل ألعاب الفيديو على محتوى عنيف؟',opts:['Yes, all of them','No — 80% do, but helpful games also exist','No, none of them'],ok:1,n:'Some games, where you help others, make you more helpful!',nar:'بعض الألعاب التي تساعد فيها الآخرين تجعلك أكثر تعاونًا!'},
+ {q:'What is more important than the amount of screen time?',ar:'ما هو الأهم من عدد ساعات استخدام الشاشة؟',opts:['The colour of your screen','The content and context of screen use','The size of the screen'],ok:1,n:'Content matters more than time.',nar:'نوع المحتوى أهم من عدد الساعات.'}];
+var Q3=[
+ {q:'A smartphone is ______ than a tablet. (small)',ar:'الهاتف الذكي ______ من الجهاز اللوحي.',opts:['more small','smaller','smallest','most small'],ok:1,n:'Short adjective + -er + than.',nar:'الصفة القصيرة: نضيف er ثم than.'},
+ {q:'YouTube is ______ than Twitter for teenagers. (popular)',ar:'يوتيوب ______ من تويتر لدى المراهقين.',opts:['popularer','the most popular','more popular','as popular'],ok:2,n:'Long adjective: more + adjective + than.',nar:'الصفة الطويلة: more ثم الصفة ثم than.'},
+ {q:'Reading a book is ______ than watching nine hours of videos. (good)',ar:'قراءة الكتاب ______ من مشاهدة تسع ساعات من الفيديو.',opts:['gooder','more good','best','better'],ok:3,n:'good → better. It is irregular!',nar:'good تتحول إلى better وهي شاذّة!'},
+ {q:'Snapchat is ______ with women than with men. (21% of women use it, but only 11% of men)',ar:'سناب شات ______ لدى النساء مقارنة بالرجال.',opts:['less popular','more popular','the most popular','as popular'],ok:1,n:'21% is bigger than 11%, so: more popular.',nar:'21% أكبر من 11% إذن: أكثر شعبية.'},
+ {q:'Twitter is ______ Snapchat with women. (9% of women use Twitter, but 21% use Snapchat)',ar:'تويتر ______ سناب شات لدى النساء.',opts:['as popular as','more popular than','the most popular','not as popular as'],ok:3,n:'not as + adjective + as = not equal.',nar:'not as + الصفة + as تعني غير متساويين.'}];
+var Q4=[
+ {q:'David spends the most hours playing video games.',ar:'ديفيد يقضي أكثر الساعات في لعب ألعاب الفيديو.',opts:['True','False','Not Given'],ok:0,n:'David: 18 hours of video games — the highest!',nar:'ديفيد: 18 ساعة ألعاب فيديو — الأعلى!'},
+ {q:'Sarah spends more time playing video games than watching TV.',ar:'سارة تقضي وقتًا أطول في ألعاب الفيديو مقارنة بمشاهدة التلفاز.',opts:['True','False','Not Given'],ok:1,n:'Sarah: 2 hours of games but 14 hours of TV.',nar:'سارة: ساعتان للألعاب مقابل 14 ساعة تلفاز.'},
+ {q:'The mother spends the least time playing video games.',ar:'الأم تقضي أقل وقت في لعب ألعاب الفيديو.',opts:['True','False','Not Given'],ok:0,n:'Only 1 hour a week!',nar:'ساعة واحدة فقط في الأسبوع!'},
+ {q:'John watches TV for the same number of hours as his father.',ar:'جون يشاهد التلفاز نفس عدد ساعات والده.',opts:['True','False','Not Given'],ok:0,n:'Both watch 2 hours of TV.',nar:'كلاهما يشاهد ساعتين من التلفاز.'},
+ {q:'The father is the worst video game player in the family.',ar:'الأب هو أسوأ لاعب ألعاب فيديو في العائلة.',opts:['True','False','Not Given'],ok:2,n:'The chart shows hours, not skill!',nar:'الرسم يوضّح الساعات لا المهارة!'},
+ {q:'Sarah thinks video games are boring.',ar:'سارة تعتقد أن ألعاب الفيديو ممِلّة.',opts:['True','False','Not Given'],ok:2,n:'The chart does not tell us her opinion.',nar:'الرسم لا يخبرنا برأيها.'}];
+var Q5=[
+ {q:'I ______ this information while searching on the Internet. (find by chance)',ar:'______ هذه المعلومة أثناء البحث في الإنترنت.',opts:['came across','went into','hurried up','clicked on'],ok:0,n:'come across = find something by chance.',nar:'come across تعني يعثر على شيء بالصدفة.'},
+ {q:'To ______, you need to enter your username and password. (connect to your account)',ar:'لكي ______ يجب إدخال اسم المستخدم وكلمة المرور.',opts:['go online','make up','log in','come across'],ok:2,n:'log in = enter your account.',nar:'log in تعني يسجّل الدخول.'},
+ {q:'The report did not ______ the details of the incident. (talk about)',ar:'لم ______ التقرير تفاصيل الحادث.',opts:['log in','go into','hurry up','click on'],ok:1,n:'go into = talk about in detail.',nar:'go into تعني يتطرّق بالتفصيل.'},
+ {q:'Please ______! We don’t want to be late. (move faster)',ar:'«أسرع ______! لا نريد أن نتأخر».',opts:['go online','come across','go into','hurry up'],ok:3,n:'hurry up = move faster.',nar:'hurry up تعني أسرع.'},
+ {q:'I was online and I ______ an advert by mistake. (select with the mouse)',ar:'كنت على الإنترنت و______ على إعلانٍ بالخطأ.',opts:['logged in','clicked on','made up','hurried up'],ok:1,n:'click on = select with the mouse.',nar:'click on تعني ينقر بالفأرة.'},
+ {q:'The news report discovered that the thief ______ the story. (lie about)',ar:'اكتشف التقرير الإخباري أن اللص ______ القصة.',opts:['came across','clicked on','went into','made up'],ok:3,n:'make up = lie about / invent.',nar:'make up تعني يختلق.'}];
+var BOSSQ=[
+ {q:'A digital native is a person who…',ar:'«المواطن الرقمي» هو الشخص الذي…',opts:['is very good at farming','grew up using digital technology','was born before computers','never uses the internet'],ok:1},
+ {q:'Excessive screen time means…',ar:'«الوقت المفرط» أمام الشاشة يعني…',opts:['a little screen time','more screen time than necessary','screen time at school','exactly one hour'],ok:1},
+ {q:'YouTube is ______ popular than Twitter for this age group.',ar:'يوتيوب ______ شعبيةً من تويتر لدى هذه الفئة.',opts:['more','most','as','the most'],ok:0},
+ {q:'Facebook is ______ social media platform for both men and women. (40% of women and 39% of men use it)',ar:'فيسبوك هو ______ منصة تواصل اجتماعي للرجال والنساء معًا.',opts:['more popular','the most popular','as popular as','not popular'],ok:1},
+ {q:'Watching videos online without downloading them is called…',ar:'مشاهدة الفيديو عبر الإنترنت دون تنزيله تُسمّى…',opts:['blogging','texting','streaming','printing'],ok:2},
+ {q:'If you log in, you…',ar:'إذا «سجّلت الدخول» فأنت…',opts:['enter your account with a username and password','turn off your device','delete your account','buy a new phone'],ok:0},
+ {q:'Too much screen time can decrease your…',ar:'الإفراط في وقت الشاشة قد يقلّل…',opts:['your height','your birthday','your attention span','your phone number'],ok:2},
+ {q:'Fake news is…',ar:'«الأخبار الزائفة» هي…',opts:['very fast news','news that is not true','old news','news about technology'],ok:1}];
+
+/* ================= renderers ================= */
+function spk(t){return '<button class="spk" data-say="'+t+'">'+IC('i-speaker')+'</button>'}
+function renderVocab(mount,items){document.getElementById(mount).innerHTML=items.map(function(it){
+ return '<div class="wcard">'+spk(it.w)+IC(it.ic)+'<div class="w">'+it.w+'</div><div class="war" dir="rtl">'+it.ar+'</div></div>'}).join('')}
+function renderFlip(mount,items){document.getElementById(mount).innerHTML=items.map(function(it){
+ return '<div class="fc" tabindex="0"><div class="fi">'+
+ '<div class="ff">'+spk(it.w)+IC(it.ic)+'<div class="fw">'+it.w+'</div><div class="fhint">tap to flip<span class="ar" dir="rtl">انقر للقلب</span></div></div>'+
+ '<div class="fbk"><p class="den">'+it.en+'</p><p class="dar" dir="rtl">'+it.ar+'</p><p class="dex">'+it.ex+'</p></div>'+
+ '</div></div>'}).join('')}
+function renderQuiz(mount,list){var m=document.getElementById(mount);
+ m.innerHTML=list.map(function(it,i){
+ return '<div class="qz" data-i="'+i+'"><p class="qq">'+(i+1)+'. '+it.q+'</p><p class="qar" dir="rtl">'+it.ar+'</p>'+
+ '<div class="opts">'+it.opts.map(function(o,j){return '<button class="opt" data-j="'+j+'">'+o+'</button>'}).join('')+'</div>'+
+ '<div class="qfb"></div></div>'}).join('');
+ Array.prototype.forEach.call(m.querySelectorAll('.qz'),function(qz){
+  var tries=0,hurt=false,it=list[+qz.getAttribute('data-i')];
+  if(MODE==='level')L.qNeed++;
+  Array.prototype.forEach.call(qz.querySelectorAll('.opt'),function(opt){
+   opt.addEventListener('click',function(){
+    if(qz.classList.contains('lock'))return;
+    var j=+opt.getAttribute('data-j'),fb=qz.querySelector('.qfb');
+    if(j===it.ok){
+     qz.classList.add('lock');opt.classList.add('ok');
+     var first=(tries===0);
+     addXP(first?10:5);if(first)streakUp();
+     if(MODE==='level'){L.qDone++;updateFinishBtn()}
+     fb.className='qfb on good';
+     fb.innerHTML=IC('i-check')+'<b>'+(first?'Perfect! +10 XP':'Correct! +5 XP')+'</b>'+
+      '<span class="fb-ar" dir="rtl">إجابة صحيحة</span>'+
+      (it.n?'<span class="fn">'+it.n+'</span><span class="fb-ar" dir="rtl">'+(it.nar||'')+'</span>':'');
+     sfx('correct');burst(opt,18);mascotReact('happy');
+    }else{
+     tries++;opt.classList.add('no');setTimeout(function(){opt.classList.remove('no')},500);
+     sfx('wrong');mascotReact('sad');streakCut();
+     if(!hurt){hurt=true;if(MODE==='level'){L.wrongs++;loseHeart()}}
+     fb.className='qfb on bad';
+     fb.innerHTML='<b>Not quite — try again!</b><span class="fb-ar" dir="rtl">ليست الإجابة — حاول مرة أخرى</span>';
+    }})})})}
+
+/* ================= LINK GAME ================= */
+var LCOLORS=['#29C0B2','#FF6B6B','#FFA62B','#4D96FF','#9B5DE5','#F15BB5'];
+function LinkGame(rootId,pairs){
+ var root=document.getElementById(rootId);
+ root.classList.add('lg');
+ root.innerHTML='';
+ var grid=document.createElement('div');grid.className='lg-grid';
+ var colL=document.createElement('div');colL.className='lg-col';
+ var colR=document.createElement('div');colR.className='lg-col';
+ grid.appendChild(colL);grid.appendChild(colR);
+ var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+ svg.setAttribute('class','lg-svg');
+ var won=document.createElement('div');won.className='wonbar';
+ won.innerHTML=IC('i-check')+'<div><b>All connected! Great job!</b><span class="ar" dir="rtl">وصلت كل العناصر بنجاح!</span></div>';
+ root.appendChild(grid);root.appendChild(svg);root.appendChild(won);
+ shuffle(pairs).forEach(function(p){
+  var c=document.createElement('div');c.className='lg-chip';c.setAttribute('data-k',p.k);
+  c.innerHTML=p.a;colL.appendChild(c)});
+ shuffle(pairs).forEach(function(p){
+  var c=document.createElement('div');c.className='lg-chip';c.setAttribute('data-k',p.k);
+  c.innerHTML=p.b;colR.appendChild(c)});
+ var selL=null,selR=null,done=0,lines=[];
+ function anchor(el,side){var c=root.getBoundingClientRect(),r=el.getBoundingClientRect();
+  return side==='L'?{x:r.right-c.left,y:r.top-c.top+r.height/2}:{x:r.left-c.left,y:r.top-c.top+r.height/2}}
+ function pathD(a,b){var dx=Math.max(36,Math.abs(b.x-a.x)*.45);
+  return 'M'+a.x+' '+a.y+' C'+(a.x+dx)+' '+a.y+', '+(b.x-dx)+' '+b.y+', '+b.x+' '+b.y}
+ function solidPath(d,color){var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d',d);p.setAttribute('class','lg-line');p.setAttribute('stroke',color);
+  svg.appendChild(p);
+  var len=p.getTotalLength();
+  p.style.strokeDasharray=len;p.style.strokeDashoffset=len;
+  requestAnimationFrame(function(){p.style.transition='stroke-dashoffset .45s cubic-bezier(.3,.8,.3,1)';p.style.strokeDashoffset='0'});
+  setTimeout(function(){p.style.strokeDasharray='none';p.style.transition='none'},520);
+  return p}
+ function tempPath(d){var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d',d);p.setAttribute('class','lg-line lg-temp');p.setAttribute('stroke','#FF6B6B');
+  svg.appendChild(p);setTimeout(function(){p.remove()},680)}
+ function redraw(){if(!root.offsetWidth)return;
+  lines.forEach(function(o){o.p.setAttribute('d',pathD(anchor(o.a,'L'),anchor(o.b,'R')))})}
+ var rt=null;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(redraw,160)});
+ function evaluate(){var a=selL,b=selR;selL=selR=null;
+  if(a.getAttribute('data-k')===b.getAttribute('data-k')){
+   a.classList.remove('sel');b.classList.remove('sel');
+   a.classList.add('done');b.classList.add('done');
+   lines.push({a:a,b:b,p:solidPath(pathD(anchor(a,'L'),anchor(b,'R')),LCOLORS[done%LCOLORS.length])});
+   done++;addXP(8);streakUp();sfx('match');burst(b,14);
+   if(done===pairs.length){won.classList.add('on');sfx('fanfare');confettiRain();
+    if(MODE==='level'&&L.matchNeed){L.matchDone=true;updateFinishBtn()}}
+  }else{
+   sfx('wrong');streakCut();
+   if(MODE==='level')L.wrongs++;
+   tempPath(pathD(anchor(a,'L'),anchor(b,'R')));
+   [a,b].forEach(function(x){x.classList.remove('sel');x.classList.add('err')});
+   setTimeout(function(){[a,b].forEach(function(x){x.classList.remove('err')})},520)
+  }}
+ function wire(col,side){Array.prototype.forEach.call(col.children,function(chip){
+  chip.addEventListener('click',function(e){
+   if(e.target.closest('.spk'))return;
+   if(chip.classList.contains('done'))return;
+   sfx('pop');
+   Array.prototype.forEach.call(col.children,function(x){if(x!==chip)x.classList.remove('sel')});
+   var cur=(side==='L')?selL:selR;
+   if(cur===chip){chip.classList.remove('sel');if(side==='L')selL=null;else selR=null;return}
+   chip.classList.add('sel');
+   if(side==='L')selL=chip;else selR=chip;
+   if(selL&&selR)evaluate()})})}
+ wire(colL,'L');wire(colR,'R')}
+
+/* ================= family chart ================= */
+function familyChart(){
+ var people=[['Father',2,2],['Mother',1,8],['Patrick',10,4],['Sarah',2,14],['John',4,2],['Kate',2,10],['David',18,2]];
+ var base=250,unit=12,bars='';
+ people.forEach(function(p,i){
+  var cx=100+i*82,n=p[0],g=p[1],t=p[2];
+  var gy=base-g*unit,ty=base-t*unit;
+  bars+='<g class="fam" data-n="'+n+'" data-g="'+g+'" data-t="'+t+'">'+
+  '<rect x="'+(cx-36)+'" y="26" width="72" height="224" fill="transparent"/>'+
+  '<rect class="cbar gb" x="'+(cx-25)+'" y="'+gy+'" width="22" height="'+(g*unit)+'" rx="6" style="--bd:'+(.06+i*.09)+'s"/>'+
+  '<rect class="cbar tb" x="'+(cx+3)+'" y="'+ty+'" width="22" height="'+(t*unit)+'" rx="6" style="--bd:'+(.12+i*.09)+'s"/>'+
+  '<text class="cval" x="'+(cx-14)+'" y="'+(gy-6)+'">'+g+'</text>'+
+  '<text class="cval" x="'+(cx+14)+'" y="'+(ty-6)+'">'+t+'</text>'+
+  '<text class="cname" x="'+cx+'" y="'+(base+22)+'">'+n+'</text></g>'});
+ return '<svg viewBox="0 0 640 300" class="fchart">'+
+ '<line x1="40" y1="'+base+'" x2="620" y2="'+base+'" class="caxis"/>'+
+ [5,10,15].map(function(h){return '<line x1="40" x2="620" y1="'+(base-h*unit)+'" y2="'+(base-h*unit)+'" class="cgrid"/><text class="clab" x="34" y="'+(base-h*unit+4)+'" text-anchor="end">'+h+'</text>'}).join('')+
+ '<text class="clab" x="34" y="'+(base+4)+'" text-anchor="end">0</text>'+bars+'</svg>'}
+var ARN={Father:'الأب',Mother:'الأم',Patrick:'باتريك',Sarah:'سارة',John:'جون',Kate:'كيت',David:'ديفيد'};
+function hAr(n){return n===1?'ساعة':n===2?'ساعتان':n+' ساعات'}
+function famClick(f){sfx('pop');
+ var box=f.closest('.chartbox'),info=box.querySelector('.chart-info');
+ var n=f.getAttribute('data-n'),g=+f.getAttribute('data-g'),t=+f.getAttribute('data-t');
+ info.classList.remove('idle');
+ info.innerHTML='<b>'+n+'</b> — Games: <b>'+g+' hours</b> · TV: <b>'+t+' hours</b>'+
+ '<span class="ar" dir="rtl">'+ARN[n]+' — ألعاب الفيديو: '+hAr(g)+' · التلفاز: '+hAr(t)+'</span>'}
+
+/* ================= chart-type icons ================= */
+var CT={
+ pie:'<svg viewBox="0 0 44 44" class="mico"><circle cx="22" cy="22" r="15" fill="#A8E6DD"/><path d="M22 22 L22 7 A15 15 0 0 1 35 18 Z" fill="#FF6B6B"/><path d="M22 22 L35 18 A15 15 0 0 1 27 36 Z" fill="#FFD166"/></svg>',
+ bar:'<svg viewBox="0 0 44 44" class="mico"><rect x="6" y="8" width="30" height="7" rx="3.5" fill="#4D96FF"/><rect x="6" y="19" width="22" height="7" rx="3.5" fill="#9B5DE5"/><rect x="6" y="30" width="15" height="7" rx="3.5" fill="#F15BB5"/></svg>',
+ line:'<svg viewBox="0 0 44 44" class="mico"><polyline points="8,32 17,18 26,26 37,10" fill="none" stroke="#29C0B2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="32" r="3.5" fill="#1B9C8F"/><circle cx="17" cy="18" r="3.5" fill="#1B9C8F"/><circle cx="26" cy="26" r="3.5" fill="#1B9C8F"/><circle cx="37" cy="10" r="3.5" fill="#1B9C8F"/></svg>',
+ col:'<svg viewBox="0 0 44 44" class="mico"><rect x="8" y="20" width="8" height="16" rx="3" fill="#FFA62B"/><rect x="18" y="10" width="8" height="26" rx="3" fill="#FF6B6B"/><rect x="28" y="25" width="8" height="11" rx="3" fill="#FFD166"/></svg>'};
+
+/* ================= sentence builder ================= */
+var SB={rows:[
+ {label:'Start',ar:'البداية',chips:['In my opinion,','I think that','Based on my experience,']},
+ {label:'Idea',ar:'الفكرة',chips:['teenagers spend too much time online','social media connects people','video games can be useful']},
+ {label:'Reason',ar:'السبب',chips:['because they are fun and easy to use','because they feel bored at home','because they can talk to their friends']},
+ {label:'Example',ar:'المثال',chips:['For example, my brother watches videos every day.','For instance, I chat with my cousins online.','One example is my sister, who loves team games.']}]};
+function buildBuilder(){
+ var sel={};
+ $('#m-rows').innerHTML=SB.rows.map(function(r,ri){
+  return '<div class="srow"><span class="slab">'+r.label+'<span class="ar" dir="rtl">'+r.ar+'</span></span>'+
+  '<div class="schips">'+r.chips.map(function(c,ci){return '<button class="schip" data-r="'+ri+'" data-c="'+ci+'">'+c+'</button>'}).join('')+'</div></div>'}).join('');
+ function upd(){
+  var parts=SB.rows.map(function(_,i){return sel[i]}).filter(Boolean);
+  var bar=$('#bSentence');bar.classList.remove('done');
+  bar.innerHTML=parts.length?parts.join(' '):'<span class="ph">Your sentence will appear here…</span>';
+  if(parts.length===SB.rows.length){
+   bar.classList.add('done');burst(bar,26);sfx('fanfare');mascotReact('happy');
+   if(MODE==='level'&&!L.builder){L.builder=true;addXP(15);toast('Sentence Master!','بنيت جملة رأي كاملة!','i-bolt','var(--sun)');updateFinishBtn()}}}
+ Array.prototype.forEach.call($('#m-rows').querySelectorAll('.schip'),function(ch){
+  ch.addEventListener('click',function(){sfx('pop');
+   var r=ch.getAttribute('data-r');
+   Array.prototype.forEach.call($('#m-rows').querySelectorAll('.schip[data-r="'+r+'"]'),function(x){x.classList.remove('sel')});
+   ch.classList.add('sel');sel[r]=ch.textContent;upd()})});
+ $('#bClear').onclick=function(){sfx('click');sel={};
+  Array.prototype.forEach.call($('#m-rows').querySelectorAll('.schip'),function(x){x.classList.remove('sel')});
+  var bar=$('#bSentence');bar.classList.remove('done');
+  bar.innerHTML='<span class="ph">Your sentence will appear here…</span>'};
+ upd()}
+
+/* ================= level machinery ================= */
+function buildLevel(n){
+ switch(n){
+  case 1:
+   renderVocab('m-trad',V_TRAD);renderVocab('m-new',V_NEW);
+   L.matchNeed=true;
+   LinkGame('m-match',[
+    {k:'newspaper',a:spk('newspaper')+'<span>newspaper</span>',b:IC('i-news')+'<span class="ar" dir="rtl">صحيفة</span>'},
+    {k:'smartphone',a:spk('smartphone')+'<span>smartphone</span>',b:IC('i-phone')+'<span class="ar" dir="rtl">هاتف ذكي</span>'},
+    {k:'blog',a:spk('blog')+'<span>blog</span>',b:IC('i-pen')+'<span class="ar" dir="rtl">مدونة</span>'},
+    {k:'video game',a:spk('video game')+'<span>video game</span>',b:IC('i-game')+'<span class="ar" dir="rtl">لعبة فيديو</span>'},
+    {k:'radio',a:spk('radio')+'<span>radio</span>',b:IC('i-radio')+'<span class="ar" dir="rtl">راديو</span>'},
+    {k:'smart watch',a:spk('smart watch')+'<span>smart watch</span>',b:IC('i-watch')+'<span class="ar" dir="rtl">ساعة ذكية</span>'}]);
+   renderQuiz('m-l1q',Q1);break;
+  case 2:
+   renderFlip('m-screen',V_SCREEN);renderQuiz('m-l2q',Q2);break;
+  case 3:
+   renderQuiz('m-l3q',Q3);break;
+  case 4:
+   L.matchNeed=true;
+   LinkGame('m-ct',[
+    {k:'pie',a:CT.pie,b:'Pie Chart<span class="ar" dir="rtl">الدائري المجزأ</span>'},
+    {k:'bar',a:CT.bar,b:'Bar Chart<span class="ar" dir="rtl">الأعمدة الأفقية</span>'},
+    {k:'line',a:CT.line,b:'Line Graph<span class="ar" dir="rtl">الخط البياني</span>'},
+    {k:'col',a:CT.col,b:'Column Chart<span class="ar" dir="rtl">الأعمدة الرأسية</span>'}]);
+   Array.prototype.forEach.call(document.querySelectorAll('#chartA .chart-mount, #chartB .chart-mount'),function(m){m.innerHTML=familyChart()});
+   renderVocab('m-news',V_NEWS);renderQuiz('m-l4q',Q4);break;
+  case 5:
+   renderFlip('m-phr',V_PHRASAL);renderQuiz('m-l5q',Q5);break;
+  case 6:
+   buildBuilder();break}}
+function startLevel(n){
+ MODE='level';
+ L={lvl:n,step:0,hearts:3,wrongs:0,qNeed:0,qDone:0,matchNeed:false,matchDone:false,builder:false,blog:false};
+ buildLevel(n);
+ show('l'+n);
+ var scr=$('#scr-l'+n);
+ if(!scr){show('map');return}
+ L.steps=scr.querySelectorAll('.step');
+ var dots=scr.querySelector('.lvl-dots');
+ dots.innerHTML='';
+ Array.prototype.forEach.call(L.steps,function(_,i){
+  var d=document.createElement('button');d.className='ldot';d.type='button';
+  d.addEventListener('click',function(){if(MODE==='level'&&i<=L.step){sfx('click');showStep(i)}});
+  dots.appendChild(d)});
+ Array.prototype.forEach.call(scr.querySelectorAll('.step-next'),function(b){b.remove()});
+ var last=L.steps.length-1;
+ Array.prototype.forEach.call(L.steps,function(s,i){
+  var b=document.createElement('button');b.type='button';b.className='btn step-next';
+  b.innerHTML='<span class="sn-en">Next</span><span class="b-ar sn-ar" dir="rtl">التالي</span>';
+  b.addEventListener('click',function(){sfx('click');
+   if(i<last)showStep(i+1);else finishLevel()});
+  s.appendChild(b)});
+ $('#hudHearts').classList.remove('hidden');
+ renderHearts();showStep(0)}
+function showStep(i){L.step=i;
+ var scr=$('#scr-l'+L.lvl);
+ Array.prototype.forEach.call(L.steps,function(s,j){s.classList.toggle('on',j===i)});
+ Array.prototype.forEach.call(scr.querySelectorAll('.ldot'),function(d,j){d.className='ldot'+(j===i?' cur':(j<i?' done':''))});
+ var st=L.steps[i];
+ scr.querySelector('.tip-en').textContent=st.getAttribute('data-tip')||'';
+ scr.querySelector('.tip-ar').textContent=st.getAttribute('data-tipar')||'';
+ var bub=scr.querySelector('.bubble');bub.classList.remove('bp');void bub.offsetWidth;bub.classList.add('bp');
+ updateFinishBtn();
+ window.scrollTo({top:0,behavior:'smooth'})}
+function reqState(){var left=0;
+ if(L.qNeed>L.qDone)left+=L.qNeed-L.qDone;
+ if(L.matchNeed&&!L.matchDone)left++;
+ if(L.lvl===6){if(!L.builder)left++;if(!L.blog)left++}
+ return{ok:left===0,left:left}}
+function updateFinishBtn(){
+ if(MODE!=='level'||!L.steps)return;
+ var b=L.steps[L.steps.length-1].querySelector('.step-next');if(!b)return;
+ var r=reqState(),en=b.querySelector('.sn-en'),ar=b.querySelector('.sn-ar');
+ if(r.ok){b.classList.remove('blocked');en.textContent='Finish Level!';ar.textContent='أنهِ المرحلة'}
+ else{b.classList.add('blocked');
+  en.textContent='Finish · '+r.left+' task'+(r.left>1?'s':'')+' left';
+  ar.textContent='أكمل المهام المتبقية'}}
+function finishLevel(){
+ var r=reqState();
+ if(!r.ok){sfx('wrong');
+  toast('Not so fast!','أجب عن جميع الأسئلة وأكمل الألعاب أولًا','i-flame','var(--ink)');
+  var b=L.steps[L.steps.length-1].querySelector('.step-next');
+  if(b){b.classList.remove('nshake');void b.offsetWidth;b.classList.add('nshake')}
+  return}
+ MODE=null;$('#hudHearts').classList.add('hidden');
+ var stars=Math.max(1,3-Math.min(2,L.wrongs));
+ S.stars[L.lvl]=Math.max(S.stars[L.lvl]||0,stars);
+ S.unlocked=Math.max(S.unlocked,L.lvl<6?L.lvl+1:7);
+ var bonus=15+stars*5;addXP(bonus);
+ award(BMAP[L.lvl]);
+ if(L.wrongs===0){addXP(10);toast('Perfect!','مرحلة كاملة بلا أخطاء!','i-star','var(--gold)')}
+ save();sfx('fanfare');showComplete(stars,bonus)}
+function showComplete(stars,bonus){
+ var lv=LEVELS[L.lvl-1];
+ var nextBtn=L.lvl<6
+  ?'<button class="btn" data-act="next" style="--bc:var(--'+lv.c+');--bcd:var(--'+lv.c+'D)"><span>Next Level</span><span class="b-ar" dir="rtl">المرحلة التالية</span></button>'
+  :'<button class="btn" data-act="boss" style="--bc:var(--coral);--bcd:var(--coralD)"><span>Face the Boss!</span><span class="b-ar" dir="rtl">واجه الوحش!</span></button>';
+ ovl.innerHTML='<div class="ovl-card">'+
+ '<div class="ovl-kick" style="color:var(--'+lv.c+'D)">LEVEL '+L.lvl+' COMPLETE</div>'+
+ '<h3 class="ovl-t">Great job!</h3>'+
+ '<p class="ovl-ar ar" dir="rtl">أحسنت! أكملت «'+lv.ar+'»</p>'+
+ '<div class="big-stars">'+[0,1,2].map(function(){return '<span class="bst">'+IC('i-star')+'</span>'}).join('')+'</div>'+
+ '<p class="ovl-xp">'+IC('i-bolt')+' +'+bonus+' XP bonus</p>'+
+ '<div class="ovl-btns"><button class="btn ghost" data-act="map"><span>Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>'+nextBtn+'</div></div>';
+ ovl.classList.add('on');
+ Array.prototype.forEach.call(ovl.querySelectorAll('.bst'),function(s,i){
+  if(i<stars)setTimeout(function(){s.classList.add('lit');sfx('star',i)},600+i*420)})}
+
+/* ================= boss ================= */
+function startBoss(){
+ MODE='boss';B={q:0,hp:8,hearts:3};
+ show('boss');
+ $('#hudHearts').classList.remove('hidden');
+ var mon=$('#monSvg');mon.classList.remove('dead');
+ $('#hpFill').style.width='100%';
+ renderHearts();renderBossQ()}
+function renderBossQ(){
+ var it=BOSSQ[B.q],box=$('#bq');
+ box.innerHTML='<div class="qz"><p class="bprog">'+IC('i-flame')+' QUESTION '+(B.q+1)+' OF 8</p>'+
+ '<p class="qq">'+it.q+'</p><p class="qar" dir="rtl">'+it.ar+'</p>'+
+ '<div class="opts">'+it.opts.map(function(o,j){return '<button class="opt" data-j="'+j+'">'+o+'</button>'}).join('')+'</div>'+
+ '<div class="qfb"></div></div>';
+ var qz=box.querySelector('.qz'),hurt=false;
+ Array.prototype.forEach.call(box.querySelectorAll('.opt'),function(opt){
+  opt.addEventListener('click',function(){
+   if(qz.classList.contains('lock'))return;
+   var j=+opt.getAttribute('data-j'),fb=box.querySelector('.qfb');
+   if(j===it.ok){
+    qz.classList.add('lock');opt.classList.add('ok');
+    fb.className='qfb on good';
+    fb.innerHTML=IC('i-check')+'<b>Direct hit!</b><span class="fb-ar" dir="rtl">إصابة مباشرة! الوحش يضعف</span>';
+    sfx('correct');burst(opt,18);mascotReact('happy');addXP(15);bossHit();
+   }else{
+    sfx('wrong');mascotReact('sad');streakCut();
+    opt.classList.add('no');setTimeout(function(){opt.classList.remove('no')},500);
+    fb.className='qfb on bad';
+    fb.innerHTML='<b>Try again!</b><span class="fb-ar" dir="rtl">حاول مرة أخرى</span>';
+    if(!hurt){hurt=true;loseHeart()}
+   }})})}
+function bossHit(){
+ B.hp--;$('#hpFill').style.width=(B.hp/8*100)+'%';
+ var mon=$('#monSvg');mon.classList.remove('hit');void mon.offsetWidth;mon.classList.add('hit');
+ sfx('hit');
+ var d=document.createElement('span');d.className='dmg';d.textContent='-1';
+ $('#monWrap').appendChild(d);setTimeout(function(){d.remove()},900);
+ if(B.hp<=0){bossWin()}
+ else{setTimeout(function(){B.q++;renderBossQ()},800)}}
+function bossWin(){
+ $('#monSvg').classList.add('dead');
+ $('#bq').innerHTML='<div class="gcard mondead">'+IC('i-trophy')+'<p>MONSTER DEFEATED!</p><p class="ar" dir="rtl">لقد هزمت وحش الشاشات!</p></div>';
+ sfx('fanfare');confettiRain();award('boss');addXP(40);save();
+ setTimeout(function(){
+  ovl.innerHTML='<div class="ovl-card">'+
+  '<div class="ovl-kick" style="color:var(--coralD)">VICTORY!</div>'+
+  '<h3 class="ovl-t">You defeated the Screen Monster!</h3>'+
+  '<p class="ovl-ar ar" dir="rtl">انتصرت على وحش الشاشات!</p>'+
+  '<div class="big-stars">'+[0,1,2].map(function(){return '<span class="bst">'+IC('i-star')+'</span>'}).join('')+'</div>'+
+  '<div class="ovl-btns"><button class="btn ghost" data-act="map"><span>Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>'+
+  '<button class="btn" data-act="win" style="--bc:var(--gold);--bcd:var(--goldD);color:#7A5B00"><span>Claim Victory</span><span class="b-ar" dir="rtl">استلم نصرك</span></button></div></div>';
+  ovl.classList.add('on');
+  Array.prototype.forEach.call(ovl.querySelectorAll('.bst'),function(s,i){setTimeout(function(){s.classList.add('lit');sfx('star',i)},500+i*380)})
+ },1300)}
+function bossFail(){
+ MODE=null;$('#hudHearts').classList.add('hidden');sfx('wrong');
+ ovl.innerHTML='<div class="ovl-card">'+
+ '<div class="ovl-kick" style="color:var(--coralD)">OH NO!</div>'+
+ '<h3 class="ovl-t">The monster wins this round!</h3>'+
+ '<p class="ovl-ar ar" dir="rtl">انتصر الوحش هذه المرة!</p>'+
+ '<p class="ovl-p">Take a deep breath… and try again. You can do it!</p>'+
+ '<p class="ovl-ar ar" dir="rtl">خذ نفسًا عميقًا وحاول من جديد — أنت تستطيع!</p>'+
+ '<div class="ovl-btns"><button class="btn ghost" data-act="map"><span>Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>'+
+ '<button class="btn" data-act="retry" style="--bc:var(--coral);--bcd:var(--coralD)"><span>Retry</span><span class="b-ar" dir="rtl">حاول مجددًا</span></button></div></div>';
+ ovl.classList.add('on')}
+
+/* ================= win ================= */
+function showWin(){
+ MODE=null;$('#hudHearts').classList.add('hidden');
+ show('win');
+ $('#winXp').textContent=S.xp;
+ $('#winStars').textContent=Object.keys(S.stars).reduce(function(a,k){return a+S.stars[k]},0);
+ $('#winBdg').textContent=S.badges.length;
+ $('#winBadges').innerHTML=BADGES.map(function(b){
+  var has=S.badges.indexOf(b.id)>=0;
+  return '<div class="bdg'+(has?'':' lock')+'" style="--bc:'+b.c+'"><span class="bdg-ic">'+IC(has?b.ic:'i-lock')+'</span><b>'+b.t+'</b><span class="ar" dir="rtl">'+b.ar+'</span></div>'}).join('');
+ confettiRain();setTimeout(confettiRain,900);setTimeout(confettiRain,1800)}
+
+/* ================= global delegation ================= */
+document.addEventListener('click',function(e){
+ var sp=e.target.closest('.spk');if(sp){speakSay(sp);return}
+ var f=e.target.closest('.fc');if(f){f.classList.toggle('flip');sfx('pop');return}
+ var fam=e.target.closest('.fam');if(fam){famClick(fam);return}
+ var rv=e.target.closest('.rvbtn');
+ if(rv&&!rv.getAttribute('id')){
+  var box=rv.closest('.talkcard'),t=box.querySelector('.rvt');
+  t.classList.toggle('on');var open=t.classList.contains('on');
+  rv.querySelector('.rv-en').textContent=open?'Hide':'Show ideas';
+  rv.querySelector('.rv-ar').textContent=open?'إخفاء':'أظهر الأفكار';sfx('pop');return}
+ var nd=e.target.closest('.node');if(nd){nodeClick(nd);return}});
+ovl.addEventListener('click',function(e){
+ var b=e.target.closest('[data-act]');if(!b)return;
+ sfx('click');var a=b.getAttribute('data-act');
+ if(a==='map'){hideOvl();show('map')}
+ else if(a==='next'){hideOvl();startLevel(L.lvl+1)}
+ else if(a==='boss'){hideOvl();startBoss()}
+ else if(a==='retry'){hideOvl();startBoss()}
+ else if(a==='win'){hideOvl();showWin()}
+ else if(a==='resetNo'){hideOvl()}
+ else if(a==='resetYes'){doReset()}});
+document.addEventListener('keydown',function(e){
+ if(MODE!=='level'||!L||!L.steps)return;
+ if(e.key==='ArrowRight'&&L.step<L.steps.length-1)showStep(L.step+1);
+ else if(e.key==='ArrowLeft'&&L.step>0)showStep(L.step-1)});
+
+/* ================= reset ================= */
+function confirmReset(){sfx('click');
+ ovl.innerHTML='<div class="ovl-card"><h3 class="ovl-t">Reset progress?</h3>'+
+ '<p class="ovl-ar ar" dir="rtl">هل تريد حذف كل التقدم والبدء من جديد؟</p>'+
+ '<div class="ovl-btns"><button class="btn ghost" data-act="resetNo"><span>No</span><span class="b-ar" dir="rtl">لا</span></button>'+
+ '<button class="btn" data-act="resetYes" style="--bc:var(--coral);--bcd:var(--coralD)"><span>Yes, reset</span><span class="b-ar" dir="rtl">نعم، احذف</span></button></div></div>';
+ ovl.classList.add('on')}
+function doReset(){try{localStorage.removeItem(KEY)}catch(e){}
+ S={xp:0,stars:{},unlocked:1,badges:[],streak:0};xpShown=0;$('#xpN').textContent='0';
+ hideOvl();show('title')}
+
+/* ================= init ================= */
+Array.prototype.forEach.call($$('.tabby-slot'),function(s){s.innerHTML=tabbySVG()});
+var tkWords=V_TRAD.concat(V_NEW).map(function(v){return v.w});
+ $('#tk').innerHTML=tkWords.concat(tkWords).map(function(w){return '<span class="tkchip">'+w+'</span>'}).join('');
+ $('#startBtn').addEventListener('click',function(){initAudio();sfx('click');show('map')});
+ $('#hudHome').addEventListener('click',function(){sfx('click');show('map')});
+ $('#mapReset').addEventListener('click',confirmReset);
+ $('#winMapBtn').addEventListener('click',function(){sfx('click');show('map')});
+ $('#winAgainBtn').addEventListener('click',confirmReset);
+ $('#sndBtn').addEventListener('click',function(){
+ muted=!muted;
+ $('#sndUse').setAttribute('href',muted?'#i-voloff':'#i-vol');
+ if(!muted)sfx('click')});
+ $('#blogGo').addEventListener('click',function(){
+ sfx('click');
+ var n=$('#blogName').value.trim()||'My Blog';
+ var t=$('#blogTopic').value.trim()||'things I love';
+ $('#blogPT').textContent=n;
+ $('#blogPTopic').textContent='A blog all about '+t+'!';
+ var p=$('#blogPrev');p.classList.add('ready');
+ burst(p,26);sfx('fanfare');
+ if(MODE==='level'&&!L.blog){L.blog=true;addXP(15);toast('Blog Creator!','أنشأت مدونتك الأولى!','i-pen','var(--pink)')}
+ updateFinishBtn()});
+show('title');
+tweenXP();
+})();
+</script>
+</body>
+</html>
