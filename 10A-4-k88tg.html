@@ -1,0 +1,2047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Civilisation Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka:wght@400;500;600;700&family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+--paper:#F6ECD4;--paper2:#FDFAF1;--ink:#4A3A26;--ink2:#94825F;
+--ar:#0E7C72;
+--mint:#3BA08E;--mintD:#2C7F70;--coral:#D96846;--coralD:#B14F31;
+--sun:#DBA226;--sunD:#B2820B;--sky:#3E7CB1;--skyD:#2F628E;
+--grape:#8B6BB1;--grapeD:#6F4F95;--pink:#C75D8F;--pinkD:#A74373;
+--gold:#E8C34E;--goldD:#C99A22;--green:#5B9E48;--greenD:#478236;
+--bord:#E4D4A8;--sh:0 5px 0 rgba(74,58,38,.09);
+}
+body{font-family:'Fredoka',sans-serif;color:var(--ink);min-height:100vh;overflow-x:hidden;
+background-color:var(--paper);
+background-image:radial-gradient(rgba(74,58,38,.06) 2.2px,transparent 2.3px);
+background-size:30px 30px;-webkit-user-select:none;user-select:none}
+input{-webkit-user-select:text;user-select:text}
+button{font-family:inherit;touch-action:manipulation}
+.ar{font-family:'Baloo Bhaijaan 2',sans-serif;color:var(--ar);font-weight:600}
+.hidden{display:none!important}
+.ico{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.svgic{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;flex-direction:column;align-items:center;line-height:1.15;gap:1px;
+font-family:'Lilita One';font-size:1.05rem;letter-spacing:.6px;color:#fff;text-transform:uppercase;
+background:var(--bc,var(--mint));border:none;border-radius:999px;padding:12px 26px 13px;cursor:pointer;
+box-shadow:0 6px 0 var(--bcd,var(--mintD)),0 14px 26px rgba(74,58,38,.16);transition:transform .12s,box-shadow .12s}
+.btn:active{transform:translateY(6px);box-shadow:0 0 0 var(--bcd,var(--mintD)),0 4px 10px rgba(74,58,38,.15)}
+.btn .b-ar{font-family:'Baloo Bhaijaan 2';font-size:.82rem;font-weight:600;opacity:.95;text-transform:none}
+.btn.ghost{--bc:#fff;--bcd:#D9C48C;color:var(--ink)}
+
+/* ---------- HUD ---------- */
+#hud{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:90;display:none;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;
+background:rgba(253,250,241,.95);border:3px solid var(--bord);border-radius:999px;padding:6px 10px;
+box-shadow:var(--sh);max-width:calc(100vw - 20px)}
+#hud.on{display:flex}
+.hchip{display:flex;align-items:center;gap:6px;font-family:'Lilita One';font-size:.95rem;background:#fff;
+border:2.5px solid var(--bord);border-radius:999px;padding:4px 12px}
+.hchip .ico{width:17px;height:17px}
+.hbtn{cursor:pointer;transition:transform .12s}
+.hbtn:active{transform:scale(.92)}
+#hudXp{background:#FBF0CE;border-color:var(--gold)} #hudXp .ico{color:var(--sunD)}
+#hudStreak{display:none;background:#F6DFC4;border-color:#E0BE7E;color:#9A6B10}
+#hudStreak.on{display:flex}
+#hudStreak.pop{animation:hpop .35s}
+#hudHearts .ico{width:18px;height:18px}
+.hh{color:var(--coral);display:inline-flex}
+.hh.off .ico{color:#DDD0A6}
+#hudHearts.hpop{animation:hpop .4s}
+@keyframes hpop{40%{transform:scale(1.18)}}
+.spacer{flex:1}
+@media(max-width:520px){.hchip{font-size:.8rem;padding:3px 9px}.hchip .ico{width:14px;height:14px}#hud{gap:5px;padding:5px 8px}}
+
+/* ---------- screens ---------- */
+.wrap{max-width:920px;margin:0 auto;padding:86px 16px 40px}
+.level .wrap{padding-bottom:60px}
+.screen{display:none}
+.screen.on{display:block;animation:scrIn .45s cubic-bezier(.2,.8,.3,1) both}
+@keyframes scrIn{from{opacity:0;transform:translateY(22px) scale(.985)}}
+
+/* ---------- title ---------- */
+.title-wrap{text-align:center;position:relative;padding-top:26px}
+.kick{display:inline-block;background:#fff;border:3px solid var(--bord);border-radius:999px;padding:5px 18px;
+font-family:'Lilita One';letter-spacing:2px;font-size:.8rem;color:var(--ink2);box-shadow:var(--sh)}
+.logo{font-family:'Lilita One';font-size:clamp(3rem,10vw,4.7rem);line-height:.95;margin-top:18px;display:flex;justify-content:center;flex-wrap:wrap}
+.logo span{display:inline-block;animation:wig 2.6s ease-in-out infinite;animation-delay:calc(var(--i)*.13s);text-shadow:0 4px 0 rgba(74,58,38,.16)}
+@keyframes wig{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-9px) rotate(3deg)}}
+.ribbon{display:inline-block;background:var(--coral);color:#fff;font-family:'Lilita One';font-size:1.35rem;letter-spacing:4px;
+padding:5px 22px 6px;border-radius:14px;transform:rotate(-2deg);margin-top:12px;box-shadow:0 5px 0 var(--coralD)}
+.t-sub{margin-top:16px;font-weight:500;color:var(--ink2)}
+.t-sub-ar{margin-top:4px;font-size:1.1rem}
+.title-tabby{width:150px;margin:20px auto 0}
+.howto{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px}
+.howchip{background:#fff;border:3px solid var(--bord);border-radius:999px;padding:6px 16px;font-weight:600;box-shadow:var(--sh);font-size:.9rem;display:flex;align-items:center;gap:7px}
+.howchip .ico{width:17px;height:17px}
+.f-ico{position:absolute;animation:floaty 6s ease-in-out infinite;opacity:.9}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-20px) rotate(5deg)}}
+.ticker{overflow:hidden;background:#fff;border-top:3px solid var(--bord);border-bottom:3px solid var(--bord);margin-top:30px}
+.tk{display:flex;gap:12px;width:max-content;animation:tick 40s linear infinite;padding:10px 0}
+@keyframes tick{to{transform:translateX(-50%)}}
+.tkchip{background:#FBF0CE;border:2.5px solid var(--gold);color:#7A5B10;font-weight:600;font-size:.85rem;border-radius:999px;padding:4px 14px;white-space:nowrap}
+
+/* ---------- map ---------- */
+.map-head{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.map-logo{font-family:'Lilita One';font-size:1.7rem}
+.map-logo i{font-style:normal;color:var(--coral)}
+.map-wrap{position:relative;width:min(460px,94vw);height:1310px;margin:10px auto 0}
+.map-path{position:absolute;inset:0;width:100%;height:100%}
+.deco{position:absolute;pointer-events:none}
+#mapNodes{position:absolute;inset:0}
+.node{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;z-index:2;padding:6px}
+.node-face{position:relative;width:78px;height:78px;border-radius:26px;background:var(--nc,var(--mint));border:4px solid #fff;
+box-shadow:0 7px 0 var(--ncd,var(--mintD)),0 16px 26px rgba(74,58,38,.22);display:flex;align-items:center;justify-content:center;color:#fff;transition:transform .2s}
+.node-face .ico{width:34px;height:34px}
+.node:hover .node-face{transform:translateY(-5px) rotate(-3deg) scale(1.05)}
+.node-num{position:absolute;top:-9px;left:-9px;width:27px;height:27px;background:var(--gold);border:3px solid #fff;border-radius:50%;
+font-family:'Lilita One';font-size:.9rem;color:#7A5B00;display:flex;align-items:center;justify-content:center}
+.node.lock .node-face{background:#CCC3A0;box-shadow:0 7px 0 #B0A67F;color:#94825F}
+.node.cur .node-face::after{content:'';position:absolute;inset:-9px;border:4px solid var(--nc,var(--mint));border-radius:34px;animation:ring 1.6s infinite}
+@keyframes ring{from{transform:scale(.92);opacity:1}to{transform:scale(1.4);opacity:0}}
+.go-arrow{position:absolute;top:-52px;color:var(--coral);animation:bob 1s infinite}
+.go-arrow .ico{width:26px;height:26px}
+@keyframes bob{50%{transform:translateY(8px)}}
+.node-stars{display:flex;gap:3px}
+.nst{position:relative;display:inline-block;width:14px;height:14px}
+.nst .ico{width:14px;height:14px}
+.nst .base{color:#DDD6B4}
+.nst .fill{position:absolute;left:0;top:0;color:var(--gold);opacity:0}
+.nst[data-f="1"] .fill,.nst[data-f="0.5"] .fill{opacity:1}
+.nst.half .fill{clip-path:inset(0 50% 0 0)}
+.node-name{font-family:'Lilita One';font-size:.82rem;background:#fff;border:2.5px solid var(--bord);border-radius:999px;padding:2px 12px 4px;box-shadow:var(--sh);text-align:center}
+.node-name .nar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.72rem;display:block}
+.node.nshake{animation:nsh .4s}
+@keyframes nsh{25%{transform:translate(-50%,-50%) translateX(-7px)}75%{transform:translate(-50%,-50%) translateX(7px)}}
+.boss-node .node-face{width:104px;height:104px;border-radius:32px;background:#5A5344;box-shadow:0 8px 0 #40392C,0 18px 30px rgba(74,58,38,.32)}
+.boss-node .node-face .ico{width:46px;height:46px;color:var(--gold)}
+.boss-node.cur .node-face::after{border-color:var(--gold)}
+.boss-ribbon{background:var(--coral);color:#fff;font-family:'Lilita One';font-size:.7rem;letter-spacing:2px;padding:2px 12px 3px;border-radius:99px}
+.map-foot{text-align:center;margin-top:8px;font-weight:600;color:var(--ink2)}
+.map-foot .ar{display:block;margin-top:2px}
+
+/* ---------- level head + dots ---------- */
+.lvl-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#fff;border:3px solid var(--bord);border-radius:24px;padding:14px 16px;box-shadow:var(--sh);margin-bottom:12px}
+.lvl-num{width:54px;height:54px;border-radius:18px;background:var(--lc);color:#fff;font-family:'Lilita One';font-size:1.6rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 var(--lcd);flex:none}
+.lt{font-family:'Lilita One';font-size:1.65rem;line-height:1.05}
+.lvl-ar{color:var(--ar);font-weight:600;font-size:1rem}
+.head-tabby{margin-left:auto;display:flex;align-items:center;gap:10px;max-width:340px}
+.tabby-slot{width:74px;flex:none}
+.tabby-slot.jump{animation:tjump .6s}
+.tabby-slot.shake{animation:nsh .4s}
+@keyframes tjump{30%{transform:translateY(-14px)}60%{transform:translateY(0)}80%{transform:translateY(-6px)}}
+.bubble{position:relative;background:var(--paper2);border:2.5px dashed var(--lc);border-radius:16px;padding:8px 12px;font-size:.83rem}
+.bubble::after{content:'';position:absolute;left:-9px;top:18px;border:7px solid transparent;border-right-color:var(--lc)}
+.bubble.bp{animation:bp .4s}
+@keyframes bp{from{transform:scale(.9);opacity:.4}}
+.tip-en{display:block;font-weight:600}
+.tip-ar{display:block;text-align:right;font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.8rem}
+.lvl-dots{display:flex;justify-content:center;gap:9px;margin:0 0 16px}
+.ldot{width:14px;height:14px;border-radius:50%;background:#F1E6C4;border:3px solid #D9C48C;cursor:pointer;padding:0;transition:.2s;touch-action:manipulation}
+.ldot.cur{background:var(--lc,var(--mint));border-color:var(--lcd,var(--mintD));transform:scale(1.35)}
+.ldot.done{background:var(--gold);border-color:var(--goldD)}
+
+/* ---------- steps ---------- */
+.step{display:none}
+.step.on{display:block;animation:stepIn .4s ease both}
+@keyframes stepIn{from{opacity:0;transform:translateX(28px)}}
+.step-next{margin-top:20px;width:100%;font-size:1.12rem;--bc:var(--lc,var(--mint));--bcd:var(--lcd,var(--mintD))}
+.step-next.blocked{--bc:#CCC3A0;--bcd:#B0A67F}
+.step-next.nshake{animation:nsh2 .4s}
+@keyframes nsh2{25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+.sh{font-family:'Lilita One';font-size:1.3rem;display:flex;align-items:center;gap:9px;margin:4px 0 2px}
+.sh .ico{color:var(--lcd)}
+.sh-ar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;text-align:right;margin-bottom:10px;display:block}
+
+/* ---------- cards / quiz ---------- */
+.gcard{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:18px;box-shadow:var(--sh)}
+.qz{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px 18px;margin:14px 0;box-shadow:var(--sh)}
+.qq{font-weight:600;font-size:1.05rem}
+.qar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.95rem;text-align:right;margin-top:3px}
+.opts{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.opt{font-weight:600;font-size:.95rem;color:var(--ink);background:var(--paper2);border:3px solid #EBDCB0;border-radius:14px;padding:9px 16px;cursor:pointer;box-shadow:0 4px 0 rgba(74,58,38,.09);transition:.15s;touch-action:manipulation}
+.opt:hover{transform:translateY(-2px);border-color:var(--lc,var(--mint))}
+.opt.ok{background:#DDF0CE;border-color:var(--green);color:#2C6B1F}
+.opt.no{background:#F8DFD3;border-color:var(--coral);color:#A31515;animation:shk .4s}
+.qz.lock .opt{pointer-events:none;opacity:.5}
+.qz.lock .opt.ok{opacity:1}
+.qfb{margin-top:10px;display:none;border-radius:12px;padding:9px 12px;font-weight:600;font-size:.9rem;align-items:center;gap:8px}
+.qfb.on{display:flex;flex-wrap:wrap;animation:pp .3s}
+.qfb.good{background:#DDF0CE;color:#2C6B1F;border:2.5px solid #AEDB8C}
+.qfb.bad{background:#F8DFD3;color:#A31515;border:2.5px solid #EFA98E}
+.qfb .fb-ar{display:block;width:100%;text-align:right;font-family:'Baloo Bhaijaan 2';font-weight:600;margin-top:2px}
+.qfb .fn{display:block;width:100%;font-size:.85rem;margin-top:2px}
+@keyframes shk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes pp{from{transform:scale(.93);opacity:0}}
+.bprog{font-family:'Lilita One';font-size:.72rem;letter-spacing:1.5px;color:var(--ink2);display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.bprog .ico{width:14px;height:14px;color:var(--coral)}
+
+/* ---------- vocab / flip ---------- */
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px}
+.wcard{position:relative;background:#fff;border:3px solid var(--bord);border-radius:18px;padding:18px 8px 12px;text-align:center;box-shadow:var(--sh);transition:transform .2s}
+.wcard:hover{transform:translateY(-5px) rotate(-1.2deg);border-color:var(--lc)}
+.wcard .ico{width:36px;height:36px;color:var(--lcd)}
+.wcard .w{font-weight:600;font-size:.98rem;margin-top:6px}
+.wcard .war{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.95rem}
+.spk{position:absolute;top:6px;right:6px;width:30px;height:30px;border-radius:50%;border:2.5px solid var(--bord);background:#fff;color:var(--lcd);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;z-index:2;touch-action:manipulation}
+.spk .ico{width:15px;height:15px}
+.spk:hover{background:var(--lc);color:#fff;transform:scale(1.12)}
+.spk.busy{animation:spkb 1s ease}
+@keyframes spkb{50%{transform:scale(1.2);background:var(--coral);color:#fff}}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:16px}
+.fc{perspective:1000px;height:225px;cursor:pointer;outline:none}
+.fi{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,1.4,.4,1)}
+.fc.flip .fi{transform:rotateY(180deg)}
+.ff,.fbk{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px}
+.ff{background:#fff;border:3px solid var(--bord);box-shadow:var(--sh)}
+.ff .ico{width:36px;height:36px;color:var(--lcd)}
+.fw{font-family:'Lilita One';font-size:1.2rem;margin-top:8px}
+.fhint{margin-top:12px;font-size:.7rem;color:var(--ink2);font-weight:600}
+.fhint .ar{display:block;font-weight:600}
+.fbk{background:linear-gradient(150deg,var(--lc),var(--lcd));color:#fff;transform:rotateY(180deg);box-shadow:0 6px 0 rgba(74,58,38,.2)}
+.den{font-weight:600;font-size:.9rem;line-height:1.3}
+.dar{font-family:'Baloo Bhaijaan 2';font-weight:600;font-size:1rem;margin-top:8px;color:#FFF3CE}
+.dex{margin-top:10px;background:rgba(255,255,255,.18);border-radius:12px;padding:6px 10px;font-size:.82rem;font-style:italic}
+
+/* ---------- LINK GAME ---------- */
+.lg{position:relative}
+.lg-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 60px;position:relative;z-index:2}
+.lg-col{display:flex;flex-direction:column;gap:10px}
+.lg-chip{position:relative;display:flex;align-items:center;gap:9px;background:#fff;border:3px solid #EBDCB0;border-radius:14px;padding:9px 12px;min-height:56px;cursor:pointer;font-weight:600;font-size:.95rem;box-shadow:0 4px 0 rgba(74,58,38,.09);transition:transform .15s,border-color .15s,background .15s;text-align:left;touch-action:manipulation}
+.lg-chip:hover{transform:translateY(-2px);border-color:var(--lc)}
+.lg-chip.sel{border-color:var(--lc);background:#FBF0CE;transform:scale(1.03)}
+.lg-chip.done{background:#DDF0CE;border-color:var(--green);color:#2C6B1F;animation:pp .4s}
+.lg-chip.done .ar{color:#1E6B4F}
+.lg-chip.err{animation:shk .4s;border-color:var(--coral)}
+.lg-chip .spk{position:static;flex:none;width:27px;height:27px}
+.lg-chip .ico{width:26px;height:26px;color:var(--lcd)}
+.lg-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:1}
+.lg-line{fill:none;stroke-width:5;stroke-linecap:round}
+.lg-temp{stroke-dasharray:9 7;animation:lgfade .65s forwards}
+@keyframes lgfade{0%{opacity:0}25%{opacity:1}70%{opacity:1}100%{opacity:0}}
+.wonbar{display:none;margin-top:14px;background:#DDF0CE;border:3px solid var(--green);border-radius:16px;padding:12px 16px;align-items:center;gap:10px;font-weight:600;color:#2C6B1F}
+.wonbar .ico{width:26px;height:26px;color:var(--greenD)}
+.wonbar.on{display:flex;animation:pp .4s}
+.wonbar .ar{color:#1E6B4F}
+.ftext{font-size:.84rem;line-height:1.45}
+@media(max-width:520px){.lg-grid{gap:10px 40px}.lg-chip{padding:8px 9px;font-size:.85rem;min-height:52px}}
+
+/* ---------- SORT GAME ---------- */
+.sg-hint{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:12px}
+.sg-hint span{background:#fff;border:2.5px solid var(--bord);border-radius:999px;padding:5px 14px;font-weight:600;font-size:.85rem}
+.sg-pool{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;min-height:64px;background:#fff;border:3px dashed var(--bord);border-radius:18px;padding:12px;margin-bottom:14px}
+.sg-chip{display:flex;align-items:center;gap:8px;background:var(--paper2);border:3px solid #EBDCB0;border-radius:14px;padding:8px 12px;cursor:pointer;font-weight:600;font-size:.92rem;box-shadow:0 4px 0 rgba(74,58,38,.09);transition:.15s;touch-action:manipulation;max-width:100%}
+.sg-chip .ico{width:24px;height:24px;color:var(--lcd);flex:none}
+.sg-chip:hover{transform:translateY(-2px);border-color:var(--lc)}
+.sg-chip.sel{border-color:var(--lc);background:#FBF0CE;transform:scale(1.05)}
+.sg-chip.err{animation:shk .4s;border-color:var(--coral)}
+.sg-chip .ar{font-size:.78rem}
+.sg-bins{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sg-bin{border:3px dashed var(--bin,#C9AE6E);border-radius:18px;padding:12px;min-height:110px;background:rgba(255,255,255,.65);cursor:pointer;transition:.15s;touch-action:manipulation}
+.sg-bin:hover{border-color:var(--bin)}
+.sg-bin h4{font-family:'Lilita One';display:flex;justify-content:center;align-items:center;gap:8px;color:var(--bin,#999);font-size:1rem}
+.sg-bin h4 .ico{width:20px;height:20px}
+.sg-bin h4 .ar{font-size:.75rem;font-weight:600;color:var(--bin)}
+.sg-bin.flash{animation:shk .4s;border-color:var(--coral);background:#F8DFD3}
+.sg-bin-inner{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;min-height:40px}
+.sg-mini{display:flex;align-items:center;gap:6px;background:#fff;border:2.5px solid var(--bin,#999);border-radius:10px;padding:5px 10px;font-weight:600;font-size:.83rem;animation:pp .35s}
+.sg-mini .ico{width:15px;height:15px;color:var(--bin,#999)}
+.sg-empty{color:var(--ink2);font-weight:600;font-size:.85rem}
+@media(max-width:560px){.sg-bins{grid-template-columns:1fr}}
+
+/* ---------- ORDER GAME ---------- */
+.og-n{font-family:'Lilita One';font-size:.72rem;letter-spacing:1.5px;color:var(--ink2);display:flex;align-items:center;gap:6px}
+.og-n .ico{width:14px;height:14px;color:var(--grapeD)}
+.og-target{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:1rem;text-align:right;margin-top:4px}
+.og-line{min-height:58px;background:#fff;border:3px dashed #D9C48C;border-radius:16px;padding:11px 14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:600;margin-top:10px}
+.og-w{background:var(--lc,var(--grape));color:#fff;border-radius:10px;padding:4px 10px;animation:pp .3s}
+.og-caret{width:3px;height:26px;background:var(--lc,var(--grape));animation:blink 1s infinite}
+@keyframes blink{50%{opacity:0}}
+.og-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.og-chip{border:3px solid #EBDCB0;background:#fff;border-radius:999px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:.9rem;transition:.15s;box-shadow:0 3px 0 rgba(74,58,38,.08);touch-action:manipulation;color:var(--ink)}
+.og-chip:hover{border-color:var(--lc)}
+.og-chip.err{animation:shk .4s;border-color:var(--coral)}
+.og-next{margin-top:14px}
+.wonbar.og-won{margin-top:12px}
+
+/* ---------- voices / bio (scroll cards) ---------- */
+.emails2{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.mail{background:#fff;border:3px solid var(--bord);border-radius:18px;box-shadow:var(--sh);overflow:hidden}
+.mail-top{display:flex;align-items:center;gap:8px;background:#F4E9C8;padding:9px 12px;flex-wrap:wrap}
+.mail-top .ico{color:var(--lcd,var(--coralD));width:18px;height:18px}
+.mail-addr{background:#fff;border:2px solid #EBDCB0;border-radius:999px;padding:3px 11px;font-size:.68rem;font-weight:600;color:var(--ink2)}
+.mail-sub{font-family:'Lilita One';font-size:.8rem;color:#7A5B10}
+.mail-body{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.para{position:relative;background:var(--paper2);border:2.5px solid var(--bord);border-radius:14px;padding:10px 12px}
+.para .pen{font-weight:500;line-height:1.5;padding-right:34px;font-size:.9rem}
+.para .pen b{font-weight:700;color:var(--lcd,var(--coralD))}
+.para .par{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.85rem;text-align:right;margin-top:6px;border-top:2px dashed var(--bord);padding-top:6px}
+.para .spk{top:8px;right:8px}
+@media(max-width:760px){.emails2{grid-template-columns:1fr}}
+
+/* ---------- timeline ---------- */
+.tlbox{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:14px;box-shadow:var(--sh);margin-top:12px}
+.tlsvg{width:100%;height:auto;display:block}
+.tl-bar{cursor:pointer;transition:opacity .15s}
+.tl-bar:hover{opacity:.78}
+.tl-name{font-family:'Fredoka';font-weight:700;font-size:12.5px;fill:#4A3A26}
+.tl-date{font-family:'Fredoka';font-weight:600;font-size:10px;fill:#94825F}
+.tl-tick{font-family:'Fredoka';font-weight:600;font-size:10.5px;fill:#94825F}
+.tlnote{text-align:center;font-weight:600;color:var(--ink2);font-size:.82rem;margin-top:8px}
+.tlnote .ar{display:block;margin-top:2px}
+
+/* ---------- preview cards (before connect games) ---------- */
+.fscrolls,.qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:14px;margin-top:12px}
+.fscard,.qcard{position:relative;background:#fff;border:3px solid var(--bord);border-radius:18px;padding:14px 42px 14px 14px;box-shadow:var(--sh);border-top:6px solid var(--fc,var(--skyD))}
+.fscard h4{font-family:'Lilita One';font-size:1rem;color:var(--ink);display:flex;justify-content:space-between;align-items:baseline;margin-top:6px}
+.fscard h4 .ar{font-size:.85rem;font-weight:600}
+.fscard .fe,.qcard .qe{font-weight:600;font-size:.88rem;margin-top:8px;line-height:1.55}
+.qcard .qe{font-style:italic}
+.fscard .fa,.qcard .qa{display:block;text-align:right;margin-top:8px;font-size:.85rem;line-height:1.65}
+.fscard .spk,.qcard .spk{top:10px;right:10px}
+.qcard .qw{font-family:'Lilita One';font-size:.85rem;color:var(--coralD);margin-top:10px}
+
+/* ---------- grammar ---------- */
+.fchips{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px;box-shadow:var(--sh);margin:12px 0}
+.fch{font-family:'Lilita One';font-size:1rem;padding:8px 15px;border-radius:12px;color:#fff;box-shadow:0 4px 0 rgba(74,58,38,.18)}
+.step.on .fch{animation:chipIn .45s both;animation-delay:var(--d,0s)}
+@keyframes chipIn{from{opacity:0;transform:scale(.5) rotate(-7deg)}}
+.fplus{font-family:'Lilita One';color:#B8A87C;font-size:1.4rem}
+.c-adj{background:var(--sky)} .c-er{background:var(--sun)} .c-than{background:var(--coral)}
+.c-more{background:var(--grape)}
+.hl{padding:1px 6px;border-radius:8px;font-weight:700}
+.hl-sky{background:#DCE8F4;color:#2557B0} .hl-sun{background:#F6E3B4;color:#8A5B00}
+.hl-coral{background:#F8DFD3;color:#B14F31} .hl-grape{background:#E9DFF3;color:#6B2FB3}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:14px;margin-top:12px}
+.rcard{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px;box-shadow:var(--sh);border-top:7px solid var(--rc)}
+.rtag{display:inline-block;background:var(--rc);color:#fff;font-family:'Lilita One';font-size:.72rem;letter-spacing:1px;padding:3px 12px;border-radius:99px}
+.rname{font-family:'Lilita One';font-size:1.05rem;margin-left:8px}
+.rar{display:block;font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.9rem;text-align:right;margin-top:4px}
+.rf{margin:11px 0;background:#FBF5E0;border:2.5px dashed var(--rc);border-radius:12px;padding:9px;text-align:center;font-weight:600;font-size:.98rem}
+.rex{background:#FBF0CE;border:2.5px solid #EBD48E;border-radius:12px;padding:9px 12px;margin-top:8px}
+.rex .en{font-weight:600;font-size:.9rem;color:#6B4E00;display:block}
+.rex .ar{display:block;margin-top:4px;font-size:.85rem}
+.watch{background:#F8DFD3;border:3px solid #EFA98E;border-radius:16px;padding:11px 14px;color:#A3431F;font-weight:600;display:flex;gap:10px;align-items:center;margin-top:14px}
+.watch .ico{width:24px;height:24px;flex:none}
+.watch .ar{display:block;font-weight:600;color:#B14F31;text-align:right;margin-top:2px;font-size:.9rem}
+.vsbox{display:flex;align-items:center;justify-content:center;gap:22px;background:#fff;border:3px solid var(--bord);border-radius:20px;padding:20px;box-shadow:var(--sh);flex-wrap:wrap}
+.vs-side{text-align:center;max-width:240px}
+.vs-side .v-ic{width:38px;height:38px;margin:0 auto}
+.vs-side b{display:block;margin-top:8px;font-size:.95rem}
+.vs-side .nm{display:block;font-weight:600;font-size:.8rem;margin-top:4px;color:var(--ink2)}
+.vs-badge{font-family:'Lilita One';background:var(--ink);color:var(--gold);border-radius:12px;padding:7px 13px;font-size:1.05rem;transform:rotate(-3deg);box-shadow:0 4px 0 rgba(74,58,38,.3)}
+.vs-cap{text-align:center;margin-top:12px;font-size:1.05rem;font-weight:600}
+.vs-cap .ar{display:block;margin-top:4px}
+.advrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#fff;border:3px solid var(--bord);border-radius:16px;padding:10px 16px;margin:10px 0}
+.advw{font-family:'Lilita One';background:var(--sun);color:#fff;padding:4px 16px;border-radius:10px;font-size:.98rem;box-shadow:0 3px 0 var(--sunD)}
+.advbar{display:flex;gap:4px}
+.seg{width:19px;height:12px;border-radius:4px;background:#EFDFAE;border:2px solid #DCC98F}
+.seg.on{background:var(--sun);border-color:var(--sunD)}
+.advrow .ar{margin-left:auto;font-size:.85rem}
+
+/* ---------- facts / quotes ---------- */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin-top:12px}
+.fact{background:#fff;border:3px solid var(--bord);border-radius:18px;padding:16px;box-shadow:var(--sh);text-align:center;border-top:6px solid var(--fc)}
+.fact .ico{width:34px;height:34px;color:var(--fc)}
+.fact .fe{font-weight:600;margin-top:8px;font-size:.93rem}
+.fact .ar{display:block;margin-top:5px;font-size:.85rem}
+
+/* ---------- quiz helpers / talk ---------- */
+.datastrip{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.dschip{background:#FBF0CE;border:2.5px solid var(--gold);border-radius:999px;padding:5px 14px;font-weight:600;font-size:.85rem;color:#7A5B10}
+.talkcard{margin-top:14px}
+.rvbtn{display:inline-flex;flex-direction:column;align-items:center;background:#FBF0CE;border:2.5px solid var(--gold);color:#7A5B00;border-radius:12px;padding:7px 18px;cursor:pointer;font-weight:600;transition:.2s;margin-top:10px;touch-action:manipulation}
+.rvbtn:hover{background:var(--gold)}
+.rvbtn .rv-ar{font-family:'Baloo Bhaijaan 2';font-size:.82rem;font-weight:600}
+.rvt{display:none;margin-top:10px;background:linear-gradient(135deg,#FCF6DC,#EDF5E4);border:2.5px dashed var(--gold);border-radius:14px;padding:11px 15px;font-weight:600}
+.rvt.on{display:block;animation:pp .35s}
+.rvt .ar{display:block;text-align:right;margin-top:4px;font-size:.9rem}
+.eco{display:flex;flex-wrap:wrap;gap:9px;margin-top:10px}
+.ecochip{border:3px solid #EBDCB0;background:#fff;border-radius:999px;padding:7px 14px;font-weight:600;cursor:pointer;font-size:.85rem;transition:.15s;touch-action:manipulation;color:var(--ink)}
+.ecochip:hover{border-color:var(--mint)}
+.ecochip.sel{background:var(--mint);color:#fff;border-color:var(--mintD)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px}
+.pgroup{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:14px;box-shadow:var(--sh);border-top:7px solid var(--pc)}
+.pg-h{font-family:'Lilita One';font-size:1rem;color:var(--ink)}
+.pg-h .ar{font-size:.85rem;display:block}
+.pchip{background:#FBF5E0;border:2.5px solid #EBDCB0;border-radius:12px;padding:7px 11px;margin-top:8px}
+.pchip .en{display:block;font-weight:600;font-size:.9rem}
+.pchip .ar{display:block;text-align:right;font-size:.82rem}
+.tipgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.tipcard{background:#fff;border-radius:16px;padding:14px;box-shadow:var(--sh);border-top:5px solid var(--tc)}
+.tipcard h4{font-family:'Lilita One';color:var(--ink);display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.tipcard h4 .ar{font-size:.82rem;font-weight:600}
+.tipitem{display:flex;align-items:flex-start;gap:8px;margin-top:10px;font-weight:600;color:#5A4A30;font-size:.88rem}
+.tipitem .ico{width:15px;height:15px;color:var(--tc);margin-top:3px;flex:none}
+.tipitem .ti-ar{display:block;color:var(--ar);font-weight:600;font-size:.82rem;text-align:right}
+
+/* ---------- plaque builder ---------- */
+.srow{display:flex;align-items:flex-start;gap:12px;margin-top:12px;flex-wrap:wrap}
+.slab{flex:0 0 88px;font-family:'Lilita One';color:var(--ink);padding-top:8px}
+.slab .ar{font-size:.75rem;display:block}
+.schips{display:flex;flex-wrap:wrap;gap:8px}
+.schip{border:3px solid #EBDCB0;background:#fff;border-radius:999px;padding:7px 14px;font-weight:600;cursor:pointer;font-size:.88rem;transition:.15s;box-shadow:0 3px 0 rgba(74,58,38,.08);touch-action:manipulation;color:var(--ink)}
+.schip:hover{border-color:var(--pink)}
+.schip.sel{background:var(--pink);color:#fff;border-color:var(--pinkD);transform:scale(1.04)}
+.schip .ico{width:16px;height:16px;vertical-align:-3px;margin-right:5px;color:var(--ec)}
+.schip.sel .ico{color:#fff}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+.field label{display:block;font-weight:600;text-align:left}
+.field .f-ar{display:block;color:var(--ar);font-weight:600;font-size:.88rem;text-align:right}
+.field input{width:100%;margin-top:6px;border:3px solid #EBDCB0;border-radius:14px;padding:10px 14px;font-family:'Fredoka';font-weight:600;font-size:1rem;color:var(--ink);outline:none;background:#fff;transition:.2s}
+.field input:focus{border-color:var(--pink)}
+.prevbox{margin-top:14px;text-align:center;border:3px dashed #D9C48C;border-radius:20px;padding:14px}
+.prevbox .bp-h{color:var(--ink2);font-weight:600}
+.prevbox .bp-arh{font-weight:600;margin-top:2px}
+.prevbox .bp-body{display:none;padding:4px}
+.prevbox.ready{background:linear-gradient(135deg,#FBF0CE,#F4E9C8);border-color:var(--goldD)}
+.prevbox.ready .bp-h,.prevbox.ready .bp-arh{display:none}
+.prevbox.ready .bp-body{display:block;animation:pp .4s}
+@media(max-width:640px){.fields{grid-template-columns:1fr}}
+
+/* ---------- boss ---------- */
+.mon-wrap{text-align:center;position:relative;padding:6px 0}
+#monSvg{width:min(280px,68vw);filter:drop-shadow(0 10px 0 rgba(74,58,38,.14))}
+#monSvg.hit{animation:mhit .45s}
+@keyframes mhit{20%{transform:translateX(-13px) rotate(-2deg)}55%{transform:translateX(11px)}80%{transform:translateX(-6px)}}
+#monSvg.dead{animation:mdead 1s forwards}
+@keyframes mdead{to{transform:rotate(9deg) translateY(16px);filter:grayscale(1);opacity:.45}}
+.m-dead{display:none}
+#monSvg.dead .m-eyes{display:none}
+#monSvg.dead .m-dead{display:block}
+.hpbar{max-width:430px;margin:12px auto 4px;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:5px}
+.hpfill{height:16px;border-radius:99px;background:linear-gradient(90deg,var(--coral),var(--sun));width:100%;transition:width .5s cubic-bezier(.3,.8,.3,1)}
+.hplbl{font-family:'Lilita One';font-size:.75rem;letter-spacing:2px;color:var(--ink2)}
+.dmg{position:absolute;top:26%;left:58%;font-family:'Lilita One';color:#B2820B;font-size:1.6rem;animation:dmgUp .9s forwards;pointer-events:none}
+@keyframes dmgUp{to{transform:translateY(-52px) scale(1.4);opacity:0}}
+.mondead{text-align:center;padding:20px}
+.mondead .ico{width:64px;height:64px;color:var(--sunD)}
+
+/* ---------- win ---------- */
+.done-wrap{text-align:center;padding-top:20px}
+.trophy-big{width:100px;height:100px;color:var(--gold);filter:drop-shadow(0 8px 0 rgba(201,154,34,.4))}
+.done-title{font-family:'Lilita One';font-size:2.6rem;background:linear-gradient(90deg,var(--sun),var(--coral));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.done-sub{margin-top:10px;font-weight:500;color:var(--ink2)}
+.done-sub-ar{text-align:center;margin-top:6px;font-size:1.05rem}
+.statpills{display:flex;justify-content:center;gap:14px;margin:20px 0;flex-wrap:wrap}
+.statpill{background:#fff;border-radius:999px;padding:10px 22px;box-shadow:var(--sh);font-family:'Lilita One';font-size:1.05rem;display:flex;align-items:center;gap:8px;border:3px solid var(--bord)}
+.statpill .ico{color:var(--sunD)}
+.bdg-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:10px}
+.bdg{background:#fff;border:3px solid var(--bord);border-radius:18px;padding:12px 16px;text-align:center;box-shadow:var(--sh);min-width:130px}
+.bdg-ic{width:46px;height:46px;border-radius:14px;background:var(--bc);display:flex;align-items:center;justify-content:center;margin:0 auto;color:#fff}
+.bdg-ic .ico{width:24px;height:24px}
+.bdg b{font-family:'Lilita One';font-size:.8rem;display:block;margin-top:6px}
+.bdg .ar{font-size:.75rem;display:block;font-weight:600}
+.bdg.lock{opacity:.45;filter:grayscale(.8)}
+.bdg.lock .bdg-ic{background:#CCC3A0}
+.done-btns{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:22px}
+
+/* ---------- overlay / toasts / confetti ---------- */
+#ovl{position:fixed;inset:0;background:rgba(58,46,26,.55);backdrop-filter:blur(3px);z-index:120;display:none;align-items:center;justify-content:center;padding:20px}
+#ovl.on{display:flex;animation:fdi .3s}
+@keyframes fdi{from{opacity:0}}
+.ovl-card{background:var(--paper2);border:4px solid #fff;border-radius:28px;padding:28px;max-width:440px;width:100%;text-align:center;box-shadow:0 12px 0 rgba(74,58,38,.25),0 30px 60px rgba(0,0,0,.28);animation:ovlPop .5s cubic-bezier(.3,1.5,.4,1);max-height:calc(100vh - 40px);overflow:auto}
+@keyframes ovlPop{from{transform:scale(.7);opacity:0}}
+.ovl-kick{font-family:'Lilita One';letter-spacing:2px;font-size:.85rem}
+.ovl-t{font-family:'Lilita One';font-size:2rem;margin-top:4px}
+.ovl-ar{text-align:center;margin-top:4px;font-size:1.05rem}
+.ovl-p{margin-top:12px;font-weight:600;color:var(--ink2)}
+.big-stars{display:flex;justify-content:center;gap:12px;margin:16px 0}
+.bst{position:relative;display:inline-block;width:58px;height:58px}
+.bst .ico{width:58px;height:58px}
+.bst .base{color:#DDD6B4}
+.bst .fill{position:absolute;left:0;top:0;color:var(--gold);opacity:0;transition:opacity .25s}
+.bst.lit .fill{opacity:1;animation:starPop .5s cubic-bezier(.3,1.8,.4,1);filter:drop-shadow(0 4px 0 rgba(201,154,34,.5))}
+.bst.half .fill{clip-path:inset(0 50% 0 0)}
+@keyframes starPop{from{transform:scale(0) rotate(-100deg)}}
+.ovl-xp{font-family:'Lilita One';color:var(--sunD);display:flex;justify-content:center;gap:6px;align-items:center;flex-wrap:wrap}
+.ovl-btns{display:flex;justify-content:center;gap:12px;margin-top:20px;flex-wrap:wrap}
+#toasts{position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:130;display:flex;flex-direction:column;gap:8px;pointer-events:none;align-items:center;width:max-content;max-width:92vw}
+.toast{display:flex;align-items:center;gap:10px;background:var(--ink);color:#fff;border-radius:16px;padding:10px 16px;box-shadow:0 8px 20px rgba(0,0,0,.3);animation:toastIn .4s cubic-bezier(.3,1.4,.4,1)}
+.toast .t-ic{width:36px;height:36px;border-radius:12px;background:var(--tc,var(--gold));display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+.toast .t-ic .ico{width:19px;height:19px}
+.toast b{font-family:'Lilita One';letter-spacing:.5px;display:block;font-size:.92rem}
+.toast .t-ar{font-family:'Baloo Bhaijaan 2';font-weight:600;font-size:.85rem;color:#FBF0CE;display:block;text-align:right}
+.toast.out{animation:toastOut .3s forwards}
+@keyframes toastIn{from{transform:translateY(-26px) scale(.9);opacity:0}}
+@keyframes toastOut{to{transform:translateY(-16px);opacity:0}}
+.cf{position:fixed;width:9px;height:14px;border-radius:2px;z-index:200;pointer-events:none;animation:cfall 1.6s ease-in forwards}
+@keyframes cfall{to{transform:translate(var(--dx,60px),70vh) rotate(720deg);opacity:.1}}
+
+@media(max-width:640px){
+.lvl-head .head-tabby{width:100%;margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ ICONS ============ -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+ <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 3.5l8 7V20a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 20z"/><path d="M9.5 21.5v-6h5v6"/></symbol>
+ <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21C12 21 3 15.5 3 9.5C3 6.5 5.5 4 8.5 4C10 4 11.3 4.8 12 6C12.7 4.8 14 4 15.5 4C18.5 4 21 6.5 21 9.5C21 15.5 12 21 12 21Z"/></symbol>
+ <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 22a6.5 6.5 0 0 0 6.5-6.5c0-2.8-1.9-4.5-3.3-6.4C13.7 7 13 5 13 2.5c-3 2-4.3 4.5-4.3 6.3 0 1.2.4 2 .4 2S7.2 9.6 6.5 8.2A6.4 6.4 0 0 0 5.5 15.5C5.5 19.1 8.4 22 12 22z"/></symbol>
+ <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></symbol>
+ <symbol id="i-vol" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></symbol>
+ <symbol id="i-voloff" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></symbol>
+ <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.9 6.4.7-4.8 4.3 1.3 6.3-5.7-3.2-5.7 3.2 1.3-6.3L2.8 9.4l6.4-.7z"/></symbol>
+ <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17.5V21M7 4h10v4.5a5 5 0 0 1-10 0z"/><path d="M7 5.5H4v1.7a3.3 3.3 0 0 0 3.3 3.3M17 5.5h3v1.7a3.3 3.3 0 0 1-3.3 3.3"/></symbol>
+ <symbol id="i-medal" viewBox="0 0 24 24"><circle cx="12" cy="14.5" r="5.5"/><path d="M9 10 6.5 3h4L12 7l1.5-4h4L15 10"/></symbol>
+ <symbol id="i-crown" viewBox="0 0 24 24"><path d="M4 8.5 8 11.5l4-6 4 6 4-3-1.2 10.5H5.2z"/></symbol>
+ <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></symbol>
+ <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5 9.5 17.5 19.5 6.5"/></symbol>
+ <symbol id="i-arrowD" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></symbol>
+ <symbol id="i-loop" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 1 2.2 5.3"/><path d="M4.5 20v-4.7h4.7"/></symbol>
+ <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.8"/><path d="M4.5 21c0-4.1 3.4-7 7.5-7s7.5 2.9 7.5 7"/></symbol>
+ <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3.5 20.5l1.4-5.2A8.5 8.5 0 1 1 21 11.5z"/><path d="M8.3 12h.01M12 12h.01M15.7 12h.01" stroke-width="2.4"/></symbol>
+ <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v4.5l3.2 1.9"/></symbol>
+ <symbol id="i-scroll" viewBox="0 0 24 24"><rect x="6" y="3.5" width="12" height="17" rx="2.5"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12.5" y2="16"/></symbol>
+ <symbol id="i-col" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="3.5" rx="1"/><line x1="8.5" y1="7.5" x2="8.5" y2="18"/><line x1="12" y1="7.5" x2="12" y2="18"/><line x1="15.5" y1="7.5" x2="15.5" y2="18"/><rect x="3.5" y="18" width="17" height="3" rx="1"/></symbol>
+ <symbol id="i-scale" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="7" x2="19" y2="7"/><path d="M2.5 12a2.5 2.5 0 0 0 5 0L5 7zM16.5 12a2.5 2.5 0 0 0 5 0L19 7z"/><line x1="8.5" y1="20.5" x2="15.5" y2="20.5"/><circle cx="12" cy="4.2" r="1.1" fill="currentColor" stroke="none"/></symbol>
+ <symbol id="i-pyr" viewBox="0 0 24 24"><path d="M12 3.5 21.5 20.5h-19z"/><line x1="8.4" y1="14.5" x2="15.6" y2="14.5"/><line x1="6" y1="18" x2="18" y2="18"/></symbol>
+ <symbol id="i-arch" viewBox="0 0 24 24"><path d="M4 20.5V10a8 8 0 0 1 16 0v10.5"/><path d="M8.5 20.5v-8.5a3.5 3.5 0 0 1 7 0v8.5"/><line x1="2.5" y1="20.5" x2="21.5" y2="20.5"/></symbol>
+ <symbol id="i-zig" viewBox="0 0 24 24"><path d="M6.5 20v-4h3v-4h3V8.5h3V20z"/><line x1="4" y1="20" x2="20" y2="20"/></symbol>
+ <symbol id="i-ship" viewBox="0 0 24 24"><path d="M3.5 15.5h17l-2.5 4.5h-12z"/><path d="M12.5 14.5V4l7 10.5z"/><line x1="12.5" y1="14.5" x2="20" y2="14.5"/></symbol>
+ <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M6.5 18.5C6.5 10.5 11.5 4.5 19.5 4c0 8-5.5 14-13 14.5z"/><path d="M8 17c2.5-3.5 5.5-6 9.5-8"/></symbol>
+ <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3.5 20.5h17"/><line x1="7" y1="20" x2="7" y2="12.5"/><line x1="12" y1="20" x2="12" y2="6.5"/><line x1="17" y1="20" x2="17" y2="10"/></symbol>
+ <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.7 3.3a2.15 2.15 0 0 1 3 3L7.4 18.6 3 20l1.4-4.4z"/></symbol>
+ <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></symbol>
+ <symbol id="i-speaker" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
+ <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.8.6 1.5 1.6 1.5 2.6h4c0-1 .7-2 1.5-2.6A6 6 0 0 0 12 3z"/></symbol>
+ <symbol id="i-earth" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M4.5 8.5c4 2.5 11 2.5 15 0M4.5 15.5c4-2.5 11-2.5 15 0"/></symbol>
+ <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+</svg>
+
+<!-- ============ HUD ============ -->
+<div id="hud">
+ <button id="hudHome" class="hchip hbtn" title="Map"><svg class="ico"><use href="#i-home"/></svg></button>
+ <div id="hudHearts" class="hchip hidden"></div>
+ <div class="spacer"></div>
+ <div id="hudStreak" class="hchip"><svg class="ico"><use href="#i-flame"/></svg><span id="streakN">x2</span></div>
+ <div id="hudXp" class="hchip"><svg class="ico"><use href="#i-bolt"/></svg><span id="xpN">0</span>&nbsp;XP</div>
+ <button id="sndBtn" class="hchip hbtn" title="Sound"><svg class="ico"><use id="sndUse" href="#i-vol"/></svg></button>
+</div>
+
+<div id="toasts"></div>
+<div id="ovl"></div>
+
+<!-- ============ TITLE ============ -->
+<section class="screen on" id="scr-title">
+ <div class="wrap title-wrap">
+  <div class="f-ico" style="top:6%;left:5%;color:var(--coral)"><svg class="ico" style="width:42px;height:42px"><use href="#i-pyr"/></svg></div>
+  <div class="f-ico" style="top:10%;right:6%;color:var(--sky);animation-delay:-1.5s"><svg class="ico" style="width:38px;height:38px"><use href="#i-col"/></svg></div>
+  <div class="f-ico" style="bottom:24%;left:7%;color:var(--sunD);animation-delay:-3s"><svg class="ico" style="width:36px;height:36px"><use href="#i-scroll"/></svg></div>
+  <div class="f-ico" style="bottom:20%;right:9%;color:var(--mintD);animation-delay:-2s"><svg class="ico" style="width:38px;height:38px"><use href="#i-ship"/></svg></div>
+  <div class="f-ico" style="top:44%;left:2%;color:var(--grape);animation-delay:-4s"><svg class="ico" style="width:32px;height:32px"><use href="#i-scale"/></svg></div>
+  <div class="f-ico" style="top:46%;right:2%;color:var(--pinkD);animation-delay:-5s"><svg class="ico" style="width:32px;height:32px"><use href="#i-crown"/></svg></div>
+  <span class="kick">UNIT 4 · CIVILISATION</span>
+  <h1 class="logo">
+   <span style="--i:0;color:var(--coral)">C</span><span style="--i:1;color:var(--sky)">I</span><span style="--i:2;color:var(--sun)">V</span><span style="--i:3;color:var(--mint)">I</span><span style="--i:4;color:var(--grape)">L</span>
+  </h1>
+  <span class="ribbon">QUEST</span>
+  <p class="t-sub">A playful journey through time and ancient civilisations</p>
+  <p class="t-sub-ar ar" dir="rtl">رحلة مرحة عبر الزمن والحضارات القديمة</p>
+  <div class="title-tabby tabby-slot"></div>
+  <div class="howto">
+   <span class="howchip"><svg class="ico" style="color:var(--skyD)"><use href="#i-clock"/></svg>Explore the past</span>
+   <span class="howchip"><svg class="ico" style="color:var(--goldD)"><use href="#i-star"/></svg>Earn stars</span>
+   <span class="howchip"><svg class="ico" style="color:var(--coralD)"><use href="#i-crown"/></svg>Save history</span>
+  </div>
+  <p class="t-sub-ar ar" dir="rtl" style="margin-top:8px">استكشف الماضي · اجمع النجوم · أنقذ التاريخ</p>
+  <button id="startBtn" class="btn" style="--bc:var(--coral);--bcd:var(--coralD);font-size:1.3rem;padding:15px 42px 16px;margin-top:24px">
+   <span>Press Start</span><span class="b-ar" dir="rtl">ابدأ اللعب</span>
+  </button>
+  <div class="ticker"><div class="tk" id="tk"></div></div>
+ </div>
+</section>
+
+<!-- ============ MAP ============ -->
+<section class="screen" id="scr-map">
+ <div class="wrap">
+  <div class="map-head">
+   <div class="map-logo">CIVILISATION <i>QUEST</i></div>
+   <div class="hchip"><svg class="ico" style="color:var(--sunD)"><use href="#i-star"/></svg><span id="mapStars">0</span>/18</div>
+   <div class="hchip"><svg class="ico" style="color:var(--grapeD)"><use href="#i-medal"/></svg><span id="mapBadges">0</span>/7</div>
+   <button id="mapReset" class="hchip hbtn" title="Reset"><svg class="ico"><use href="#i-loop"/></svg></button>
+  </div>
+  <div class="map-wrap">
+   <svg class="map-path" viewBox="0 0 400 1300" preserveAspectRatio="none">
+    <path d="M200 105 C200 190 96 185 96 285 C96 385 264 380 264 465 C264 555 104 555 104 645 C104 745 272 740 272 825 C272 915 120 915 120 1005 C120 1095 200 1100 200 1200" fill="none" stroke="#E3D3A4" stroke-width="24" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+    <path d="M200 105 C200 190 96 185 96 285 C96 385 264 380 264 465 C264 555 104 555 104 645 C104 745 272 740 272 825 C272 915 120 915 120 1005 C120 1095 200 1100 200 1200" fill="none" stroke="#F6ECD4" stroke-width="14" stroke-linecap="round" stroke-dasharray="1 24" vector-effect="non-scaling-stroke"/>
+   </svg>
+   <svg class="deco" style="right:2%;top:1%;width:64px" viewBox="0 0 64 64"><circle cx="32" cy="32" r="14" fill="#E8C34E" stroke="#C99A22" stroke-width="4"/><g stroke="#DBA226" stroke-width="4" stroke-linecap="round"><line x1="32" y1="4" x2="32" y2="12"/><line x1="32" y1="52" x2="32" y2="60"/><line x1="4" y1="32" x2="12" y2="32"/><line x1="52" y1="32" x2="60" y2="32"/></g></svg>
+   <svg class="deco" style="left:3%;top:12%;width:86px" viewBox="0 0 90 60"><path d="M8 56 32 12l24 44z" fill="#E9D8A9" stroke="#C9AE6E" stroke-width="3" stroke-linejoin="round"/><path d="M44 56 62 22l18 34z" fill="#F0E2BC" stroke="#C9AE6E" stroke-width="3" stroke-linejoin="round"/><line x1="2" y1="56" x2="88" y2="56" stroke="#C9AE6E" stroke-width="3" stroke-linecap="round"/></svg>
+   <svg class="deco" style="right:5%;top:42%;width:52px" viewBox="0 0 52 64"><rect x="8" y="4" width="36" height="8" rx="2" fill="#FDFAF1" stroke="#C9AE6E" stroke-width="3"/><line x1="14" y1="12" x2="14" y2="52" stroke="#C9AE6E" stroke-width="3"/><line x1="26" y1="12" x2="26" y2="52" stroke="#C9AE6E" stroke-width="3"/><line x1="38" y1="12" x2="38" y2="52" stroke="#C9AE6E" stroke-width="3"/><rect x="6" y="52" width="40" height="8" rx="2" fill="#FDFAF1" stroke="#C9AE6E" stroke-width="3"/></svg>
+   <svg class="deco" style="left:4%;top:60%;width:80px" viewBox="0 0 80 40"><path d="M20 32a12 12 0 0 1 2-23 14 14 0 0 1 26 2 11 11 0 0 1 12 21z" fill="#fff" stroke="#D9C48C" stroke-width="3"/></svg>
+   <svg class="deco" style="left:8%;top:90%;width:46px" viewBox="0 0 40 52"><rect x="17" y="26" width="6" height="22" rx="3" fill="#B0895A"/><path d="M20 26c-8-4-10-12-4-18 2 6 4 8 4 8s2-2 4-8c6 6 4 14-4 18z" fill="#7FB069" stroke="#478236" stroke-width="2"/></svg>
+   <svg class="deco" style="right:8%;top:76%;width:40px" viewBox="0 0 40 52"><rect x="17" y="26" width="6" height="22" rx="3" fill="#B0895A"/><path d="M20 26c-8-4-10-12-4-18 2 6 4 8 4 8s2-2 4-8c6 6 4 14-4 18z" fill="#7FB069" stroke="#478236" stroke-width="2"/></svg>
+   <div id="mapNodes"></div>
+  </div>
+  <div class="map-foot">
+   Complete all six levels to open the Boss Gate and save history!
+   <span class="ar" dir="rtl">أكمل المراحل الست لفتح بوابة الوحش وإنقاذ التاريخ!</span>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 1 ============ -->
+<section class="screen level" id="scr-l1" style="--lc:var(--sky);--lcd:var(--skyD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">1</span>
+   <div><h2 class="lt">Time Gateway</h2><span class="lvl-ar" dir="rtl">بوابة الزمن</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Hi! I am Cuni! Let's travel back in time!" data-tipar="مرحبًا! أنا كوني! هيا نعود بالزمن إلى الوراء!">
+    <h3 class="sh"><svg class="ico"><use href="#i-earth"/></svg>What is a Civilisation?</h3>
+    <span class="sh-ar" dir="rtl">ما هي الحضارة؟ — كلمات أساسية من الكتاب</span>
+    <div class="gcard" style="background:linear-gradient(135deg,#F4E9C8,#FDF3E3)">
+     <p style="font-size:1.08rem;font-weight:600;line-height:1.5">When people <b class="hl hl-sky">live together in an organised way</b>, they form a <b class="hl hl-sky">society</b> — with trade, farming, laws and monuments. A great society like this is called a <b class="hl hl-coral">civilisation</b>.</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:8px">حين يعيش الناس معًا بنظامٍ يكوّنون مجتمعًا — بتجارةٍ وزراعةٍ وقوانينَ ومعالم. والمجتمع العظيم هكذا يُسمّى حضارة.</p>
+    </div>
+    <div class="rgrid">
+     <div class="rcard" style="--rc:var(--mintD)"><svg class="ico" style="color:var(--mintD)"><use href="#i-loop"/></svg><p style="font-weight:600;margin-top:8px">To trade means to buy, sell or exchange goods and services.</p><p class="rar" dir="rtl">التجارة: بيع وشراء وتبادل السلع والخدمات.</p></div>
+     <div class="rcard" style="--rc:var(--greenD)"><svg class="ico" style="color:var(--greenD)"><use href="#i-leaf"/></svg><p style="font-weight:600;margin-top:8px">Agriculture means the work of farming.</p><p class="rar" dir="rtl">الزراعة: عمل الفلاحة.</p></div>
+     <div class="rcard" style="--rc:var(--sunD)"><svg class="ico" style="color:var(--sunD)"><use href="#i-chart"/></svg><p style="font-weight:600;margin-top:8px">The economy is the system of trade and industry that generates wealth in a country.</p><p class="rar" dir="rtl">الاقتصاد: نظام التجارة والصناعة الذي يولّد الثروة.</p></div>
+    </div>
+    <div class="fgrid" id="m-defs" style="margin-top:14px"></div>
+    <div class="gcard talkcard">
+     <p style="font-weight:600"><svg class="ico" style="width:18px;height:18px;color:var(--skyD);vertical-align:-3px"><use href="#i-chat"/></svg> Why is it important to study ancient civilisations?</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">لماذا من المهم دراسة الحضارات القديمة؟</p>
+     <button class="rvbtn"><span class="rv-en">Show ideas</span><span class="rv-ar" dir="rtl">أظهر الأفكار</span></button>
+     <div class="rvt"><span class="rvv">They teach us how people lived, what they invented, and how their ideas shape our world today.</span>
+      <span class="ar" dir="rtl">تعلّمنا كيف عاش الناس وما اخترعوه، وكيف شكّلت أفكارهم عالمنا اليوم.</span></div>
+    </div>
+   </div>
+   <div class="step" data-tip="Meet the six great civilisations — and their timeline!" data-tipar="تعرّف على الحضارات الست العظيمة — وخط زمنها!">
+    <h3 class="sh"><svg class="ico"><use href="#i-crown"/></svg>Six Great Civilisations</h3>
+    <span class="sh-ar" dir="rtl">ست حضارات عظيمة من الكتاب</span>
+    <div class="wgrid" id="m-civs"></div>
+    <div class="tlbox" id="tlBox"></div>
+   </div>
+   <div class="step" data-tip="Read each fact carefully — the connect game is coming!" data-tipar="اقرأ كل حقيقة بتمعّن — لعبة الوصل قادمة!">
+    <h3 class="sh"><svg class="ico"><use href="#i-scroll"/></svg>Fact Scrolls</h3>
+    <span class="sh-ar" dir="rtl">لفائف الحقائق — تعرّف على حقيقة كل حضارة قبل أن توصلها</span>
+    <div class="fscrolls" id="m-fscrolls"></div>
+   </div>
+   <div class="step" data-tip="Now connect each fact to its civilisation!" data-tipar="الآن وصّل كل حقيقة بحضارتها!">
+    <h3 class="sh"><svg class="ico"><use href="#i-search"/></svg>Connect!</h3>
+    <span class="sh-ar" dir="rtl">وصّل كل حقيقة بحضارتها — انقر الحقيقة ثم الحضارة فيُرسم خط بينهما</span>
+    <div id="m-match"></div>
+   </div>
+   <div class="step" data-tip="Quick check — show me your power!" data-tipar="اختبار أخير — أرني قوتك!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Quick Check</h3>
+    <span class="sh-ar" dir="rtl">تحقّق سريع — اختر الإجابة الصحيحة</span>
+    <div class="datastrip">
+     <span class="dschip">society = organised group</span><span class="dschip">empire = ruled lands</span><span class="dschip">monument = honour building</span><span class="dschip">Sumerian = oldest (4500 BC)</span>
+    </div>
+    <div id="m-l1q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 2 ============ -->
+<section class="screen level" id="scr-l2" style="--lc:var(--coral);--lcd:var(--coralD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">2</span>
+   <div><h2 class="lt">Voices of the Past</h2><span class="lvl-ar" dir="rtl">أصوات الماضي</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Four teenagers from the past are speaking!" data-tipar="أربعة مراهقين من الماضي يتحدثون إليك!">
+    <h3 class="sh"><svg class="ico"><use href="#i-scroll"/></svg>Four Teenagers, Four Worlds</h3>
+    <span class="sh-ar" dir="rtl">أربعة مراهقين من أربع حضارات — اقرأ ثم أجب</span>
+    <div class="emails2">
+     <div class="mail">
+      <div class="mail-top"><svg class="ico"><use href="#i-arch"/></svg><span class="mail-addr">100 AD</span><span class="mail-addr">Livia · ليفيا</span><span class="mail-sub">ROMAN</span></div>
+      <div class="mail-body">
+       <div class="para"><button class="spk" data-say="It is the year 100 AD. My name is Livia. I live in the capital city which is the centre of our great empire. In my society, we are very interested in sports and games."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">It is the year <b>100 AD</b>. My name is <b>Livia</b>. I live in the capital city which is the centre of our great <b>empire</b>. In my <b>society</b>, we are very interested in sports and games.</p>
+        <p class="par" dir="rtl">أنا ليفيا من عاصمة إمبراطوريتنا العظيمة؛ ومجتمعنا مهتم جدًا بالرياضة والألعاب.</p></div>
+       <div class="para"><button class="spk" data-say="Last week, my father took us to the Colosseum. I was amazed at the size of the building which can seat 50,000 people. It was built using a new material called concrete."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">Last week, my father took us to the <b>Colosseum</b>. I was amazed — it can seat <b>50,000 people</b>! It was built using a new material called <b>concrete</b>.</p>
+        <p class="par" dir="rtl">الكولوسيوم مبهر: يتسع لـ 50 ألف شخص، وقد بُني بمادة جديدة تُسمى الخرسانة.</p></div>
+       <div class="para"><button class="spk" data-say="We watched gladiators fighting some big animals like lions and bears."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">We watched <b>gladiators</b> fighting some big animals like lions and bears.</p>
+        <p class="par" dir="rtl">شاهدنا المصارعين يقاتلون حيوانات ضخمة كالأسود والدببة.</p></div>
+      </div>
+     </div>
+     <div class="mail">
+      <div class="mail-top"><svg class="ico"><use href="#i-scroll"/></svg><span class="mail-addr">2100 BC</span><span class="mail-addr">Iskur · إسكور</span><span class="mail-sub">SUMERIAN</span></div>
+      <div class="mail-body">
+       <div class="para"><button class="spk" data-say="It is 2100 BC and my name is Iskur. I am training to be a Sangu which means accountant. I have to write information on clay tablets using a form of writing called cuneiform."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">It is <b>2100 BC</b> and my name is <b>Iskur</b>. I am training to be a 'Sangu' which means <b>accountant</b>. I write information on <b>clay tablets</b> using a form of writing called <b>cuneiform</b>.</p>
+        <p class="par" dir="rtl">أنا إسكور، أتدرّب لأصبح «سانغو» أي محاسبًا؛ أكتب على ألواح طينية بخطٍّ يُسمى المسماري.</p></div>
+       <div class="para"><button class="spk" data-say="My older brother is an architect. He helped build the Great Ziggurat at Ur."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">My older brother is an <b>architect</b>. He helped build the <b>Great Ziggurat at Ur</b>.</p>
+        <p class="par" dir="rtl">أخي الأكبر مهندس معماري؛ ساعد في بناء الزقورة العظيمة في أور.</p></div>
+       <div class="para"><button class="spk" data-say="The ziggurat is a huge monument that was constructed using clay bricks. Some people think it is the tallest and most beautiful building in the world."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">The ziggurat is a huge <b>monument</b> constructed using <b>clay bricks</b>. Some people think it is the tallest and most beautiful building in the world.</p>
+        <p class="par" dir="rtl">الزقورة معلم ضخم بُني بالطوب الطيني؛ يراها بعض الناس أطول وأجمل بناء في العالم.</p></div>
+      </div>
+     </div>
+     <div class="mail">
+      <div class="mail-top"><svg class="ico"><use href="#i-ship"/></svg><span class="mail-addr">950 BC</span><span class="mail-addr">Mubarak · مبارك</span><span class="mail-sub">MAJAN</span></div>
+      <div class="mail-body">
+       <div class="para"><button class="spk" data-say="It is the year 950 BC. My name is Mubarak and my father is a trader. He also owns a copper mine. We live in Al Asil, in Sohar."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">It is <b>950 BC</b>. My name is <b>Mubarak</b> and my father is a <b>trader</b>. He also owns a <b>copper mine</b>. We live in Al Asil, in <b>Sohar</b>.</p>
+        <p class="par" dir="rtl">أنا مبارك؛ والدي تاجر ويمتلك منجم نحاس، ونسكن الأصيل في صحار.</p></div>
+       <div class="para"><button class="spk" data-say="The people here are very skilled at building ships. My father has a fleet of dhows and he sails to many places to trade copper."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">The people here are very skilled at <b>building ships</b>. My father has a fleet of <b>dhows</b> and he sails to many places to trade copper.</p>
+        <p class="par" dir="rtl">أهلنا مهرة في بناء السفن؛ والدي يملك أسطولًا من السفن العربية ويسافر للتجارة بالنحاس.</p></div>
+       <div class="para"><button class="spk" data-say="He navigates using the stars. Sometimes I sail with him and I have visited many beautiful places."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">He navigates using <b>the stars</b>. Sometimes I sail with him and I have visited many beautiful places.</p>
+        <p class="par" dir="rtl">يهتدي بالنجوم؛ أبحر معه أحيانًا وزرت أماكن جميلة كثيرة.</p></div>
+      </div>
+     </div>
+     <div class="mail">
+      <div class="mail-top"><svg class="ico"><use href="#i-pyr"/></svg><span class="mail-addr">1500 BC</span><span class="mail-addr">Atet · أتيت</span><span class="mail-sub">EGYPTIAN</span></div>
+      <div class="mail-body">
+       <div class="para"><button class="spk" data-say="It is 1500 BC and my name is Atet. Agriculture is the main industry in our economy. My family owns a lot of land which means we are wealthy. Because of this I was able to have an education."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">It is <b>1500 BC</b> and my name is <b>Atet</b>. <b>Agriculture</b> is the main industry in our <b>economy</b>. My family owns a lot of land, so we are <b>wealthy</b> — and because of this, I was able to have an education.</p>
+        <p class="par" dir="rtl">أنا أتيت؛ الزراعة أهم صناعة في اقتصادنا، وعائلتي تملك أرضًا واسعة فنحن أثرياء — ولذا حصلت على تعليم.</p></div>
+       <div class="para"><button class="spk" data-say="I learned how to read hieroglyphics."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">I learned how to read <b>hieroglyphics</b>.</p>
+        <p class="par" dir="rtl">تعلمت قراءة الكتابة الهيروغليفية.</p></div>
+       <div class="para"><button class="spk" data-say="I will get married soon so I have to help my mother and learn how to run the household. Feasts are important in our culture. We often have big parties for our family and friends with lots of music and dancing."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">I will get married soon, so I help my mother and learn how to run the household. <b>Feasts</b> are important in our culture — big parties with lots of music and dancing!</p>
+        <p class="par" dir="rtl">سأتزوج قريبًا فأتعلم إدارة المنزل؛ الولائم مهمة في ثقافتنا بحفلات كبيرة وموسيقى ورقص.</p></div>
+      </div>
+     </div>
+    </div>
+   </div>
+   <div class="step" data-tip="Did you understand the four voices?" data-tipar="هل فهمت الأصوات الأربعة؟">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Did You Understand?</h3>
+    <span class="sh-ar" dir="rtl">تحقّق من فهمك — كل المعلومات أمامك</span>
+    <div class="datastrip">
+     <span class="dschip">Iskur 2100 BC · cuneiform · accountant</span><span class="dschip">Atet 1500 BC · hieroglyphics</span><span class="dschip">Mubarak 950 BC · dhows · copper</span><span class="dschip">Livia 100 AD · Colosseum</span>
+    </div>
+    <div id="m-l2q"></div>
+   </div>
+   <div class="step" data-tip="Role play time — can your friends guess?" data-tipar="وقت التمثيل — هل يستطيع أصدقاؤك التخمين؟">
+    <h3 class="sh"><svg class="ico"><use href="#i-chat"/></svg>Role Play: Guess My Civilisation!</h3>
+    <span class="sh-ar" dir="rtl">تمثيل الأدوار — تحدّث عن حضارتك دون ذكر اسمها ودَع أصدقاءك يخمّنون</span>
+    <div class="gcard talkcard">
+     <p style="font-weight:600">Imagine you are a teenager from an ancient civilisation. Describe your life WITHOUT saying the name — can your friends guess?</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">تخيّل أنك مراهق من حضارة قديمة؛ صف حياتك دون ذكر اسمها ودع البقية يخمّنون!</p>
+     <button class="rvbtn"><span class="rv-en">Show the identities</span><span class="rv-ar" dir="rtl">أظهر الهويات</span></button>
+     <div class="rvt"><span class="rvv">Livia → Roman · Iskur → Sumerian · Mubarak → Majan · Atet → Egyptian</span>
+      <span class="ar" dir="rtl">ليفيا رومانية · إسكور سومري · مبارك من مجان · أتيت مصرية.</span></div>
+    </div>
+    <div class="gcard talkcard">
+     <p style="font-weight:600">In which civilisation would you like to be a teenager? Why?</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">في أي حضارة تحب أن تعيش مراهقًا؟ ولماذا؟</p>
+     <button class="rvbtn"><span class="rv-en">Show ideas</span><span class="rv-ar" dir="rtl">أظهر الأفكار</span></button>
+     <div class="rvt"><span class="rvv">Roman: games and the Colosseum · Egyptian: feasts and music · Majan: sailing to beautiful places · Sumerian: writing on clay tablets!</span>
+      <span class="ar" dir="rtl">الرومانية: الألعاب والكولوسيوم · المصرية: الولائم والموسيقى · مجان: الإبحار لأماكن جميلة · السومرية: الكتابة على الألواح الطينية!</span></div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 3 ============ -->
+<section class="screen level" id="scr-l3" style="--lc:var(--sun);--lcd:var(--sunD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">3</span>
+   <div><h2 class="lt">Passive Temple</h2><span class="lvl-ar" dir="rtl">معبد المبني للمجهول</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="The passive voice puts the object in the spotlight!" data-tipar="المبني للمجهول يضع المفعول في دائرة الضوء!">
+    <h3 class="sh"><svg class="ico"><use href="#i-col"/></svg>Past Passive</h3>
+    <span class="sh-ar" dir="rtl">المبني للمجهول في الماضي — حين نريد إبراز المفعول</span>
+    <div class="vsbox">
+     <div class="vs-side"><svg class="ico v-ic" style="color:var(--skyD)"><use href="#i-person"/></svg><b>The Sumerians invented cuneiform.</b><span class="nm">ACTIVE — the doer is important</span><span class="ar" dir="rtl">المعلوم: الفاعل هو المهم</span></div>
+     <div class="vs-badge">→ PASSIVE</div>
+     <div class="vs-side"><svg class="ico v-ic" style="color:var(--coralD)"><use href="#i-scroll"/></svg><b>Cuneiform was invented by the Sumerians.</b><span class="nm">PASSIVE — the object comes first!</span><span class="ar" dir="rtl">المجهول: المفعول يتقدّم أولًا!</span></div>
+    </div>
+    <div class="fchips">
+     <span class="fch c-adj" style="--d:.1s">object</span><span class="fplus">+</span><span class="fch c-er" style="--d:.25s">was / were</span><span class="fplus">+</span><span class="fch c-more" style="--d:.4s">past participle</span><span class="fplus">(+ by …)</span>
+    </div>
+    <div class="rgrid">
+     <div class="rcard" style="--rc:var(--sunD)"><div><span class="rtag">RULE 1</span><span class="rname">Form</span><span class="rar" dir="rtl">الصيغة</span></div>
+      <div class="rf"><b class="hl hl-sun">was / were</b> + past participle</div>
+      <div class="rex"><span class="en">The Pyramids <b class="hl hl-sun">were built</b> in Egypt.</span><span class="ar" dir="rtl">بُنيت الأهرامات في مصر.</span></div></div>
+     <div class="rcard" style="--rc:var(--coralD)"><div><span class="rtag">RULE 2</span><span class="rname">by + doer</span><span class="rar" dir="rtl">لذكر الفاعل</span></div>
+      <div class="rf">… <b class="hl hl-coral">by</b> the Romans</div>
+      <div class="rex"><span class="en">Concrete <b class="hl hl-sun">was invented</b> <b class="hl hl-coral">by</b> the Romans.</span><span class="ar" dir="rtl">أُخترعت الخرسانة بواسطة الرومان.</span></div></div>
+     <div class="rcard" style="--rc:var(--skyD)"><div><span class="rtag">RULE 3</span><span class="rname">Past participle</span><span class="rar" dir="rtl">التصريف الثالث</span></div>
+      <div class="rf">Regular: <b class="hl hl-sky">-ed</b> · Irregular: special</div>
+      <div class="rex"><span class="en">invented, painted, destroyed · <b>bought, eaten, sung</b></span><span class="ar" dir="rtl">المنتظمة تنتهي بـ ed، والشاذّة لها صيغة خاصة.</span></div></div>
+    </div>
+    <div class="watch"><svg class="ico"><use href="#i-flame"/></svg><div>We use the passive when we want to emphasise the OBJECT of the sentence!
+     <span class="ar" dir="rtl">نستخدم المبني للمجهول حين نريد إبراز مفعول الجملة — لا فاعلها.</span></div></div>
+    <div class="fgrid" id="m-passEx" style="margin-top:14px"></div>
+   </div>
+   <div class="step" data-tip="Sort the participles — think about each verb!" data-tipar="رتّب التصريفات — فكّر في كل فعل!">
+    <h3 class="sh"><svg class="ico"><use href="#i-search"/></svg>Sort the Participles!</h3>
+    <span class="sh-ar" dir="rtl">رتّب التصريف الثالث — انقر الفعل ثم الصندوق الصحيح</span>
+    <div class="sg-hint">
+     <span><svg class="ico" style="width:15px;height:15px;color:var(--greenD);vertical-align:-3px"><use href="#i-check"/></svg> REGULAR = verb + -ed · <span class="ar">تُضاف ed للفعل</span></span>
+     <span><svg class="ico" style="width:15px;height:15px;color:var(--coralD);vertical-align:-3px"><use href="#i-flame"/></svg> IRREGULAR = special form · <span class="ar">صيغة خاصة لا تتبع القاعدة</span></span>
+    </div>
+    <div id="m-parts"></div>
+   </div>
+   <div class="step" data-tip="Complete each passive sentence!" data-tipar="أكمل كل جملة مبني للمجهول!">
+    <h3 class="sh"><svg class="ico"><use href="#i-loop"/></svg>Connect!</h3>
+    <span class="sh-ar" dir="rtl">وصّل بداية الجملة بنهايتها — انقر ثم انقر قرينتها فيُرسم خط بينهما</span>
+    <div id="m-pass"></div>
+   </div>
+   <div class="step" data-tip="Temple battle — good luck!" data-tipar="معركة المعبد — بالتوفيق!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Temple Battle</h3>
+    <span class="sh-ar" dir="rtl">تدريب على القواعد — اختبر قوتك</span>
+    <div class="datastrip">
+     <span class="dschip">was/were + past participle</span><span class="dschip">by + the doer</span><span class="dschip">emphasise the object</span>
+    </div>
+    <div id="m-l3q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 4 ============ -->
+<section class="screen level" id="scr-l4" style="--lc:var(--grape);--lcd:var(--grapeD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">4</span>
+   <div><h2 class="lt">Debate Arena</h2><span class="lvl-ar" dir="rtl">ساحة المناظرة</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="The great debate: inventions or people?" data-tipar="المناظرة الكبرى: الاختراعات أم الناس؟">
+    <h3 class="sh"><svg class="ico"><use href="#i-chat"/></svg>The Great Debate</h3>
+    <span class="sh-ar" dir="rtl">المناظرة الكبرى — رتّب الحجج: مع أم ضد؟</span>
+    <div class="gcard" style="background:linear-gradient(135deg,#E9DFF3,#FBF0CE);text-align:center">
+     <p style="font-family:'Lilita One';font-size:1.25rem;color:var(--grapeD)">“Inventions are more important than people in a civilisation.”</p>
+     <p class="ar" dir="rtl" style="margin-top:6px">«الاختراعات أهم من الناس في الحضارة» — هل توافق؟</p>
+    </div>
+    <span class="sh-ar" dir="rtl" style="margin-top:12px">انقر كل رأي ثم ضعه في الصندوق المناسب</span>
+    <div class="sg-hint">
+     <span><svg class="ico" style="width:15px;height:15px;color:var(--sunD);vertical-align:-3px"><use href="#i-bulb"/></svg> FOR = supports inventions · <span class="ar">مع الاختراعات</span></span>
+     <span><svg class="ico" style="width:15px;height:15px;color:var(--coralD);vertical-align:-3px"><use href="#i-person"/></svg> AGAINST = people matter more · <span class="ar">ضد — الناس أهم</span></span>
+    </div>
+    <div id="m-deb"></div>
+   </div>
+   <div class="step" data-tip="Adverbs of degree — the power meters of opinions!" data-tipar="ظروف الدرجة — عدادات قوة الآراء!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Adverbs of Degree</h3>
+    <span class="sh-ar" dir="rtl">ظروف الدرجة — نستخدمها للتعبير بقوة أكبر</span>
+    <div class="gcard" style="background:#FBF5E0">
+     <p style="font-weight:600;font-size:1rem">Studying is important. → Studying is <b class="hl hl-sun">very</b> important.</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">الدراسة مهمة ← الدراسة مهمة جدًا (قوة أعلى).</p>
+     <p style="font-weight:600;font-size:1rem;margin-top:8px">I love camping. → I <b class="hl hl-coral">absolutely</b> love camping.</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">أحب التخييم ← أحب التخييم تمامًا (أقصى قوة).</p>
+    </div>
+    <div class="gcard" style="margin-top:12px">
+     <p style="font-family:'Lilita One';text-align:center;color:var(--ink2);font-size:.85rem;letter-spacing:1px">STRENGTH METER · مقياس القوة</p>
+     <div class="advrow"><span class="advw">absolutely</span><span class="advbar"><i class="seg on"></i><i class="seg on"></i><i class="seg on"></i><i class="seg on"></i></span><span class="ar" dir="rtl">تمامًا — الأقوى</span></div>
+     <div class="advrow"><span class="advw">definitely</span><span class="advbar"><i class="seg on"></i><i class="seg on"></i><i class="seg on"></i><i class="seg on"></i></span><span class="ar" dir="rtl">قطعًا — الأقوى</span></div>
+     <div class="advrow"><span class="advw">certainly</span><span class="advbar"><i class="seg on"></i><i class="seg on"></i><i class="seg on"></i><i class="seg on"></i></span><span class="ar" dir="rtl">بالتأكيد — الأقوى</span></div>
+     <div class="advrow"><span class="advw">very</span><span class="advbar"><i class="seg on"></i><i class="seg on"></i><i class="seg on"></i><i class="seg"></i></span><span class="ar" dir="rtl">جدًا — قوي</span></div>
+     <div class="advrow"><span class="advw">really</span><span class="advbar"><i class="seg on"></i><i class="seg on"></i><i class="seg on"></i><i class="seg"></i></span><span class="ar" dir="rtl">فعلًا — قوي</span></div>
+     <div class="advrow"><span class="advw">quite</span><span class="advbar"><i class="seg on"></i><i class="seg on"></i><i class="seg"></i><i class="seg"></i></span><span class="ar" dir="rtl">نوعًا ما — متوسط</span></div>
+     <div class="advrow"><span class="advw">fairly</span><span class="advbar"><i class="seg on"></i><i class="seg"></i><i class="seg"></i><i class="seg"></i></span><span class="ar" dir="rtl">إلى حدٍّ ما — الأضعف</span></div>
+    </div>
+    <div class="gcard talkcard">
+     <p style="font-weight:600"><svg class="ico" style="width:18px;height:18px;color:var(--grapeD);vertical-align:-3px"><use href="#i-chat"/></svg> What makes an opinion strong or less strong?</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">ما الذي يجعل الرأي قويًا أو أقل قوة؟</p>
+     <button class="rvbtn"><span class="rv-en">Show answer</span><span class="rv-ar" dir="rtl">أظهر الإجابة</span></button>
+     <div class="rvt"><span class="rvv">Strong adverbs (absolutely, definitely, certainly) make opinions stronger — weaker adverbs (quite, fairly) make them less strong.</span>
+      <span class="ar" dir="rtl">الظروف القوية (تمامًا، قطعًا، بالتأكيد) تقوّي الرأي — والضعيفة (نوعًا ما، إلى حدٍّ ما) تُضعفه.</span></div>
+    </div>
+   </div>
+   <div class="step" data-tip="Arena battle — good luck!" data-tipar="معركة الساحة — بالتوفيق!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Arena Battle</h3>
+    <span class="sh-ar" dir="rtl">تدريب — اختبر قوتك</span>
+    <div class="datastrip">
+     <span class="dschip">Strongest: absolutely · definitely · certainly</span><span class="dschip">Strong: very · really</span><span class="dschip">Medium: quite</span><span class="dschip">Weakest: fairly</span>
+    </div>
+    <div id="m-l4q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 5 ============ -->
+<section class="screen level" id="scr-l5" style="--lc:var(--mint);--lcd:var(--mintD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">5</span>
+   <div><h2 class="lt">Hall of Wisdom</h2><span class="lvl-ar" dir="rtl">قاعة الحكمة</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Rights for everyone, everywhere — the big idea!" data-tipar="حقوق للجميع في كل مكان — الفكرة الكبرى!">
+    <h3 class="sh"><svg class="ico"><use href="#i-scale"/></svg>Human Rights</h3>
+    <span class="sh-ar" dir="rtl">حقوق الإنسان — الإعلان العالمي</span>
+    <div class="gcard" style="background:linear-gradient(135deg,#E4F2EE,#FBF0CE)">
+     <p style="font-size:.98rem;font-weight:600;line-height:1.55">On the 10th of December, <b class="hl hl-sun">1948</b>, the Universal Declaration of Human Rights was <b class="hl hl-sky">adopted</b> by the United Nations. The document contains <b class="hl hl-sun">30</b> articles, and it has been translated into over <b class="hl hl-sun">500</b> languages. International <b class="hl hl-coral">Human Rights</b> Day is celebrated every year on the 10th of December.</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:8px">في 10 ديسمبر 1948 تبنّت الأمم المتحدة الإعلان العالمي لحقوق الإنسان؛ يحتوي 30 مادة وتُرجم إلى أكثر من 500 لغة، ويُحتفل بيوم حقوق الإنسان العالمي في 10 ديسمبر كل عام.</p>
+    </div>
+    <div class="facts">
+     <div class="fact" style="--fc:var(--mintD)"><svg class="ico"><use href="#i-person"/></svg><p class="fe"><b>Article 1</b> — All human beings are born free and have equal rights.</p><p class="ar" dir="rtl">المادة 1: يولد جميع البشر أحرارًا ومتساوين في الحقوق.</p></div>
+     <div class="fact" style="--fc:var(--skyD)"><svg class="ico"><use href="#i-earth"/></svg><p class="fe"><b>Article 2</b> — The same rights whatever their race, colour, gender, language or religion.</p><p class="ar" dir="rtl">المادة 2: الحقوق نفسها مهما كان العرق أو اللون أو الجنس أو اللغة أو الدين.</p></div>
+     <div class="fact" style="--fc:var(--coralD)"><svg class="ico"><use href="#i-heart"/></svg><p class="fe"><b>Article 3</b> — The right to life, freedom and security.</p><p class="ar" dir="rtl">المادة 3: الحق في الحياة والحرية والأمان.</p></div>
+     <div class="fact" style="--fc:var(--sunD)"><svg class="ico"><use href="#i-scale"/></svg><p class="fe"><b>Article 6</b> — The right to be treated equally by the law.</p><p class="ar" dir="rtl">المادة 6: الحق في المساواة أمام القانون.</p></div>
+     <div class="fact" style="--fc:var(--grapeD)"><svg class="ico"><use href="#i-home"/></svg><p class="fe"><b>Article 15</b> — The right to a nationality.</p><p class="ar" dir="rtl">المادة 15: الحق في الجنسية.</p></div>
+     <div class="fact" style="--fc:var(--greenD)"><svg class="ico"><use href="#i-book"/></svg><p class="fe"><b>Article 26</b> — The right to an education.</p><p class="ar" dir="rtl">المادة 26: الحق في التعليم.</p></div>
+    </div>
+    <div id="m-udhr"></div>
+   </div>
+   <div class="step" data-tip="Read the six wise quotes — the connect game is coming!" data-tipar="اقرأ الاقتباسات الستة — لعبة الوصل قادمة!">
+    <h3 class="sh"><svg class="ico"><use href="#i-scroll"/></svg>Words of Wisdom</h3>
+    <span class="sh-ar" dir="rtl">كلمات حكيمة — اقرأها بتمعّن قبل لعبة الوصل</span>
+    <div class="qgrid" id="m-wise"></div>
+   </div>
+   <div class="step" data-tip="Now connect each quote to its topic!" data-tipar="الآن وصّل كل اقتباس بموضوعه!">
+    <h3 class="sh"><svg class="ico"><use href="#i-search"/></svg>Connect the Quotes!</h3>
+    <span class="sh-ar" dir="rtl">وصّل كل اقتباس بموضوعه — انقر الاقتباس ثم الموضوع فيُرسم خط بينهما</span>
+    <div id="m-quotes"></div>
+   </div>
+   <div class="step" data-tip="The United Nations — the world's team!" data-tipar="الأمم المتحدة — فريق العالم!">
+    <h3 class="sh"><svg class="ico"><use href="#i-earth"/></svg>The United Nations</h3>
+    <span class="sh-ar" dir="rtl">الأمم المتحدة — منظمة دولية لحفظ السلام والتعاون</span>
+    <div class="gcard">
+     <p style="font-weight:600;font-size:.98rem;line-height:1.55">The United Nations is an international organisation formed by governments around the world to <b>maintain peace</b>, develop <b>friendly relations</b> between nations and achieve <b>international cooperation</b>. It also works to address 21st century issues such as human rights, climate change, sustainable development, equality, and humanitarian and health emergencies.</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:8px">الأمم المتحدة منظمة دولية أسستها حكومات العالم لحفظ السلام وتوطيد العلاقات الودية بين الأمم وتحقيق التعاون الدولي، وتعالج قضايا القرن الحادي والعشرين كحقوق الإنسان وتغيّر المناخ والتنمية المستدامة والمساواة والطوارئ الإنسانية والصحية.</p>
+    </div>
+    <div class="datastrip" style="margin-top:10px">
+     <span class="dschip">Charter: 26th of June 1945</span><span class="dschip">6 official languages</span><span class="dschip">Leader: Secretary General</span><span class="dschip">Nickname: the UN family</span>
+    </div>
+    <div id="m-un"></div>
+    <div class="gcard talkcard">
+     <p style="font-weight:600"><svg class="ico" style="width:18px;height:18px;color:var(--mintD);vertical-align:-3px"><use href="#i-chat"/></svg> What universal rules would make the world a better place? Write three new articles!</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">ما القواعد الكونية التي تجعل العالم أفضل؟ اكتب ثلاث مواد جديدة!</p>
+     <button class="rvbtn"><span class="rv-en">Show ideas</span><span class="rv-ar" dir="rtl">أظهر الأفكار</span></button>
+     <div class="rvt"><span class="rvv">Every child deserves clean water · No one should go hungry · Animals and nature deserve protection — your ideas can be different!</span>
+      <span class="ar" dir="rtl">كل طفل يستحق ماءً نظيفًا · لا أحد يجوع · الحيوانات والطبيعة تستحق الحماية — وقد تكون أفكارك مختلفة!</span></div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 6 ============ -->
+<section class="screen level" id="scr-l6" style="--lc:var(--pink);--lcd:var(--pinkD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">6</span>
+   <div><h2 class="lt">Hall of Lives</h2><span class="lvl-ar" dir="rtl">قاعة العظماء</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Meet the Lion of the Sea — Ahmed Bin Majid!" data-tipar="تعرّف على أسد البحر — أحمد بن ماجد!">
+    <h3 class="sh"><svg class="ico"><use href="#i-ship"/></svg>Ahmed Bin Majid</h3>
+    <span class="sh-ar" dir="rtl">أحمد بن ماجد — بحّار وملاح عماني شهير</span>
+    <div class="mail">
+     <div class="mail-top"><svg class="ico"><use href="#i-ship"/></svg><span class="mail-addr">Oman · ~1421 – ~1500</span><span class="mail-sub">THE LION OF THE SEA</span></div>
+     <div class="mail-body">
+      <div class="para"><button class="spk" data-say="Ahmed Bin Majid was a famous Omani sailor and navigator. He was known as the Lion of the Sea for his expertise in sailing and navigation. Ibn Majid was born around 1421 in Oman. He was raised in a family of professional sailors."><svg class="ico"><use href="#i-speaker"/></svg></button>
+       <p class="pen">Ahmed Bin Majid was a famous Omani <b>sailor and navigator</b>. He was known as the <b>'Lion of the Sea'</b> for his expertise in sailing and navigation. He was born around <b>1421</b> in Oman, and was raised in a family of professional sailors.</p>
+       <p class="par" dir="rtl">أحمد بن ماجد بحّار وملاح عماني شهير عُرف بـ«أسد البحر» لبراعته في الإبحار والملاحة؛ وُلد نحو عام 1421 في عُمان ونشأ في عائلة من البحّارة المحترفين.</p></div>
+      <div class="para"><button class="spk" data-say="At the age of seventeen, Ibn Majid became a sailor. He quickly progressed to the position of Master Mariner. Perhaps his most important achievement was the books he wrote to record his knowledge of sailing, navigation and the ports of the Arab trading empire. He also wrote almost 40 poems."><svg class="ico"><use href="#i-speaker"/></svg></button>
+       <p class="pen">At the age of <b>seventeen</b>, he became a sailor and quickly progressed to <b>Master Mariner</b>. Perhaps his most important achievement was the <b>books</b> he wrote to record his knowledge of sailing, navigation and the ports of the Arab trading empire. He also wrote almost <b>40 poems</b>.</p>
+       <p class="par" dir="rtl">في السابعة عشرة صار بحّارًا ثم «ريبّانًا» رئيسيًا؛ وأهم إنجازاته كتبُه التي دوّنت معارفه في الملاحة ومرافئ إمبراطورية التجارة العربية، وكتب نحو 40 قصيدة.</p></div>
+      <div class="para"><button class="spk" data-say="Ibn Majid invented the kamal, a simple but effective tool for navigation. He also redesigned the compass which was originally invented by the Chinese. His compass was far superior and the compasses we use today are based on his design."><svg class="ico"><use href="#i-speaker"/></svg></button>
+       <p class="pen">He invented the <b>'kamal'</b>, a simple but effective tool for navigation. He also <b>redesigned the compass</b> (originally invented by the Chinese) — his design was far superior, and the compasses we use today are <b>based on his design</b>.</p>
+       <p class="par" dir="rtl">اخترع «الكمال» أداة ملاحية بسيطة وفعّالة، وأعاد تصميم البوصلة (التي اخترعها الصينيون أصلًا) — وبوصلتنا اليوم مبنية على تصميمه.</p></div>
+      <div class="para"><button class="spk" data-say="The exact date of Ibn Majid's death is not known. Historians think he probably died around 1500. He will be remembered as one of the most famous navigators and explorers of all time."><svg class="ico"><use href="#i-speaker"/></svg></button>
+       <p class="pen">The exact date of his death is not known — historians think he probably died around <b>1500</b>. He will be remembered as one of the most famous navigators and explorers of all time.</p>
+       <p class="par" dir="rtl">لا يُعرف تاريخ وفاته بدقة؛ يرجّح المؤرخون نحو عام 1500 — وسيبقى في الذاكرة أحد أشهر الملاحين والمستكشفين عبر التاريخ.</p></div>
+     </div>
+    </div>
+    <h3 class="sh" style="margin-top:18px"><svg class="ico"><use href="#i-star"/></svg>Dr Lamya Al Haj</h3>
+    <span class="sh-ar" dir="rtl">الدكتورة لمياء الحاج — عالمة ومحاضرة وباحثة عمانية</span>
+    <div class="mail">
+     <div class="mail-top"><svg class="ico"><use href="#i-bulb"/></svg><span class="mail-addr">Oman · born 1982</span><span class="mail-sub">SCIENTIST &amp; RESEARCHER</span></div>
+     <div class="mail-body">
+      <div class="para"><button class="spk" data-say="Dr Lamya Al Haj is a university lecturer, public speaker, scientist and researcher from Oman. She was born on 31st May 1982 in Buraimi. She always loved science. She studied a BSc at Sultan Qaboos University and graduated in 2004 with a high distinction."><svg class="ico"><use href="#i-speaker"/></svg></button>
+       <p class="pen">Dr Lamya Al Haj is a university <b>lecturer, public speaker, scientist and researcher</b> from Oman. She was born on <b>31st May 1982 in Buraimi</b>, always loved science, and graduated from <b>Sultan Qaboos University</b> in <b>2004</b> with a high distinction.</p>
+       <p class="par" dir="rtl">الدكتورة لمياء الحاج محاضرة جامعية ومتحدثة وعالمة وباحثة من عُمان؛ وُلدت في 31 مايو 1982 في البريمي، وتخرجت بامتياز عالٍ في جامعة السلطان قابوس عام 2004.</p></div>
+      <div class="para"><button class="spk" data-say="She studied an MSc in Australia and graduated in 2006. She studied a PhD in London and graduated in 2014. She works as an Assistant Professor at Sultan Qaboos University."><svg class="ico"><use href="#i-speaker"/></svg></button>
+       <p class="pen">She completed an <b>MSc in Australia (2006)</b> and a <b>PhD in London (2014)</b>. She now works as an <b>Assistant Professor</b> at Sultan Qaboos University, publishing research and presenting at conferences.</p>
+       <p class="par" dir="rtl">أتمّت الماجستير في أستراليا 2006 والدكتوراه في لندن 2014، وتعمل اليوم أستاذة مساعدة في جامعة السلطان قابوس تنشر البحوث وتشارك في المؤتمرات.</p></div>
+      <div class="para"><button class="spk" data-say="In 2003 she received the Award of Excellence from His Majesty Sultan Qaboos. In 2016 she was the first Omani invited to address the Harvard Business School Alumni. In 2018 she received the L'Oreal UNESCO Award for Women in Science."><svg class="ico"><use href="#i-speaker"/></svg></button>
+       <p class="pen">In <b>2003</b>, she received the Award of Excellence from His Majesty <b>Sultan Qaboos</b>. In <b>2016</b>, she was the first Omani invited to address the <b>Harvard Business School Alumni</b>. In <b>2018</b>, she received the <b>L'Oréal UNESCO Award for Women in Science</b>.</p>
+       <p class="par" dir="rtl">نالت 2003 جائزة التميز من حضرة صاحب الجلالة السلطان قابوس، وكانت 2016 أول عمانية تُخاطب خريجي كلية هارفارد للأعمال، ونالت 2018 جائزة لوريال يونسكو للنساء في العلوم.</p></div>
+     </div>
+    </div>
+   </div>
+   <div class="step" data-tip="Build Dr Lamya's biography in order!" data-tipar="ابنِ سيرة لمياء الحاج بالترتيب!">
+    <h3 class="sh"><svg class="ico"><use href="#i-pen"/></svg>Biography Builder</h3>
+    <span class="sh-ar" dir="rtl">ابنِ جمل السيرة — انقر الكلمات بالترتيب الصحيح</span>
+    <div id="m-order"></div>
+   </div>
+   <div class="step" data-tip="Now create YOUR museum plaque — I can't wait!" data-tipar="الآن أنشئ لوحة متحفك أنت — لا أستطيع الانتظار!">
+    <h3 class="sh"><svg class="ico"><use href="#i-crown"/></svg>Project: Museum Plaque</h3>
+    <span class="sh-ar" dir="rtl">المشروع — صمّم لوحة معلومات لموقع أثري أو شخصية عظيمة</span>
+    <div class="tipgrid">
+     <div class="tipcard" style="--tc:var(--mintD)"><h4><span>Example: Al Baleed</span><span class="ar" dir="rtl">مثال من الكتاب</span></h4>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>The site dates back to 2000 BC — the port city became the centre of the frankincense trade.<span class="ti-ar" dir="rtl">يعود الموقع إلى 2000 ق.م وصار مركز تجارة اللبان.</span></span></div>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Discovered in 1930; given UNESCO World Heritage status in 2000.<span class="ti-ar" dir="rtl">اكتُشف 1930 ونال مكانة اليونسكو 2000.</span></span></div>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>A mosque with 144 columns and a 13-metre fort; a wall protected it from Khareef floods.<span class="ti-ar" dir="rtl">مسجد بـ144 عمودًا وحصن 13 مترًا وسورٌ يقي فيضانات الخريف.</span></span></div>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Visiting info: 8am–8pm · 2 OMR per car · Frankincense Land Museum.<span class="ti-ar" dir="rtl">معلومات الزيارة: 8ص–8م · ريالان للسيارة · متحف أرض اللبان.</span></span></div></div>
+     <div class="tipcard" style="--tc:var(--grapeD)"><h4><span>How to research</span><span class="ar" dir="rtl">كيف تستقصي؟</span></h4>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Information online or in books · YouTube videos<span class="ti-ar" dir="rtl">المعلومة عبر الإنترنت والكتب والفيديوهات.</span></span></div>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Ask a history teacher · contact the Ministry of Heritage and Culture<span class="ti-ar" dir="rtl">اسأل مدرّس التاريخ أو تواصل مع وزارة التراث والثقافة.</span></span></div>
+      <div class="tipitem"><svg class="ico"><use href="#i-check"/></svg><span>Visit the site or the national museum — the most reliable sources!<span class="ti-ar" dir="rtl">زر الموقع أو المتحف الوطني — أكثر المصادر موثوقية!</span></span></div></div>
+    </div>
+    <div class="pgrid" style="margin-top:14px">
+     <div class="pgroup" style="--pc:var(--pinkD)"><div class="pg-h">Biography phrases<span class="ar" dir="rtl">عبارات كتابة السير</span></div>
+      <div class="pchip"><span class="en">(Name) is/was a famous/well-known …</span><span class="ar" dir="rtl">فلان شخصية شهيرة…</span></div>
+      <div class="pchip"><span class="en">At/From a young age …</span><span class="ar" dir="rtl">منذ الصغر…</span></div>
+      <div class="pchip"><span class="en">In (year) he/she …</span><span class="ar" dir="rtl">في سنة كذا فعل…</span></div>
+      <div class="pchip"><span class="en">He/She studied (subject) at (university)</span><span class="ar" dir="rtl">درس المادة في الجامعة.</span></div>
+      <div class="pchip"><span class="en">One of his/her greatest achievements is …</span><span class="ar" dir="rtl">من أعظم إنجازاته…</span></div>
+      <div class="pchip"><span class="en">(Name) will be remembered as/for …</span><span class="ar" dir="rtl">سيُذكر فلان بـ…</span></div></div>
+    </div>
+    <div class="gcard" style="margin-top:14px">
+     <div class="fields">
+      <div class="field"><label>Plaque name (site or person)</label><span class="f-ar" dir="rtl">اسم اللوحة — موقع أو شخصية</span><input id="plaqueName" placeholder="e.g. The Great Ziggurat" maxlength="30"></div>
+      <div class="field"><label>Why is it famous?</label><span class="f-ar" dir="rtl">لماذا هو شهير؟</span><input id="plaqueFact" placeholder="e.g. built with clay bricks in 2100 BC" maxlength="44"></div>
+     </div>
+     <div class="srow"><span class="slab">Symbol<span class="ar" dir="rtl">الرمز</span></span>
+      <div class="schips" id="symRow">
+       <button class="schip plaqueic" data-k="pyr" style="--ec:var(--sunD)"><svg class="ico"><use href="#i-pyr"/></svg>Pyramid</button>
+       <button class="schip plaqueic" data-k="ship" style="--ec:var(--mintD)"><svg class="ico"><use href="#i-ship"/></svg>Dhow</button>
+       <button class="schip plaqueic" data-k="scroll" style="--ec:var(--coralD)"><svg class="ico"><use href="#i-scroll"/></svg>Scroll</button>
+       <button class="schip plaqueic" data-k="col" style="--ec:var(--skyD)"><svg class="ico"><use href="#i-col"/></svg>Column</button>
+       <button class="schip plaqueic" data-k="scale" style="--ec:var(--grapeD)"><svg class="ico"><use href="#i-scale"/></svg>Balance</button>
+      </div>
+     </div>
+     <button id="plaqueGo" class="btn" style="--bc:var(--gold);--bcd:var(--goldD);color:#5A4500;margin-top:16px"><span>Create my museum plaque</span><span class="b-ar" dir="rtl">أنشئ لوحة متحفي</span></button>
+     <div class="prevbox" id="plaquePrev">
+      <p class="bp-h">Your plaque appears here</p>
+      <p class="bp-arh ar" dir="rtl">ستظهر لوحتك هنا</p>
+      <div class="bp-body" id="plaqueBody"></div>
+     </div>
+    </div>
+   </div>
+   <div class="step" data-tip="Final check for the Hall of Lives!" data-tipar="اختبار قاعة العظماء الأخير!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Hall of Lives Check</h3>
+    <span class="sh-ar" dir="rtl">تحقّق سريع — المعلومات أمامك</span>
+    <div class="datastrip">
+     <span class="dschip">Ibn Majid: Lion of the Sea · ~1421 · kamal · compass</span><span class="dschip">Lamya: SQU 2004 · PhD 2014 · UNESCO Award 2018</span>
+    </div>
+    <div id="m-bio"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ BOSS ============ -->
+<section class="screen level" id="scr-boss" style="--lc:#5A5344;--lcd:#40392C">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num" style="background:#5A5344;box-shadow:0 4px 0 #40392C"><svg class="ico" style="width:26px;height:26px"><use href="#i-arch"/></svg></span>
+   <div><h2 class="lt">The Ruin Monster</h2><span class="lvl-ar" dir="rtl">وحش الخرائب</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en">This is it! Restore history!</span><span class="tip-ar" dir="rtl">لحظة الحسم! أعد التاريخ إلى النور!</span></div></div>
+  </header>
+  <div class="mon-wrap" id="monWrap">
+   <svg id="monSvg" viewBox="0 0 240 210">
+    <rect x="18" y="98" width="26" height="50" rx="12" fill="#8A8273" stroke="#4A4335" stroke-width="6"/>
+    <rect x="196" y="98" width="26" height="50" rx="12" fill="#8A8273" stroke="#4A4335" stroke-width="6"/>
+    <rect x="56" y="162" width="32" height="18" rx="8" fill="#8A8273" stroke="#4A4335" stroke-width="6"/>
+    <rect x="152" y="162" width="32" height="18" rx="8" fill="#8A8273" stroke="#4A4335" stroke-width="6"/>
+    <rect x="34" y="30" width="172" height="140" rx="26" fill="#8A8273" stroke="#4A4335" stroke-width="6"/>
+    <path d="M74 42l7 10-5 9M168 152l-7-9 5-11" fill="none" stroke="#5A5344" stroke-width="4" stroke-linecap="round"/>
+    <g class="m-eyes">
+     <path d="M70 78 L102 92" stroke="#4A4335" stroke-width="7" stroke-linecap="round"/>
+     <path d="M170 78 L138 92" stroke="#4A4335" stroke-width="7" stroke-linecap="round"/>
+     <rect x="72" y="92" width="30" height="20" rx="8" fill="#F5EFDD"/>
+     <rect x="138" y="92" width="30" height="20" rx="8" fill="#F5EFDD"/>
+     <circle cx="88" cy="102" r="6" fill="#DBA226"/><circle cx="152" cy="102" r="6" fill="#DBA226"/>
+    </g>
+    <g class="m-dead">
+     <path d="M74 94 L100 114 M100 94 L74 114" stroke="#6B6355" stroke-width="6" stroke-linecap="round"/>
+     <path d="M140 94 L166 114 M166 94 L140 114" stroke="#6B6355" stroke-width="6" stroke-linecap="round"/>
+    </g>
+    <path class="m-mouth" d="M88 140 L98 132 L108 140 L118 132 L128 140 L138 132 L148 140" fill="none" stroke="#4A4335" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+   </svg>
+   <div class="hpbar"><div class="hpfill" id="hpFill"></div></div>
+   <p class="hplbl">RUIN POWER · قوة الخراب</p>
+   <p style="font-weight:600;margin-top:10px">Answer 8 questions to defeat it — every correct answer restores a piece of history!</p>
+   <p class="ar" dir="rtl" style="text-align:center;margin-top:4px">أجب عن 8 أسئلة لتهزمه — كل إجابة صحيحة تعيد قطعة من التاريخ إلى النور!</p>
+  </div>
+  <div id="bq"></div>
+ </div>
+</section>
+
+<!-- ============ WIN ============ -->
+<section class="screen" id="scr-win">
+ <div class="wrap done-wrap">
+  <svg class="trophy-big"><use href="#i-trophy"/></svg>
+  <h2 class="done-title">HISTORY SAVED!</h2>
+  <p class="done-sub">You defeated the Ruin Monster, restored the timeline, and mastered Civilisation.</p>
+  <p class="done-sub-ar ar" dir="rtl">هزمت وحش الخرائب وأعدت التاريخ إلى النور وأتقنت وحدة الحضارة — أحسنت!</p>
+  <div class="statpills">
+   <div class="statpill"><svg class="ico"><use href="#i-bolt"/></svg><span id="winXp">0</span>&nbsp;XP</div>
+   <div class="statpill"><svg class="ico"><use href="#i-star"/></svg><span id="winStars">0</span>/18</div>
+   <div class="statpill"><svg class="ico"><use href="#i-medal"/></svg><span id="winBdg">0</span>/7</div>
+  </div>
+  <h3 class="sh" style="justify-content:center"><svg class="ico"><use href="#i-medal"/></svg>Your Badges</h3>
+  <span class="sh-ar" dir="rtl" style="text-align:center">أوسمتك — اجمعها كلها!</span>
+  <div class="bdg-grid" id="winBadges"></div>
+  <div class="done-btns">
+   <button id="winMapBtn" class="btn ghost"><span>Back to Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>
+   <button id="winAgainBtn" class="btn" style="--bc:var(--coral);--bcd:var(--coralD)"><span>Play Again</span><span class="b-ar" dir="rtl">العب من جديد</span></button>
+  </div>
+ </div>
+</section>
+
+<script>
+(function(){
+'use strict';
+/* ================= helpers ================= */
+var $=function(s){return document.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+var IC=function(n){return '<svg class="ico"><use href="#'+n+'"/></svg>'};
+var shuffle=function(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t}return b};
+var esc=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')};
+
+/* ================= audio ================= */
+var actx=null,muted=false;
+function initAudio(){if(actx)return;try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}
+function tone(f,d,type,v,dl){if(!actx||muted)return;type=type||'sine';v=v||.12;dl=dl||0;
+ var t=actx.currentTime+dl,o=actx.createOscillator(),g=actx.createGain();
+ o.type=type;o.frequency.setValueAtTime(f,t);
+ g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+ o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+d+.05)}
+function sfx(n,i){switch(n){
+ case 'click':tone(560,.07,'triangle',.06);break;
+ case 'pop':tone(340,.06,'sine',.08);break;
+ case 'correct':tone(660,.12,'sine',.12);tone(880,.16,'sine',.12,.09);break;
+ case 'wrong':tone(220,.18,'sawtooth',.06);tone(160,.22,'sawtooth',.05,.09);break;
+ case 'match':tone(523,.09,'sine',.1);tone(659,.09,'sine',.1,.08);tone(784,.14,'sine',.1,.16);break;
+ case 'heart':tone(392,.12,'sine',.1);tone(294,.18,'sine',.09,.1);break;
+ case 'hit':tone(130,.14,'square',.09);tone(90,.2,'square',.07,.05);break;
+ case 'crack':tone(987,.08,'square',.07);tone(740,.12,'square',.07,.06);break;
+ case 'unlock':tone(600,.1,'triangle',.09);tone(900,.16,'triangle',.09,.09);break;
+ case 'star':tone(700+(i||0)*160,.16,'sine',.12);break;
+ case 'fanfare':[523,659,784,1046].forEach(function(f,k){tone(f,.16,'triangle',.11,k*.13)});tone(1318,.3,'triangle',.1,.55);break;
+}}
+document.addEventListener('pointerdown',function once(){initAudio();document.removeEventListener('pointerdown',once)});
+
+/* ================= state ================= */
+var KEY='cvq2';
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY));
+ if(d&&typeof d.xp==='number')return{xp:d.xp,stars:d.stars||{},unlocked:d.unlocked||1,badges:d.badges||[],streak:0}}catch(e){}
+ return{xp:0,stars:{},unlocked:1,badges:[],streak:0}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({xp:S.xp,stars:S.stars,unlocked:S.unlocked,badges:S.badges}))}catch(e){}}
+var S=load();
+var MODE=null,L=null,B=null;
+
+/* ================= speech ================= */
+var voices=[];
+function loadVoices(){try{voices=window.speechSynthesis.getVoices()}catch(e){}}
+if('speechSynthesis' in window){loadVoices();window.speechSynthesis.addEventListener('voiceschanged',loadVoices)}
+var VPREF=['Google UK English Female','Microsoft Sonia','Microsoft Libby','Microsoft Aria','Microsoft Michelle','Samantha','Serena','Kate','Moira','Zira','Victoria','Google US English'];
+function pickVoice(){var i,j;
+ for(i=0;i<VPREF.length;i++){for(j=0;j<voices.length;j++){if(voices[j].name===VPREF[i])return voices[j]}}
+ for(j=0;j<voices.length;j++){if(/female/i.test(voices[j].name))return voices[j]}
+ for(j=0;j<voices.length;j++){if(/^en/i.test(voices[j].lang))return voices[j]}
+ return null}
+function speakText(t){if(!('speechSynthesis' in window)||!t)return null;
+ try{window.speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=.85;u.pitch=1.05;
+  var v=pickVoice();if(v)u.voice=v;
+  window.speechSynthesis.speak(u);return u}catch(e){return null}}
+function speakSay(btn){var t=btn.getAttribute('data-say');if(!t)return;
+ var u=speakText(t);if(!u)return;
+ btn.classList.add('busy');u.onend=u.onerror=function(){btn.classList.remove('busy')}}
+
+/* ================= confetti ================= */
+var CCOL=['#DBA226','#3E7CB1','#D96846','#3BA08E','#8B6BB1','#E8C34E'];
+function confetti(x,y,n){n=n||24;
+ for(var i=0;i<n;i++){var c=document.createElement('i');c.className='cf';
+  c.style.left=x+'px';c.style.top=y+'px';c.style.background=CCOL[Math.floor(Math.random()*CCOL.length)];
+  c.style.setProperty('--dx',(Math.random()*200-100)+'px');
+  c.style.animationDuration=(1+Math.random()*.9)+'s';
+  if(Math.random()<.4)c.style.borderRadius='50%';
+  document.body.appendChild(c);
+  (function(el){setTimeout(function(){el.remove()},2200)})(c)}}
+function burst(el,n){if(!el)return;var r=el.getBoundingClientRect();confetti(r.left+r.width/2,r.top+r.height/2,n||22)}
+function confettiRain(){for(var i=0;i<5;i++)setTimeout(function(){confetti(Math.random()*window.innerWidth,-10,26)},i*250)}
+
+/* ================= HUD ================= */
+var xpShown=0;
+function addXP(d){S.xp+=d;save();tweenXP()}
+function tweenXP(){var el=$('#xpN'),from=xpShown,to=S.xp,t0=performance.now(),dur=450;
+ function f(t){var k=Math.min(1,(t-t0)/dur);xpShown=Math.round(from+(to-from)*k);el.textContent=xpShown;if(k<1)requestAnimationFrame(f)}
+ requestAnimationFrame(f)}
+function streakUp(){S.streak++;
+ if(S.streak>=2){var h=$('#hudStreak');h.classList.add('on');$('#streakN').textContent='x'+S.streak;
+  h.classList.remove('pop');void h.offsetWidth;h.classList.add('pop')}
+ if(S.streak>0&&S.streak%4===0){addXP(5);toast('On Fire!','أداؤك مشتعل — واصل!','i-flame','var(--coral)');sfx('match')}}
+function streakCut(){S.streak=0;$('#hudStreak').classList.remove('on')}
+function renderHearts(){var h=$('#hudHearts');
+ var n=MODE==='boss'?B.hearts:(MODE==='level'?L.hearts:3);
+ h.innerHTML=[0,1,2].map(function(i){return '<span class="hh'+(i<n?'':' off')+'">'+IC('i-heart')+'</span>'}).join('')}
+function loseHeart(){sfx('heart');
+ if(MODE==='boss'){B.hearts=Math.max(0,B.hearts-1);renderHearts();
+  var el=$('#hudHearts');el.classList.remove('hpop');void el.offsetWidth;el.classList.add('hpop');
+  if(B.hearts<=0){setTimeout(bossFail,600)}return}
+ if(MODE!=='level')return;
+ L.hearts=Math.max(0,L.hearts-1);renderHearts();
+ var el=$('#hudHearts');el.classList.remove('hpop');void el.offsetWidth;el.classList.add('hpop')}
+
+/* ================= toasts / badges ================= */
+function toast(t,ar,ic,col){var w=$('#toasts');
+ if(w.children.length>2)w.firstChild.remove();
+ var d=document.createElement('div');d.className='toast';d.style.setProperty('--tc',col||'var(--gold)');
+ d.innerHTML='<span class="t-ic">'+IC(ic||'i-star')+'</span><span><b>'+t+'</b><span class="t-ar" dir="rtl">'+ar+'</span></span>';
+ w.appendChild(d);
+ setTimeout(function(){d.classList.add('out');setTimeout(function(){d.remove()},350)},2400)}
+var BADGES=[
+ {id:'time',t:'Time Traveller',ar:'مسافر الزمن',ic:'i-clock',c:'var(--sky)'},
+ {id:'voices',t:'Voice Listener',ar:'مستمع الماضي',ic:'i-scroll',c:'var(--coral)'},
+ {id:'passive',t:'Passive Master',ar:'سيّد المبني للمجهول',ic:'i-col',c:'var(--sun)'},
+ {id:'debate',t:'Debate Star',ar:'نجم المناظرة',ic:'i-chat',c:'var(--grape)'},
+ {id:'rights',t:'Rights Defender',ar:'مدافع الحقوق',ic:'i-scale',c:'var(--mint)'},
+ {id:'lives',t:'Life Chronicler',ar:'كاتب سِيَر العظماء',ic:'i-pen',c:'var(--pink)'},
+ {id:'boss',t:'Civilisation Saver',ar:'منقذ الحضارة',ic:'i-crown',c:'var(--gold)'}];
+var BMAP={1:'time',2:'voices',3:'passive',4:'debate',5:'rights',6:'lives'};
+function award(id){if(S.badges.indexOf(id)>=0)return;
+ S.badges.push(id);save();
+ var b=BADGES.filter(function(x){return x.id===id})[0];
+ if(b){toast(b.t,b.ar,b.ic,b.c);sfx('unlock')}}
+
+/* ================= mascot (Cuni the clay tablet) ================= */
+function tabbySVG(){return '<svg class="tabby-svg" viewBox="0 0 120 134">'+
+ '<line x1="60" y1="20" x2="60" y2="8" stroke="#3D3450" stroke-width="4" stroke-linecap="round"/>'+
+ '<path d="M64 2.5l-7 4h5l-3 4.5 8-5h-4.6z" fill="#8A5A2B" stroke="#3D3450" stroke-width="2" stroke-linejoin="round"/>'+
+ '<rect x="6" y="58" width="13" height="30" rx="6.5" fill="#A96B3F"/>'+
+ '<rect x="101" y="58" width="13" height="30" rx="6.5" fill="#A96B3F"/>'+
+ '<rect x="28" y="120" width="17" height="11" rx="5.5" fill="#3D3450"/>'+
+ '<rect x="75" y="120" width="17" height="11" rx="5.5" fill="#3D3450"/>'+
+ '<rect x="17" y="24" width="86" height="102" rx="20" fill="#C88757" stroke="#3D3450" stroke-width="4.5"/>'+
+ '<rect x="27" y="34" width="66" height="82" rx="13" fill="#F3DDBE"/>'+
+ '<path d="M33 40l4 2-4 2zM87 40l-4 2 4 2z" fill="#A96B3F"/>'+
+ '<circle cx="60" cy="49" r="2.2" fill="#3D3450"/>'+
+ '<g class="tabby-eyes"><circle cx="47" cy="63" r="5.6" fill="#3D3450"/><circle cx="73" cy="63" r="5.6" fill="#3D3450"/>'+
+ '<circle cx="49" cy="61" r="1.9" fill="#fff"/><circle cx="75" cy="61" r="1.9" fill="#fff"/></g>'+
+ '<circle cx="36" cy="74" r="4" fill="#E8A87C" opacity=".85"/><circle cx="84" cy="74" r="4" fill="#E8A87C" opacity=".85"/>'+
+ '<path class="tabby-mouth" d="M52 70 Q60 77 68 70" fill="none" stroke="#3D3450" stroke-width="3.5" stroke-linecap="round"/></svg>'}
+function mascotReact(mood){var scr=document.querySelector('.screen.on');if(!scr)return;
+ var slot=scr.querySelector('.tabby-slot');if(!slot)return;
+ var mouth=slot.querySelector('.tabby-mouth');if(!mouth)return;
+ if(mood==='happy'){mouth.setAttribute('d','M46 65 Q60 86 74 65 Z');mouth.setAttribute('fill','#3D3450')}
+ else{mouth.setAttribute('d','M52 76 Q60 67 68 76');mouth.setAttribute('fill','none')}
+ slot.classList.remove('jump','shake');void slot.offsetWidth;
+ slot.classList.add(mood==='happy'?'jump':'shake');
+ setTimeout(function(){mouth.setAttribute('d','M52 70 Q60 77 68 70');mouth.setAttribute('fill','none');
+  slot.classList.remove('jump','shake')},1300)}
+
+/* ================= screens ================= */
+var ovl=$('#ovl');
+function show(id){
+ var el=$('#scr-'+id);
+ $$('.screen').forEach(function(s){s.classList.remove('on')});
+ if(!el)return;
+ el.classList.add('on');
+ $('#hud').classList.toggle('on',id!=='title');
+ if(id!=='map')window.scrollTo(0,0);
+ if(id==='map'){MODE=null;$('#hudHearts').classList.add('hidden');renderMap();
+  setTimeout(function(){var c=$('#mapNodes .node.cur')||$('#mapNodes .node:not(.lock)');if(c)c.scrollIntoView({block:'center',behavior:'smooth'})},150)}}
+function hideOvl(){ovl.classList.remove('on')}
+
+/* ================= map ================= */
+var LEVELS=[
+ {name:'Time Gateway',ar:'بوابة الزمن',c:'sky',ic:'i-clock'},
+ {name:'Voices of the Past',ar:'أصوات الماضي',c:'coral',ic:'i-scroll'},
+ {name:'Passive Temple',ar:'معبد المبني للمجهول',c:'sun',ic:'i-col'},
+ {name:'Debate Arena',ar:'ساحة المناظرة',c:'grape',ic:'i-chat'},
+ {name:'Hall of Wisdom',ar:'قاعة الحكمة',c:'mint',ic:'i-scale'},
+ {name:'Hall of Lives',ar:'قاعة العظماء',c:'pink',ic:'i-crown'}];
+var POS=[{x:50,y:8.1},{x:24,y:21.9},{x:66,y:35.8},{x:26,y:49.6},{x:68,y:63.5},{x:30,y:77.3}];
+function nodeStars(st){var out='';
+ for(var i=1;i<=3;i++){var f=Math.max(0,Math.min(1,st-(i-1)));
+  out+='<span class="nst'+(f===0.5?' half':'')+'" data-f="'+f+'">'+
+  '<svg class="ico base"><use href="#i-star"/></svg>'+
+  '<svg class="ico fill"><use href="#i-star"/></svg></span>'}
+ return out}
+function starTotal(){var t=Object.keys(S.stars).reduce(function(a,k){return a+S.stars[k]},0);
+ return t%1?t.toFixed(1):t}
+function renderMap(){
+ $('#mapStars').textContent=starTotal();
+ $('#mapBadges').textContent=S.badges.length;
+ var h='';
+ LEVELS.forEach(function(lv,i){var n=i+1,unlocked=n<=S.unlocked,st=S.stars[n]||0,cur=(n===S.unlocked&&!st);
+  h+='<button class="node'+(unlocked?'':' lock')+(cur?' cur':'')+'" style="left:'+POS[i].x+'%;top:'+POS[i].y+'%" data-n="'+n+'">'+
+  (cur?'<span class="go-arrow">'+IC('i-arrowD')+'</span>':'')+
+  '<span class="node-face" style="--nc:var(--'+lv.c+');--ncd:var(--'+lv.c+'D)">'+(unlocked?IC(lv.ic):IC('i-lock'))+'<span class="node-num">'+n+'</span></span>'+
+  '<span class="node-stars">'+nodeStars(st)+'</span>'+
+  '<span class="node-name">'+lv.name+'<span class="nar" dir="rtl">'+lv.ar+'</span></span></button>'});
+ var bOpen=S.unlocked>=7, bCur=bOpen&&S.badges.indexOf('boss')<0;
+ h+='<button class="node boss-node'+(bOpen?'':' lock')+(bCur?' cur':'')+'" style="left:50%;top:92.3%" data-n="7">'+
+ (bCur?'<span class="go-arrow">'+IC('i-arrowD')+'</span>':'')+
+ '<span class="node-face" style="--nc:#5A5344;--ncd:#40392C">'+(bOpen?IC('i-arch'):IC('i-lock'))+'</span>'+
+ '<span class="boss-ribbon">BOSS</span>'+
+ '<span class="node-name">The Ruin Monster<span class="nar" dir="rtl">وحش الخرائب</span></span></button>';
+ $('#mapNodes').innerHTML=h}
+function nodeClick(nd){var n=+nd.getAttribute('data-n');
+ if(n===7){
+  if(S.unlocked>=7){sfx('click');startBoss()}else{locked(nd)}
+  return}
+ if(n<=S.unlocked){sfx('click');startLevel(n)}else{locked(nd)}}
+function locked(nd){sfx('wrong');nd.classList.remove('nshake');void nd.offsetWidth;nd.classList.add('nshake');
+ toast('Locked!','أكمل المرحلة السابقة أولًا','i-lock','var(--ink)')}
+
+/* ================= data ================= */
+var V_DEFS=[
+ {w:'society',ic:'i-person',en:'a large group of people who live together in an organised way',ar:'مجتمع: جماعة كبيرة تعيش معًا بنظام',ex:'In my society, we are interested in sports.'},
+ {w:'empire',ic:'i-crown',en:'a group of countries ruled by a single person, government or country',ar:'إمبراطورية: مجموعة بلدان يحكمها شخص أو حكومة واحدة',ex:'I live in the centre of our great empire.'},
+ {w:'trade',ic:'i-loop',en:'to buy, sell or exchange goods and services',ar:'يتاجر: بيع وشراء وتبادل السلع والخدمات',ex:'He sails to many places to trade copper.'},
+ {w:'agriculture',ic:'i-leaf',en:'the work of farming',ar:'الزراعة: عمل الفلاحة',ex:'Agriculture is the main industry in our economy.'},
+ {w:'economy',ic:'i-chart',en:'the system of trade and industry that generates wealth',ar:'الاقتصاد: نظام التجارة والصناعة المولّد للثروة',ex:'Agriculture is the main industry in our economy.'},
+ {w:'monument',ic:'i-col',en:'a structure or building built to honour a special person or event',ar:'معلم/نصب: بناء يُكرّم شخصًا أو حدثًا خاصًا',ex:'The ziggurat is a huge monument.'}];
+var V_PASSEX=[
+ {w:'was invented',ic:'i-scroll',en:'Cuneiform was invented by the Sumerians.',ar:'أُخترع الخط المسماري بواسطة السومريين',ex:'by + the doer tells us who did it.'},
+ {w:'were built',ic:'i-pyr',en:'The Pyramids were built in Egypt.',ar:'بُنيت الأهرامات في مصر',ex:'No "by" — the doer is not important.'},
+ {w:'was found',ic:'i-search',en:'The Lost City of Ubar was found by archaeologists.',ar:'وُجدت مدينة أبار المفقودة بواسطة علماء الآثار',ex:'The object (Ubar) is the star!'}];
+var V_CIVS=[
+ {w:'Egyptian',ar:'الحضارة المصرية',ic:'i-pyr'},{w:'Greek',ar:'الحضارة اليونانية',ic:'i-col'},
+ {w:'Roman',ar:'الحضارة الرومانية',ic:'i-arch'},{w:'Mayan',ar:'حضارة المايا',ic:'i-zig'},
+ {w:'Majan',ar:'مملكة مجان',ic:'i-ship'},{w:'Sumerian',ar:'الحضارة السومرية',ic:'i-scroll'}];
+
+/* ================= timeline + previews + stars ================= */
+var TLROWS=[
+ {n:'Sumerian',d:'4500 – 1900 BC',ic:'i-scroll',c:'#DBA226',s:-4500,e:-1900,say:'The Sumerian civilisation lasted from 4500 B C to 1900 B C.'},
+ {n:'Ancient Egypt',d:'3000 BC – …',ic:'i-pyr',c:'#D96846',s:-3000,e:null,say:'Ancient Egypt began in 3000 B C.'},
+ {n:'Majan',d:'2300 – 550 BC',ic:'i-ship',c:'#3BA08E',s:-2300,e:-550,say:'The ancient kingdom of Majan lasted from 2300 B C to 550 B C.'},
+ {n:'Ancient Greek',d:'800 BC – …',ic:'i-col',c:'#3E7CB1',s:-800,e:null,say:'Ancient Greek civilisation began in 800 B C.'},
+ {n:'Roman Empire',d:'753 BC – 6 AD',ic:'i-arch',c:'#C75D8F',s:-753,e:6,say:'The Roman Empire lasted from 753 B C to 6 A D.'},
+ {n:'Ancient Mayan',d:'… – 1539 AD',ic:'i-zig',c:'#8B6BB1',s:null,e:1539,say:'Ancient Mayan civilisation ended in 1539 A D.'}];
+function buildTimeline(){
+ var x0=168,x1=612,YMIN=-4500,YMAX=1600,rowH=40,top=16,axisY=top+6*rowH+6,H=292;
+ var px=function(y){return Math.round((x0+(y-YMIN)/(YMAX-YMIN)*(x1-x0))*10)/10};
+ var defs='',rows='',i,r;
+ for(i=0;i<TLROWS.length;i++){r=TLROWS[i];
+  defs+='<linearGradient id="tlR'+i+'" x1="0" y1="0" x2="1" y2="0">'+
+   '<stop offset="0" stop-color="'+r.c+'"/><stop offset="1" stop-color="'+r.c+'" stop-opacity="0"/></linearGradient>'+
+  '<linearGradient id="tlL'+i+'" x1="0" y1="0" x2="1" y2="0">'+
+   '<stop offset="0" stop-color="'+r.c+'" stop-opacity="0"/><stop offset="1" stop-color="'+r.c+'"/></linearGradient>'}
+ for(i=0;i<TLROWS.length;i++){r=TLROWS[i];
+  var y=top+i*rowH,by=y+18,bh=15,cy=by+bh/2,xs,xe,icx;
+  rows+='<g class="tl-bar" data-say="'+r.say+'">'+
+  '<rect x="6" y="'+(y+2)+'" width="152" height="'+(rowH-6)+'" rx="9" fill="#FDFAF1" stroke="#E4D4A8" stroke-width="2"/>'+
+  '<text class="tl-name" x="14" y="'+(y+17)+'">'+r.n+'</text>'+
+  '<text class="tl-date" x="14" y="'+(y+31)+'">'+r.d+'</text>';
+  if(r.s!==null&&r.e!==null){
+   xs=px(r.s);xe=px(r.e);icx=xs;
+   rows+='<rect x="'+xs+'" y="'+by+'" width="'+(xe-xs)+'" height="'+bh+'" rx="7.5" fill="'+r.c+'"/>';
+  }else if(r.s!==null){
+   xs=px(r.s);icx=xs;
+   rows+='<rect x="'+xs+'" y="'+by+'" width="88" height="'+bh+'" rx="7.5" fill="'+r.c+'"/>'+
+   '<rect x="'+(xs+88)+'" y="'+by+'" width="'+(x1-xs-88)+'" height="'+bh+'" rx="7.5" fill="url(#tlR'+i+')"/>';
+  }else{
+   xe=px(r.e);icx=xe;
+   rows+='<rect x="'+x0+'" y="'+by+'" width="'+(xe-88-x0)+'" height="'+bh+'" rx="7.5" fill="url(#tlL'+i+')"/>'+
+   '<rect x="'+(xe-88)+'" y="'+by+'" width="88" height="'+bh+'" rx="7.5" fill="'+r.c+'"/>'}
+  rows+='<circle cx="'+icx+'" cy="'+cy+'" r="11" fill="'+r.c+'" stroke="#FDFAF1" stroke-width="3"/>'+
+  '<svg class="svgic" x="'+(icx-7)+'" y="'+(cy-7)+'" width="14" height="14" viewBox="0 0 24 24" style="color:#fff"><use href="#'+r.ic+'"/></svg>'+
+  '</g>'}
+ var zx=px(0);
+ var axis='<line x1="'+zx+'" y1="'+(top-2)+'" x2="'+zx+'" y2="'+axisY+'" stroke="#C9AE6E" stroke-width="2" stroke-dasharray="5 6" opacity=".75"/>'+
+ '<text class="tl-tick" x="'+(zx-7)+'" y="'+(top-4)+'" text-anchor="end">BC</text>'+
+ '<text class="tl-tick" x="'+(zx+7)+'" y="'+(top-4)+'" text-anchor="start">AD</text>'+
+ '<line x1="'+(x0-8)+'" y1="'+axisY+'" x2="'+(x1+10)+'" y2="'+axisY+'" stroke="#C9AE6E" stroke-width="3" stroke-linecap="round"/>';
+ [-4000,-3000,-2000,-1000,0,500,1000,1500].forEach(function(t){
+  var x=px(t),lab=t<0?(-t+' BC'):(t===0?'0':t+' AD');
+  axis+='<line x1="'+x+'" y1="'+axisY+'" x2="'+x+'" y2="'+(axisY+7)+'" stroke="#C9AE6E" stroke-width="2.5"/>'+
+  '<text class="tl-tick" x="'+x+'" y="'+(axisY+21)+'" text-anchor="middle">'+lab+'</text>'});
+ document.getElementById('tlBox').innerHTML=
+ '<p style="text-align:center;font-weight:600">Civilisation timeline — from the book map</p>'+
+ '<p class="ar" dir="rtl" style="text-align:center;margin:2px 0 8px">الخط الزمني للحضارات — انقر أي حضارة لتسمعها</p>'+
+ '<svg viewBox="0 0 640 '+H+'" class="tlsvg"><defs>'+defs+'</defs>'+axis+rows+'</svg>'+
+ '<p class="tlnote">"…" = the book leaves this date blank · tap any civilisation to hear it'+
+ '<span class="ar" dir="rtl">علامة «…» تعني أن الكتاب ترك التاريخ فارغًا — وانقر أي حضارة لتسمعها</span></p>'}
+function renderFScrolls(mount){
+ document.getElementById(mount).innerHTML=FACTS.map(function(f){
+  return '<div class="fscard" style="--fc:'+f.c+'">'+spk(f.en)+
+  '<svg class="ico" style="width:30px;height:30px;color:'+f.c+'"><use href="#'+f.ic+'"/></svg>'+
+  '<h4>'+f.n+'<span class="ar" dir="rtl">'+f.arN+'</span></h4>'+
+  '<p class="fe">'+f.en+'</p>'+
+  '<p class="fa ar" dir="rtl">'+f.ar+'</p></div>'}).join('')}
+var WISE=[
+ {q:'I have a dream that my four children will one day live in a nation where they will not be judged by the colour of their skin but by the content of their character.',who:'Martin Luther King',arWho:'مارتن لوثر كينغ',ar:'لي حلمٌ أن يعيش أطفالي يومًا في وطنٍ لا يُحكم عليهم فيه بلون بشرتهم بل بمحتوى شخصيتهم.'},
+ {q:'An eye for an eye only ends up making the whole world blind.',who:'Mahatma Gandhi',arWho:'المهاتما غاندي',ar:'«العين بالعين» لا تزيد العالم إلا عمىً كاملًا في النهاية.'},
+ {q:'One child, one teacher, one book, one pen can change the world.',who:'Malala Yousafzai',arWho:'ملالا يوسفزاي',ar:'طفلٌ واحد ومعلمٌ واحد وكتابٌ واحد وقلمٌ واحد يستطيعون تغيير العالم.'},
+ {q:'Our country in the past was famous and strong. If we work in unity and cooperation we will regenerate that glorious past.',who:'Sultan Qaboos',arWho:'السلطان قابوس',ar:'بلادنا في الماضي كانت شهيرة وقوية، وبالعمل بروح الوحدة والتعاون سنستعيد ذلك الماضي المجيد.'},
+ {q:'You can no more win a war than you can win an earthquake.',who:'Jeannette Rankin',arWho:'جانيت رانكين',ar:'لا يمكنك كسب حربٍ أكثر مما تستطيع كسب زلزال.'},
+ {q:'Only when the last tree has died and the last river been poisoned and the last fish been caught will we realise that we cannot eat money.',who:'Cree native American proverb',arWho:'مثل هنود الكري',ar:'حين تموت آخر شجرة وتُسمَّم آخر نهر ويُصطاد آخر سمكة، عندها فقط سندرك أننا لا نستطيع أكل المال.'}];
+function renderWise(mount){
+ document.getElementById(mount).innerHTML=WISE.map(function(w){
+  return '<div class="qcard" style="--fc:var(--grapeD)">'+spk(w.q)+
+  '<p class="qe">“'+w.q+'”</p>'+
+  '<p class="qw">— '+w.who+' · <span class="ar">'+w.arWho+'</span></p>'+
+  '<p class="qa ar" dir="rtl">'+w.ar+'</p></div>'}).join('')}
+function starsRow(stars){
+ var out='';
+ for(var i=1;i<=3;i++){
+  var f=Math.max(0,Math.min(1,stars-(i-1)));
+  out+='<span class="bst'+(f===0.5?' half':'')+'" data-f="'+f+'">'+
+   '<svg class="ico base"><use href="#i-star"/></svg>'+
+   '<svg class="ico fill"><use href="#i-star"/></svg></span>'}
+ return out}
+function litStars(scope,delay){delay=delay||300;
+ Array.prototype.forEach.call(scope.querySelectorAll('.bst'),function(s,i){
+  if(+s.getAttribute('data-f')>0)setTimeout(function(){s.classList.add('lit');sfx('star',i)},delay+i*380)})}
+function starScore(){
+ var tasks=L.tasks||L.qNeed||1;
+ if(!L.wrongs)return 3;
+ var ratio=L.wrongs/tasks;
+ if(ratio<=0.10)return 2.5;
+ if(ratio<=0.25)return 2;
+ if(ratio<=0.40)return 1.5;
+ if(ratio<=0.60)return 1;
+ return 0.5}
+
+/* ================= quiz data ================= */
+var Q1=[
+ {q:'A society is…',ar:'«المجتمع» هو…',opts:['a large group of people who live together in an organised way','a small family living in one house','a type of building'],ok:0,n:'A society lives together in an organised way.',nar:'المجتمع: جماعة كبيرة تعيش بنظام.'},
+ {q:'An empire is…',ar:'«الإمبراطورية» هي…',opts:['a group of countries ruled by a single person, government or country','a game played in Rome','a type of ship'],ok:0,n:'One ruler, many countries.',nar:'حاكم واحد وبلدان كثيرة.'},
+ {q:'To trade means…',ar:'«يتاجر» يعني…',opts:['to buy, sell or exchange goods and services','to build monuments','to write on clay tablets'],ok:0,n:'Trade = buying, selling or exchanging.',nar:'التجارة بيع وشراء وتبادل.'},
+ {q:'Agriculture means…',ar:'«الزراعة» تعني…',opts:['the work of farming','the system of trade','the art of sailing'],ok:0,n:'Agriculture = farming.',nar:'الزراعة هي عمل الفلاحة.'},
+ {q:'The economy is…',ar:'«الاقتصاد» هو…',opts:['the system of trade and industry that generates wealth in a country','the king of an empire','a kind of feast'],ok:0,n:'Economy = trade + industry = wealth.',nar:'الاقتصاد نظام التجارة والصناعة المولّد للثروة.'},
+ {q:'A monument is…',ar:'«المعلم/النصب» هو…',opts:['a structure built to honour a special person or event','a clay tablet','a fleet of ships'],ok:0,n:'Monuments honour special people or events.',nar:'المعالم تُكرّم أشخاصًا أو أحداثًا خاصة.'},
+ {q:'Which civilisation is the oldest?',ar:'أي حضارة هي الأقدم؟',opts:['Roman (753 BC)','Majan (2300 BC)','Sumerian (4500 BC)'],ok:2,n:'Sumerian — from 4500 BC!',nar:'السومرية — من عام 4500 ق.م!'},
+ {q:'The Majan kingdom was famous for…',ar:'اشتهرت مملكة مجان بـ…',opts:['copper and building ships','pyramids and treasures','conquering many lands'],ok:0,n:'An important source of copper, famous for building ships.',nar:'مصدر مهم للنحاس وشهيرة ببناء السفن.'}];
+var Q2=[
+ {q:'Which teenager was born first?',ar:'أي مراهق وُلد أولًا؟',opts:['Livia (100 AD)','Iskur (2100 BC)','Mubarak (950 BC)'],ok:1,n:'Iskur — 2100 BC is the earliest date!',nar:'إسكور — 2100 ق.م أقدم تاريخ.'},
+ {q:'The two forms of writing mentioned are…',ar:'شكلا الكتابة المذكوران هما…',opts:['cuneiform and hieroglyphics','concrete and copper','dhow and kamal'],ok:0,n:'Iskur writes cuneiform; Atet reads hieroglyphics.',nar:'المسماري (إسكور) والهيروغليفي (أتيت).'},
+ {q:'Which teenagers talk about buildings?',ar:'أي مراهقَين يتحدثان عن المباني؟',opts:['Livia and Iskur','Mubarak and Atet','Iskur and Mubarak'],ok:0,n:'Livia: the Colosseum · Iskur: the Great Ziggurat.',nar:'ليفيا: الكولوسيوم · إسكور: الزقورة العظيمة.'},
+ {q:'What jobs are mentioned in the texts?',ar:'ما المهن المذكورة في النصوص؟',opts:['accountant, architect and trader','doctor, teacher and sailor','farmer, cook and king'],ok:0,n:'Iskur trains as an accountant, his brother is an architect, and Mubarak is a trader\u2019s son.',nar:'محاسب ومعماري وتاجر.'},
+ {q:'Livia watched… in the Colosseum.',ar:'شاهدت ليفيا ______ في الكولوسيوم.',opts:['gladiators fighting lions and bears','sailing races','fireworks'],ok:0,n:'Gladiators fighting big animals!',nar:'المصارعين يقاتلون الأسود والدببة!'},
+ {q:"Mubarak's father navigates using…",ar:'يهتدي والد مبارك بـ…',opts:['the stars','a compass','a map app'],ok:0,n:'He navigates using the stars.',nar:'يهتدي بالنجوم.'},
+ {q:'Atet learned how to read…',ar:'تعلمت أتيت قراءة…',opts:['hieroglyphics','cuneiform','poetry'],ok:0,n:'Egyptian hieroglyphics!',nar:'الهيروغليفية المصرية!'},
+ {q:'Who is training to be a "Sangu" (accountant)?',ar:'من يتدرب ليصبح «سانغو» أي محاسبًا؟',opts:['Iskur','Livia','Atet'],ok:0,n:'Iskur writes on clay tablets in cuneiform.',nar:'إسكور يكتب على ألواح طينية بالمسماري.'}];
+var Q3=[
+ {q:'The past passive is formed with…',ar:'يُصاغ المبني للمجهول الماضي بـ…',opts:['was/were + past participle','is/are + verb-ing','do/does + verb'],ok:0,n:'was/were + past participle (+ by …).',nar:'was/were مع التصريف الثالث.'},
+ {q:'Cuneiform was invented ___ the Sumerians.',ar:'أُخترع المسماري ___ السومريين.',opts:['by','from','with'],ok:0,n:'by + the doer of the action.',nar:'by تُدخل الفاعل.'},
+ {q:'The Pyramids were ___ in Egypt.',ar:'___ الأهرامات في مصر.',opts:['built','build','building'],ok:0,n:'Past participle of build = built.',nar:'التصريف الثالث لـ build هو built.'},
+ {q:'Which sentence is in the PASSIVE?',ar:'أي جملة مبنية للمجهول؟',opts:['The Romans invented concrete.','Concrete was invented by the Romans.','The Romans were inventors.'],ok:1,n:'was + past participle + by — the object comes first!',nar:'was مع التصريف الثالث وby — المفعول أولًا!'},
+ {q:'We use the passive when we want to…',ar:'نستخدم المبني للمجهول حين نريد…',opts:['emphasise the object of the sentence','talk about the future','ask a question'],ok:0,n:'The passive puts the object in the spotlight.',nar:'إبراز مفعول الجملة.'},
+ {q:'The past participle of "buy" is…',ar:'التصريف الثالث للفعل buy هو…',opts:['buyed','bought','buying'],ok:1,n:'bought — an irregular participle.',nar:'bought شاذّة.'},
+ {q:'The Lost City of Ubar ___ by archaeologists.',ar:'مدينة أبار المفقودة ___ بواسطة علماء الآثار.',opts:['was found','finded','is find'],ok:0,n:'was found — passive with "by"!',nar:'وُجدت — مبني للمجهول مع by.'},
+ {q:'Regular past participles are formed by…',ar:'تُصاغ التصريفات المنتظمة بـ…',opts:['adding -ed','doubling the word','adding -ing'],ok:0,n:'invented, painted, destroyed…',nar:'بإضافة ed مثل invented وpainted.'}];
+var Q4=[
+ {q:'Which adverb shows the STRONGEST degree?',ar:'أي ظرف يعبّر عن أقوى درجة؟',opts:['fairly','quite','absolutely'],ok:2,n:'absolutely — the top of the meter!',nar:'absolutely في قمة المقياس!'},
+ {q:'"Inventions are quite important" is…',ar:'«الاختراعات مهمة نوعًا ما» هي…',opts:['stronger than "absolutely important"','less strong than "absolutely important"','exactly the same'],ok:1,n:'quite is weaker than absolutely.',nar:'quite أضعف من absolutely.'},
+ {q:'Which opinion is AGAINST the topic "Inventions are more important than people"?',ar:'أي رأي ضد موضوع «الاختراعات أهم من الناس»؟',opts:['People are definitely more important because they make inventions','I certainly think inventions are more important','Inventions are very important because they improve our lives'],ok:0,n:'It says people matter more!',nar:'لأنه يقول إن الناس أهم!'},
+ {q:'"I certainly think…" — certainly is…',ar:'كلمة certainly في «أعتقد قطعًا» هي…',opts:['an adverb of degree','a past participle','a conjunction'],ok:0,n:'It tells us HOW strongly he thinks.',nar:'ظرف درجة يبيّن قوة الاعتقاد.'},
+ {q:'"Some inventions are really dangerous. Nuclear weapons…" is an argument…',ar:'«بعض الاختراعات خطيرة فعلًا كالأسلحة النووية» حجة…',opts:['against inventions','for inventions','about education'],ok:0,n:'It shows the dangerous side of inventions.',nar:'تُظهر الجانب الخطير من الاختراعات.'},
+ {q:'Which is weaker: "fairly important" or "certainly important"?',ar:'أيهما أضعف: «مهم إلى حدٍّ ما» أم «مهم بالتأكيد»؟',opts:['fairly important','certainly important','they are equal'],ok:0,n:'fairly = the weakest degree.',nar:'fairly أضعف درجة.'},
+ {q:'"Studying is very important" expresses…',ar:'«الدراسة مهمة جدًا» تعبّر عن…',opts:['a stronger opinion than "Studying is important"','a weaker opinion','a question'],ok:0,n:'Adverbs of degree make opinions stronger.',nar:'ظروف الدرجة تقوّي الرأي.'}];
+var QUDHR=[
+ {q:'The Universal Declaration of Human Rights was adopted on the 10th of December…',ar:'تُبنّي الإعلان العالمي لحقوق الإنسان في 10 ديسمبر…',opts:['1945','1948','1950'],ok:1,n:'1948 — by the United Nations.',nar:'عام 1948 من الأمم المتحدة.'},
+ {q:'The document contains… articles.',ar:'يحتوي الوثيقة على ______ مادة.',opts:['20','30','50'],ok:1,n:'30 articles!',nar:'30 مادة!'},
+ {q:'It has been translated into over… languages.',ar:'تُرجم الوثيقة إلى أكثر من ______ لغة.',opts:['100','300','500'],ok:2,n:'Over 500 languages!',nar:'أكثر من 500 لغة!'},
+ {q:'International ___ Day is celebrated on the 10th of December.',ar:'يُحتفل باليوم العالمي لـ______ في 10 ديسمبر.',opts:['Peace','Human Rights','Friendship'],ok:1,n:'Human Rights Day!',nar:'يوم حقوق الإنسان!'},
+ {q:'Article 26 gives everyone the right to…',ar:'المادة 26 تمنح الجميع الحق في…',opts:['a nationality','an education','a job'],ok:1,n:'Article 26 = education.',nar:'المادة 26: التعليم.'},
+ {q:'Article 15 gives everyone the right to…',ar:'المادة 15 تمنح الجميع الحق في…',opts:['a nationality','equal treatment by the law','life and freedom'],ok:0,n:'Article 15 = nationality.',nar:'المادة 15: الجنسية.'},
+ {q:'Article 2 says everyone has the same rights whatever their…',ar:'المادة 2: الحقوق نفسها مهما كان ______.',opts:['age or height','race, colour, gender, language or religion','country or city'],ok:1,n:'Rights do not depend on race, colour, gender, language or religion.',nar:'الحقوق لا تتوقف على العرق أو اللون أو الجنس أو اللغة أو الدين.'}];
+var QUN=[
+ {q:'The UN Charter was signed on the…',ar:'وُقّع ميثاق الأمم المتحدة في…',opts:['25th of April 1945','26th of June 1945','24th of October 1945'],ok:1,n:'The 26th of June 1945.',nar:'26 يونيو 1945.'},
+ {q:'The UN has… official languages.',ar:'للأمم المتحدة ______ لغات رسمية.',opts:['6','50','193'],ok:0,n:'6 official languages.',nar:'6 لغات رسمية.'},
+ {q:'The leader of the UN is the…',ar:'قائد الأمم المتحدة هو…',opts:['UN Secretariat','Secretary General','General Assembly'],ok:1,n:'The Secretary-General.',nar:'الأمين العام.'},
+ {q:'___ is the unofficial name of the UN and its partner programmes.',ar:'______ اسم غير رسمي للأمم المتحدة وبرامجها.',opts:['The UN family','UNESCO','UNICEF'],ok:0,n:'"The UN family".',nar:'«عائلة الأمم المتحدة».'},
+ {q:'In 2017, the UN provided food to… million people.',ar:'في 2017 وفّرت الأمم المتحدة الغذاء لـ______ مليون شخص.',opts:['3','65.3','80'],ok:1,n:'65.3 million people — food for millions!',nar:'65.3 مليون شخص!'}];
+var QBIO=[
+ {q:'Ahmed Bin Majid was known as…',ar:'عُرف أحمد بن ماجد بـ…',opts:["the 'Lion of the Sea'","the 'King of the Desert'","the 'Master of Clay'"],ok:0,n:'The Lion of the Sea — for his sailing and navigation expertise.',nar:'أسد البحر لبراعته في الإبحار والملاحة.'},
+ {q:'He was born around…',ar:'وُلد نحو عام…',opts:['1321','1421','1521'],ok:1,n:'Born around 1421 in Oman.',nar:'وُلد نحو 1421 في عُمان.'},
+ {q:'His most important achievement was…',ar:'أهم إنجازاته كانت…',opts:['the books he wrote about sailing and navigation','the pyramids he built','the ships he owned'],ok:0,n:'His books recorded his knowledge of sailing, navigation and ports.',nar:'كتبه التي دوّنت معارفه في الملاحة والمرافئ.'},
+ {q:'He invented the…',ar:'اخترع ______.',opts:['kamal','compass','dhow'],ok:0,n:"The 'kamal' — a simple but effective navigation tool.",nar:'«الكمال» أداة ملاحية بسيطة وفعّالة.'},
+ {q:'He redesigned the…',ar:'أعاد تصميم ______.',opts:['compass','colosseum','ziggurat'],ok:0,n:'The compass — originally invented by the Chinese; ours are based on his design.',nar:'البوصلة — اخترعها الصينيون أصلًا وبوصلتنا اليوم مبنية على تصميمه.'},
+ {q:'Dr Lamya Al Haj studied her BSc at…',ar:'درست لمياء الحاج البكالوريوس في…',opts:['Harvard University','Sultan Qaboos University','London University'],ok:1,n:'Sultan Qaboos University — graduated in 2004 with a high distinction.',nar:'جامعة السلطان قابوس وتخرجت 2004 بامتياز عالٍ.'},
+ {q:'In 2018 she received…',ar:'في 2018 نالت…',opts:['the Award of Excellence',"the L'Oréal UNESCO Award for Women in Science",'the Nobel Prize'],ok:1,n:"The L'Oréal UNESCO Award for Women in Science.",nar:'جائزة لوريال يونسكو للنساء في العلوم.'},
+ {q:'She works as…',ar:'تعمل اليوم…',opts:['an Assistant Professor at Sultan Qaboos University','a sailor and navigator','a history teacher'],ok:0,n:'Assistant Professor at SQU.',nar:'أستاذة مساعدة في جامعة السلطان قابوس.'}];
+var BOSSQ=[
+ {q:'Cuneiform was invented by…',ar:'أُخترع الخط المسماري بواسطة…',opts:['the Sumerians','the Romans','the Egyptians'],ok:0},
+ {q:'The Majan kingdom was famous for…',ar:'اشتهرت مملكة مجان بـ…',opts:['pyramids and treasures','copper and ships','concrete and monuments'],ok:1},
+ {q:'The Pyramids were ___ in Egypt.',ar:'___ الأهرامات في مصر.',opts:['built','invented','found'],ok:0},
+ {q:'Concrete was invented ___ the Romans.',ar:'أُخترعت الخرسانة ___ الرومان.',opts:['by','from','for'],ok:0},
+ {q:'Which adverb shows the strongest degree?',ar:'أي ظرف يعبّر عن أقوى درجة؟',opts:['fairly','quite','absolutely'],ok:2},
+ {q:'Human Rights Day is celebrated every year on…',ar:'يُحتفل بيوم حقوق الإنسان في…',opts:['the 10th of December','the 1st of January','the 26th of June'],ok:0},
+ {q:'Ahmed Bin Majid was known as…',ar:'عُرف أحمد بن ماجد بـ…',opts:["the Lion of the Sea",'the Master Mariner of Ur','the Copper King'],ok:0},
+ {q:'The Al Baleed Archaeological Park is located in…',ar:'يقع منتزه البلد الأثري في…',opts:['Sohar','Salalah, in Dhofar','Muscat'],ok:1}];
+
+/* ================= renderers ================= */
+function spk(t){return '<button class="spk" data-say="'+t+'">'+IC('i-speaker')+'</button>'}
+function renderVocab(mount,items){document.getElementById(mount).innerHTML=items.map(function(it){
+ return '<div class="wcard">'+spk(it.w)+IC(it.ic)+'<div class="w">'+it.w+'</div><div class="war" dir="rtl">'+it.ar+'</div></div>'}).join('')}
+function renderFlip(mount,items){document.getElementById(mount).innerHTML=items.map(function(it){
+ return '<div class="fc" tabindex="0"><div class="fi">'+
+ '<div class="ff">'+spk(it.w)+IC(it.ic)+'<div class="fw">'+it.w+'</div><div class="fhint">tap to flip<span class="ar" dir="rtl">انقر للقلب</span></div></div>'+
+ '<div class="fbk"><p class="den">'+it.en+'</p><p class="dar" dir="rtl">'+it.ar+'</p><p class="dex">'+it.ex+'</p></div>'+
+ '</div></div>'}).join('')}
+function renderQuiz(mount,list){var m=document.getElementById(mount);
+ m.innerHTML=list.map(function(it,i){
+ return '<div class="qz" data-i="'+i+'"><p class="qq">'+(i+1)+'. '+it.q+'</p><p class="qar" dir="rtl">'+it.ar+'</p>'+
+ '<div class="opts">'+it.opts.map(function(o,j){return '<button class="opt" data-j="'+j+'">'+o+'</button>'}).join('')+'</div>'+
+ '<div class="qfb"></div></div>'}).join('');
+ Array.prototype.forEach.call(m.querySelectorAll('.qz'),function(qz){
+  var tries=0,hurt=false,it=list[+qz.getAttribute('data-i')];
+  if(MODE==='level')L.qNeed++;
+  Array.prototype.forEach.call(qz.querySelectorAll('.opt'),function(opt){
+   opt.addEventListener('click',function(){
+    if(qz.classList.contains('lock'))return;
+    var j=+opt.getAttribute('data-j'),fb=qz.querySelector('.qfb');
+    if(j===it.ok){
+     qz.classList.add('lock');opt.classList.add('ok');
+     var first=(tries===0);
+     addXP(first?10:5);if(first)streakUp();
+     if(MODE==='level'){L.qDone++;updateFinishBtn()}
+     fb.className='qfb on good';
+     fb.innerHTML=IC('i-check')+'<b>'+(first?'Perfect! +10 XP':'Correct! +5 XP')+'</b>'+
+      '<span class="fb-ar" dir="rtl">إجابة صحيحة</span>'+
+      (it.n?'<span class="fn">'+it.n+'</span><span class="fb-ar" dir="rtl">'+(it.nar||'')+'</span>':'');
+     sfx('correct');burst(opt,18);mascotReact('happy');
+    }else{
+     tries++;opt.classList.add('no');setTimeout(function(){opt.classList.remove('no')},500);
+     sfx('wrong');mascotReact('sad');streakCut();
+     if(!hurt){hurt=true;if(MODE==='level'){L.wrongs++;loseHeart()}}
+     fb.className='qfb on bad';
+     fb.innerHTML='<b>Not quite — try again!</b><span class="fb-ar" dir="rtl">ليست الإجابة — حاول مرة أخرى</span>';
+    }})})})}
+
+/* ================= LINK GAME ================= */
+var LCOLORS=['#3E7CB1','#3BA08E','#DBA226','#8B6BB1','#C75D8F','#D96846'];
+function LinkGame(rootId,pairs){
+ var root=document.getElementById(rootId);
+ root.classList.add('lg');
+ root.innerHTML='';
+ var grid=document.createElement('div');grid.className='lg-grid';
+ var colL=document.createElement('div');colL.className='lg-col';
+ var colR=document.createElement('div');colR.className='lg-col';
+ grid.appendChild(colL);grid.appendChild(colR);
+ var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+ svg.setAttribute('class','lg-svg');
+ var won=document.createElement('div');won.className='wonbar';
+ won.innerHTML=IC('i-check')+'<div><b>All connected! Great job!</b><span class="ar" dir="rtl">وصلت كل العناصر بنجاح!</span></div>';
+ root.appendChild(grid);root.appendChild(svg);root.appendChild(won);
+ shuffle(pairs).forEach(function(p){
+  var c=document.createElement('div');c.className='lg-chip';c.setAttribute('data-k',p.k);
+  c.innerHTML=p.a;colL.appendChild(c)});
+ shuffle(pairs).forEach(function(p){
+  var c=document.createElement('div');c.className='lg-chip';c.setAttribute('data-k',p.k);
+  c.innerHTML=p.b;colR.appendChild(c)});
+ var selL=null,selR=null,done=0,lines=[];
+ function anchor(el,side){var c=root.getBoundingClientRect(),r=el.getBoundingClientRect();
+  return side==='L'?{x:r.right-c.left,y:r.top-c.top+r.height/2}:{x:r.left-c.left,y:r.top-c.top+r.height/2}}
+ function pathD(a,b){var dx=Math.max(36,Math.abs(b.x-a.x)*.45);
+  return 'M'+a.x+' '+a.y+' C'+(a.x+dx)+' '+a.y+', '+(b.x-dx)+' '+b.y+', '+b.x+' '+b.y}
+ function solidPath(d,color){var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d',d);p.setAttribute('class','lg-line');p.setAttribute('stroke',color);
+  svg.appendChild(p);
+  var len=p.getTotalLength();
+  p.style.strokeDasharray=len;p.style.strokeDashoffset=len;
+  requestAnimationFrame(function(){p.style.transition='stroke-dashoffset .45s cubic-bezier(.3,.8,.3,1)';p.style.strokeDashoffset='0'});
+  setTimeout(function(){p.style.strokeDasharray='none';p.style.transition='none'},520);
+  return p}
+ function tempPath(d){var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d',d);p.setAttribute('class','lg-line lg-temp');p.setAttribute('stroke','#D96846');
+  svg.appendChild(p);setTimeout(function(){p.remove()},680)}
+ function redraw(){if(!root.offsetWidth)return;
+  lines.forEach(function(o){o.p.setAttribute('d',pathD(anchor(o.a,'L'),anchor(o.b,'R')))})}
+ var rt=null;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(redraw,160)});
+ function evaluate(){var a=selL,b=selR;selL=selR=null;
+  if(a.getAttribute('data-k')===b.getAttribute('data-k')){
+   a.classList.remove('sel');b.classList.remove('sel');
+   a.classList.add('done');b.classList.add('done');
+   lines.push({a:a,b:b,p:solidPath(pathD(anchor(a,'L'),anchor(b,'R')),LCOLORS[done%LCOLORS.length])});
+   done++;addXP(8);streakUp();sfx('match');burst(b,14);
+   if(done===pairs.length){won.classList.add('on');sfx('fanfare');confettiRain();
+    if(MODE==='level'&&L.matchNeed){L.matchDone=true;updateFinishBtn()}}
+  }else{
+   sfx('wrong');streakCut();
+   if(MODE==='level')L.wrongs++;
+   tempPath(pathD(anchor(a,'L'),anchor(b,'R')));
+   [a,b].forEach(function(x){x.classList.remove('sel');x.classList.add('err')});
+   setTimeout(function(){[a,b].forEach(function(x){x.classList.remove('err')})},520)
+  }}
+ function wire(col,side){Array.prototype.forEach.call(col.children,function(chip){
+  chip.addEventListener('click',function(e){
+   if(e.target.closest('.spk'))return;
+   if(chip.classList.contains('done'))return;
+   sfx('pop');
+   Array.prototype.forEach.call(col.children,function(x){if(x!==chip)x.classList.remove('sel')});
+   var cur=(side==='L')?selL:selR;
+   if(cur===chip){chip.classList.remove('sel');if(side==='L')selL=null;else selR=null;return}
+   chip.classList.add('sel');
+   if(side==='L')selL=chip;else selR=chip;
+   if(selL&&selR)evaluate()})})}
+ wire(colL,'L');wire(colR,'R')}
+
+/* ================= SORT GAME ================= */
+function SortGame(rootId,items,binA,binB){
+ var root=document.getElementById(rootId);
+ root.classList.add('sg');
+ var placed={},hurt={},selT=null,done=0;
+ items.forEach(function(it){placed[it.t]=null;hurt[it.t]=false});
+ render();
+ function chip(it){
+  return '<button class="sg-chip'+(selT===it.t?' sel':'')+'" data-t="'+esc(it.t)+'">'+IC(it.ic)+
+  '<span>'+it.t+'</span><span class="ar" dir="rtl">'+it.ar+'</span></button>'}
+ function binHtml(b,list){
+  return '<div class="sg-bin" data-b="'+b.k+'" style="--bin:'+b.c+'">'+
+  '<h4>'+IC(b.ic)+b.name+'<span class="ar" dir="rtl">'+b.ar+'</span></h4>'+
+  '<div class="sg-bin-inner">'+
+  (list.length?list.map(function(it){return '<span class="sg-mini">'+IC(it.ic)+esc(it.t)+'</span>'}).join(''):'<span class="sg-empty">'+b.hint+'</span>')+
+  '</div></div>'}
+ function render(){
+  var pool=items.filter(function(it){return placed[it.t]===null});
+  var a=items.filter(function(it){return placed[it.t]==='A'});
+  var b=items.filter(function(it){return placed[it.t]==='B'});
+  root.innerHTML='<div class="sg-pool">'+
+  (pool.length?pool.map(chip).join(''):'<span class="sg-empty">Everything is sorted! · <span class="ar">رُتِّب كل شيء!</span></span>')+
+  '</div><div class="sg-bins">'+binHtml(binA,a)+binHtml(binB,b)+'</div>'+
+  '<div class="wonbar'+(pool.length===0?' on':'')+'">'+IC('i-check')+
+  '<div><b>All sorted! Great job!</b><span class="ar" dir="rtl">رتبت كل شيء بنجاح!</span></div></div>';
+  wire()}
+ function wire(){
+  Array.prototype.forEach.call(root.querySelectorAll('.sg-chip'),function(c){
+   c.addEventListener('click',function(){sfx('pop');
+    selT=(selT===c.getAttribute('data-t'))?null:c.getAttribute('data-t');
+    render()})});
+  Array.prototype.forEach.call(root.querySelectorAll('.sg-bin'),function(bEl){
+   bEl.addEventListener('click',function(){
+    if(!selT){sfx('pop');return}
+    var it=null,i;
+    for(i=0;i<items.length;i++){if(items[i].t===selT){it=items[i];break}}
+    if(!it)return;
+    var k=bEl.getAttribute('data-b');
+    if(it.bin===k){
+     placed[it.t]=k;selT=null;done++;
+     addXP(8);streakUp();sfx('match');
+     var r=bEl.getBoundingClientRect();confetti(r.left+r.width/2,r.top+34,12);
+     render();
+     if(done===items.length){sfx('fanfare');confettiRain();
+      if(MODE==='level'&&L.sortNeed){L.sortDone=true;updateFinishBtn()}}
+    }else{
+     sfx('wrong');streakCut();
+     bEl.classList.add('flash');setTimeout(function(){bEl.classList.remove('flash')},450);
+     var chipEl=root.querySelector('.sg-chip.sel');
+     if(chipEl){chipEl.classList.add('err');setTimeout(function(){chipEl.classList.remove('err')},450)}
+     if(MODE==='level'&&!hurt[it.t]){hurt[it.t]=true;L.wrongs++;loseHeart()}
+    }})})}
+}
+
+/* ================= ORDER GAME ================= */
+function OrderGame(rootId,sentences){
+ var root=document.getElementById(rootId);
+ root.classList.add('og');
+ var si=0,built=[],hurt=false;
+ render();
+ function render(){
+  var s=sentences[si];
+  var remaining=shuffle(s.parts.map(function(p,i){return{p:p,i:i}}).filter(function(o){return o.i>=built.length}));
+  var complete=(built.length===s.parts.length);
+  root.innerHTML=
+  '<p class="og-n">'+IC('i-pen')+' SENTENCE '+(si+1)+' OF '+sentences.length+'</p>'+
+  '<p class="og-target" dir="rtl">'+s.ar+'</p>'+
+  '<div class="og-line">'+built.map(function(w){return '<span class="og-w">'+esc(w)+'</span>'}).join('')+
+  (complete?'':'<span class="og-caret"></span>')+'</div>'+
+  '<div class="og-chips">'+remaining.map(function(o){return '<button class="og-chip" data-i="'+o.i+'">'+esc(o.p)+'</button>'}).join('')+'</div>'+
+  '<div class="wonbar og-won'+(complete?' on':'')+'">'+IC('i-check')+
+  '<div><b>'+esc(s.full)+'</b><span class="ar" dir="rtl">أحسنت! جملة صحيحة</span></div></div>'+
+  (complete&&si<sentences.length-1?'<button class="btn og-next" style="--bc:var(--grape);--bcd:var(--grapeD)"><span>Next sentence</span><span class="b-ar" dir="rtl">الجملة التالية</span></button>':'')+
+  (complete&&si===sentences.length-1?'<p style="text-align:center;font-weight:600;margin-top:10px">All sentences built! · <span class="ar" dir="rtl">بنيتَ سيرة كاملة!</span></p>':'');
+  wire()}
+ function wire(){
+  Array.prototype.forEach.call(root.querySelectorAll('.og-chip'),function(c){
+   c.addEventListener('click',function(){
+    var i=+c.getAttribute('data-i'),s=sentences[si];
+    if(built.length>=s.parts.length)return;
+    if(i===built.length){
+     sfx('pop');built.push(s.parts[i]);
+     if(built.length===s.parts.length){
+      sfx('fanfare');addXP(10);streakUp();burst(c,20);
+      if(MODE==='level'&&si===sentences.length-1&&L.orderNeed){L.orderDone=true;updateFinishBtn()}}
+     render();
+    }else{
+     sfx('wrong');streakCut();
+     c.classList.add('err');setTimeout(function(){c.classList.remove('err')},450);
+     if(MODE==='level'&&!hurt){hurt=true;L.wrongs++;loseHeart()}
+    }})});
+  var nx=root.querySelector('.og-next');
+  if(nx)nx.addEventListener('click',function(){sfx('click');si++;built=[];hurt=false;render()})}
+}
+
+/* ================= plaque builder ================= */
+var PLAQ={pyr:{ic:'i-pyr',n:'Pyramid',arn:'الهرم'},ship:{ic:'i-ship',n:'Dhow',arn:'السفينة'},
+ scroll:{ic:'i-scroll',n:'Scroll',arn:'المخطوط'},col:{ic:'i-col',n:'Column',arn:'العمود'},
+ scale:{ic:'i-scale',n:'Balance',arn:'الميزان'}};
+function wrapText(s,max){var words=String(s).split(' '),lines=[],cur='';
+ words.forEach(function(w){
+  if((cur+' '+w).trim().length<=max){cur=(cur+' '+w).trim()}
+  else{if(cur)lines.push(cur);cur=w}});
+ if(cur)lines.push(cur);
+ if(lines.length>3){lines=lines.slice(0,3);lines[2]=lines[2].slice(0,max-1)+'…'}
+ return lines}
+function buildPlaqueSVG(k,name,fact){
+ var p=PLAQ[k];
+ var nl=wrapText(name,16).slice(0,2);
+ var fl=wrapText(fact,26).slice(0,2);
+ var nfs=nl.some(function(l){return l.length>14})?15:17;
+ var t='',i;
+ for(i=0;i<nl.length;i++){t+='<text x="120" y="'+(120+i*21)+'" text-anchor="middle" font-family="Lilita One" font-size="'+nfs+'" fill="#4A3A26">'+esc(nl[i])+'</text>'}
+ var y0=120+nl.length*21+6;
+ for(i=0;i<fl.length;i++){t+='<text x="120" y="'+(y0+i*15)+'" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="11" fill="#6B5A33">'+esc(fl[i])+'</text>'}
+ return '<svg viewBox="0 0 240 230" style="width:min(240px,82vw);height:auto;filter:drop-shadow(0 7px 0 rgba(74,58,38,.16))">'+
+ '<rect x="14" y="8" width="212" height="214" rx="20" fill="#C99A22" stroke="#4A3A26" stroke-width="5"/>'+
+ '<rect x="26" y="20" width="188" height="190" rx="14" fill="#F2DC86" stroke="#B2820B" stroke-width="3"/>'+
+ '<circle cx="38" cy="32" r="3" fill="#B2820B"/><circle cx="202" cy="32" r="3" fill="#B2820B"/>'+
+ '<circle cx="38" cy="198" r="3" fill="#B2820B"/><circle cx="202" cy="198" r="3" fill="#B2820B"/>'+
+ '<svg class="svgic" x="98" y="40" width="44" height="44" viewBox="0 0 24 24" style="color:#7A5B00"><use href="#'+p.ic+'"/></svg>'+
+ t+
+ '<text x="120" y="200" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="9" letter-spacing="2" fill="#94825F">CIVILISATION QUEST</text>'+
+ '</svg>'}
+
+/* ================= level data (games) ================= */
+var FACTS=[
+ {k:'rom',n:'Roman',arN:'الرومانية',ic:'i-arch',c:'var(--pinkD)',en:'This civilisation conquered many lands and at its largest, citizens of the empire accounted for 12% of the total world population.',ar:'قهرت أراضي كثيرة، وكان مواطنو الإمبراطورية 12% من إجمالي سكان العالم.'},
+ {k:'grk',n:'Greek',arN:'اليونانية',ic:'i-col',c:'var(--skyD)',en:'This civilisation gave great importance to knowledge and was not limited to one united country with one king or leader.',ar:'أولت المعرفة أهمية كبيرة ولم تكن مقتصرة على بلد موحّد بملك أو قائد واحد.'},
+ {k:'may',n:'Mayan',arN:'المايا',ic:'i-zig',c:'var(--grapeD)',en:'Archaeologists do not know for certain why this civilisation in Central America collapsed.',ar:'لا يعلم علماء الآثار على وجه اليقين سبب انهيار هذه الحضارة في أمريكا الوسطى.'},
+ {k:'maj',n:'Majan',arN:'مجان',ic:'i-ship',c:'var(--mintD)',en:'This ancient kingdom was an important source of copper and famous for building ships.',ar:'مملكة قديمة كانت مصدرًا مهمًا للنحاس وشهيرة ببناء السفن.'},
+ {k:'sum',n:'Sumerian',arN:'السومرية',ic:'i-scroll',c:'var(--sunD)',en:'This ancient civilisation was responsible for many important inventions. Art and culture also thrived during this time.',ar:'حضارة قديمة مسؤولة عن اختراعات مهمة كثيرة، وازدهرت فيها الفنون والثقافة.'},
+ {k:'egy',n:'Egyptian',arN:'المصرية',ic:'i-pyr',c:'var(--coralD)',en:'This was one of the greatest and most powerful civilisations in the history of the world. Many treasures were discovered in the pyramids.',ar:'من أعظم الحضارات وأقواها في التاريخ؛ ووُجدت كنوز كثيرة في الأهرامات.'}];
+var PASSPAIRS=[
+ {k:'cun',a:spk('Cuneiform was invented')+'<span>Cuneiform was invented</span>',b:'<span>by the Sumerians</span><span class="ar" dir="rtl">بواسطة السومريين</span>'},
+ {k:'con',a:spk('Concrete was invented')+'<span>Concrete was invented</span>',b:'<span>by the Romans</span><span class="ar" dir="rtl">بواسطة الرومان</span>'},
+ {k:'pyr',a:spk('The Pyramids were built')+'<span>The Pyramids were built</span>',b:'<span>in Egypt</span><span class="ar" dir="rtl">في مصر</span>'},
+ {k:'uba',a:spk('The Lost City of Ubar was found')+'<span>The Lost City of Ubar was found</span>',b:'<span>by archaeologists</span><span class="ar" dir="rtl">بواسطة علماء الآثار</span>'},
+ {k:'pom',a:spk('The Roman city of Pompei')+'<span>The Roman city of Pompei</span>',b:'<span>was destroyed</span><span class="ar" dir="rtl">دُمّرت</span>'},
+ {k:'zig',a:spk('The Great Ziggurat was constructed')+'<span>The Great Ziggurat was constructed</span>',b:'<span>using clay bricks</span><span class="ar" dir="rtl">بالطوب الطيني</span>'}];
+var QUOTES=[
+ {k:'mlk',a:spk('I have a dream that my four children will one day live in a nation where they will not be judged by the colour of their skin but by the content of their character')+'<span class="ftext">…not judged by the colour of their skin…</span><b>Martin Luther King · مارتن لوثر كينغ</b>',b:'<span>equality</span><span class="ar" dir="rtl">المساواة</span>'},
+ {k:'gan',a:spk('An eye for an eye only ends up making the whole world blind')+'<span class="ftext">An eye for an eye only ends up…</span><b>Mahatma Gandhi · المهاتما غاندي</b>',b:'<span>revenge</span><span class="ar" dir="rtl">الانتقام</span>'},
+ {k:'mal',a:spk('One child, one teacher, one book, one pen can change the world')+'<span class="ftext">One child, one teacher, one book…</span><b>Malala Yousafzai · ملالا يوسفزاي</b>',b:'<span>education</span><span class="ar" dir="rtl">التعليم</span>'},
+ {k:'qab',a:spk('If we work in unity and cooperation we will regenerate that glorious past')+'<span class="ftext">…unity and cooperation…</span><b>Sultan Qaboos · السلطان قابوس</b>',b:'<span>cooperation</span><span class="ar" dir="rtl">التعاون</span>'},
+ {k:'ran',a:spk('You can no more win a war than you can win an earthquake')+'<span class="ftext">…win a war… an earthquake.</span><b>Jeannette Rankin · جانيت رانكين</b>',b:'<span>war</span><span class="ar" dir="rtl">الحرب</span>'},
+ {k:'cre',a:spk('Only when the last tree has died and the last river been poisoned and the last fish been caught will we realise that we cannot eat money')+'<span class="ftext">…the last tree… the last fish…</span><b>Cree proverb · مثل هنود الكري</b>',b:'<span>the environment</span><span class="ar" dir="rtl">البيئة</span>'}];
+var PARTS=[
+ {t:'invented',ar:'اخترع',ic:'i-scroll',bin:'A'},{t:'painted',ar:'لوّن',ic:'i-scroll',bin:'A'},
+ {t:'destroyed',ar:'دمّر',ic:'i-scroll',bin:'A'},{t:'designed',ar:'صمّم',ic:'i-scroll',bin:'A'},
+ {t:'excavated',ar:'نقّب',ic:'i-scroll',bin:'A'},{t:'translated',ar:'ترجم',ic:'i-scroll',bin:'A'},
+ {t:'bought',ar:'اُشترِي',ic:'i-scroll',bin:'B'},{t:'eaten',ar:'اُؤكَل',ic:'i-scroll',bin:'B'},
+ {t:'sung',ar:'يُغنّى',ic:'i-scroll',bin:'B'},{t:'built',ar:'بُني',ic:'i-scroll',bin:'B'},
+ {t:'found',ar:'وُجد',ic:'i-scroll',bin:'B'},{t:'written',ar:'كُتب',ic:'i-scroll',bin:'B'}];
+var DEB=[
+ {t:'People are definitely more important because they make inventions.',ar:'الناس أهم قطعًا',ic:'i-person',bin:'B'},
+ {t:'Laws, morals and religion are absolutely essential to civilisation.',ar:'القوانين والأخلاق أساسية تمامًا',ic:'i-person',bin:'B'},
+ {t:'I suppose inventions are fairly important.',ar:'الاختراعات مهمة إلى حدٍّ ما',ic:'i-bulb',bin:'A'},
+ {t:'Some inventions like air conditioning are quite important.',ar:'بعض الاختراعات مهمة نوعًا ما',ic:'i-bulb',bin:'A'},
+ {t:'I certainly think inventions are more important — they last forever.',ar:'أعتقد قطعًا أن الاختراعات أهم',ic:'i-bulb',bin:'A'},
+ {t:'Some inventions are really dangerous, like nuclear weapons.',ar:'بعض الاختراعات خطيرة فعلًا',ic:'i-person',bin:'B'},
+ {t:'Inventions are very important — smartphones keep us connected.',ar:'الاختراعات مهمة جدًا',ic:'i-bulb',bin:'A'}];
+var OS=[
+ {parts:['Dr Lamya Al Haj is','a well-known','Omani scientist.'],full:'Dr Lamya Al Haj is a well-known Omani scientist.',ar:'الدكتورة لمياء الحاج عالمة عمانية شهيرة.'},
+ {parts:['She was born','on 31st May 1982','in Buraimi, Oman.'],full:'She was born on 31st May 1982 in Buraimi, Oman.',ar:'وُلدت في 31 مايو 1982 في البريمي بعُمان.'},
+ {parts:['In 2004,','she graduated from','Sultan Qaboos University','with a high distinction.'],full:'In 2004, she graduated from Sultan Qaboos University with a high distinction.',ar:'في 2004 تخرجت في جامعة السلطان قابوس بامتياز عالٍ.'},
+ {parts:['In 2006,','she completed','an MSc in Australia.'],full:'In 2006, she completed an MSc in Australia.',ar:'في 2006 أتمّت الماجستير في أستراليا.'},
+ {parts:['In 2018,','she received',"the L'Oréal UNESCO Award",'for Women in Science.'],full:"In 2018, she received the L'Oréal UNESCO Award for Women in Science.",ar:'في 2018 نالت جائزة لوريال يونسكو للنساء في العلوم.'},
+ {parts:['In the future,','she hopes to empower','Omani youth and unleash','their potential.'],full:'In the future, she hopes to empower Omani youth and unleash their potential.',ar:'في المستقبل تأمل أن تُمكّن الشباب العماني وتطلق إمكاناتهم.'}];
+
+/* ================= level machinery ================= */
+function buildLevel(n){
+ switch(n){
+  case 1:
+   buildTimeline();
+   renderFScrolls('m-fscrolls');
+   renderVocab('m-civs',V_CIVS);
+   L.tasks=Q1.length+FACTS.length;
+   L.matchNeed=true;
+   LinkGame('m-match',FACTS.map(function(f){
+    return{k:f.k,
+     a:spk(f.en)+'<span class="ftext">'+f.en+'</span>',
+     b:'<svg class="ico" style="color:'+f.c+'"><use href="#'+f.ic+'"/></svg><span>'+f.n+'</span><span class="ar" dir="rtl">'+f.arN+'</span>'}}));
+   renderQuiz('m-l1q',Q1);break;
+  case 2:
+   L.tasks=Q2.length;
+   renderQuiz('m-l2q',Q2);break;
+  case 3:
+   L.tasks=Q3.length+PARTS.length+PASSPAIRS.length;
+   renderFlip('m-passEx',V_PASSEX);
+   L.sortNeed=true;
+   SortGame('m-parts',PARTS,
+    {k:'A',name:'REGULAR + -ed',ar:'منتظمة',ic:'i-check',c:'var(--greenD)',hint:'just add -ed · تُضاف ed'},
+    {k:'B',name:'IRREGULAR',ar:'شاذّة',ic:'i-flame',c:'var(--coralD)',hint:'special forms · صيغة خاصة'});
+   L.matchNeed=true;
+   LinkGame('m-pass',PASSPAIRS);
+   renderQuiz('m-l3q',Q3);break;
+  case 4:
+   L.tasks=Q4.length+DEB.length;
+   L.sortNeed=true;
+   SortGame('m-deb',DEB,
+    {k:'A',name:'FOR inventions',ar:'مع الاختراعات',ic:'i-bulb',c:'var(--sunD)',hint:'inventions matter more · الاختراعات أهم'},
+    {k:'B',name:'AGAINST',ar:'ضد — الناس أهم',ic:'i-person',c:'var(--coralD)',hint:'people matter more · الناس أهم'});
+   renderQuiz('m-l4q',Q4);break;
+  case 5:
+   L.tasks=QUDHR.length+QUOTES.length+QUN.length;
+   renderWise('m-wise');
+   renderQuiz('m-udhr',QUDHR);
+   L.matchNeed=true;
+   LinkGame('m-quotes',QUOTES);
+   renderQuiz('m-un',QUN);break;
+  case 6:
+   L.tasks=QBIO.length+OS.length;
+   renderQuiz('m-bio',QBIO);
+   L.orderNeed=true;
+   OrderGame('m-order',OS);break}}
+function startLevel(n){
+ MODE='level';
+ L={lvl:n,step:0,hearts:3,wrongs:0,qNeed:0,qDone:0,tasks:0,matchNeed:false,matchDone:false,sortNeed:false,sortDone:false,orderNeed:false,orderDone:false,inv:false};
+ buildLevel(n);
+ show('l'+n);
+ var scr=$('#scr-l'+n);
+ if(!scr){show('map');return}
+ L.steps=scr.querySelectorAll('.step');
+ var dots=scr.querySelector('.lvl-dots');
+ dots.innerHTML='';
+ Array.prototype.forEach.call(L.steps,function(_,i){
+  var d=document.createElement('button');d.className='ldot';d.type='button';
+  d.addEventListener('click',function(){if(MODE==='level'&&i<=L.step){sfx('click');showStep(i)}});
+  dots.appendChild(d)});
+ Array.prototype.forEach.call(scr.querySelectorAll('.step-next'),function(b){b.remove()});
+ var last=L.steps.length-1;
+ Array.prototype.forEach.call(L.steps,function(s,i){
+  var b=document.createElement('button');b.type='button';b.className='btn step-next';
+  b.innerHTML='<span class="sn-en">Next</span><span class="b-ar sn-ar" dir="rtl">التالي</span>';
+  b.addEventListener('click',function(){sfx('click');
+   if(i<last)showStep(i+1);else finishLevel()});
+  s.appendChild(b)});
+ $('#hudHearts').classList.remove('hidden');
+ renderHearts();showStep(0)}
+function showStep(i){L.step=i;
+ var scr=$('#scr-l'+L.lvl);
+ Array.prototype.forEach.call(L.steps,function(s,j){s.classList.toggle('on',j===i)});
+ Array.prototype.forEach.call(scr.querySelectorAll('.ldot'),function(d,j){d.className='ldot'+(j===i?' cur':(j<i?' done':''))});
+ var st=L.steps[i];
+ scr.querySelector('.tip-en').textContent=st.getAttribute('data-tip')||'';
+ scr.querySelector('.tip-ar').textContent=st.getAttribute('data-tipar')||'';
+ var bub=scr.querySelector('.bubble');bub.classList.remove('bp');void bub.offsetWidth;bub.classList.add('bp');
+ updateFinishBtn();
+ window.scrollTo({top:0,behavior:'smooth'})}
+function reqState(){var left=0;
+ if(L.qNeed>L.qDone)left+=L.qNeed-L.qDone;
+ if(L.matchNeed&&!L.matchDone)left++;
+ if(L.sortNeed&&!L.sortDone)left++;
+ if(L.orderNeed&&!L.orderDone)left++;
+ if(L.lvl===6&&!L.inv)left++;
+ return{ok:left===0,left:left}}
+function updateFinishBtn(){
+ if(MODE!=='level'||!L.steps)return;
+ var b=L.steps[L.steps.length-1].querySelector('.step-next');if(!b)return;
+ var r=reqState(),en=b.querySelector('.sn-en'),ar=b.querySelector('.sn-ar');
+ if(r.ok){b.classList.remove('blocked');en.textContent='Finish Level!';ar.textContent='أنهِ المرحلة'}
+ else{b.classList.add('blocked');
+  en.textContent='Finish · '+r.left+' task'+(r.left>1?'s':'')+' left';
+  ar.textContent='أكمل المهام المتبقية'}}
+function finishLevel(){
+ var r=reqState();
+ if(!r.ok){sfx('wrong');
+  toast('Not so fast!','أجب عن جميع الأسئلة وأكمل الألعاب أولًا','i-flame','var(--ink)');
+  var b=L.steps[L.steps.length-1].querySelector('.step-next');
+  if(b){b.classList.remove('nshake');void b.offsetWidth;b.classList.add('nshake')}
+  return}
+ MODE=null;$('#hudHearts').classList.add('hidden');
+ var stars=starScore();
+ S.stars[L.lvl]=Math.max(S.stars[L.lvl]||0,stars);
+ S.unlocked=Math.max(S.unlocked,L.lvl<6?L.lvl+1:7);
+ var bonus=15+Math.round(stars*5);addXP(bonus);
+ award(BMAP[L.lvl]);
+ if(L.wrongs===0){addXP(10);toast('Perfect!','مرحلة كاملة بلا أخطاء!','i-star','var(--gold)')}
+ save();sfx('fanfare');showComplete(stars,bonus)}
+function showComplete(stars,bonus){
+ var lv=LEVELS[L.lvl-1];
+ var nextBtn=L.lvl<6
+  ?'<button class="btn" data-act="next" style="--bc:var(--'+lv.c+');--bcd:var(--'+lv.c+'D)"><span>Next Level</span><span class="b-ar" dir="rtl">المرحلة التالية</span></button>'
+  :'<button class="btn" data-act="boss" style="--bc:var(--coral);--bcd:var(--coralD)"><span>Face the Boss!</span><span class="b-ar" dir="rtl">واجه الوحش!</span></button>';
+ ovl.innerHTML='<div class="ovl-card">'+
+ '<div class="ovl-kick" style="color:var(--'+lv.c+'D)">LEVEL '+L.lvl+' COMPLETE</div>'+
+ '<h3 class="ovl-t">Great job!</h3>'+
+ '<p class="ovl-ar ar" dir="rtl">أحسنت! أكملت «'+lv.ar+'»</p>'+
+ '<div class="big-stars">'+starsRow(stars)+'</div>'+
+ '<p class="ovl-xp">'+IC('i-bolt')+' +'+bonus+' XP · '+(stars%1?stars.toFixed(1):stars)+' / 3 ★</p>'+
+ '<div class="ovl-btns"><button class="btn ghost" data-act="map"><span>Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>'+nextBtn+'</div></div>';
+ ovl.classList.add('on');
+ setTimeout(function(){litStars(ovl,300)},600)}
+
+/* ================= boss ================= */
+function startBoss(){
+ MODE='boss';B={q:0,hp:8,hearts:3};
+ show('boss');
+ $('#hudHearts').classList.remove('hidden');
+ var mon=$('#monSvg');mon.classList.remove('dead');
+ $('#hpFill').style.width='100%';
+ renderHearts();renderBossQ()}
+function renderBossQ(){
+ var it=BOSSQ[B.q],box=$('#bq');
+ box.innerHTML='<div class="qz"><p class="bprog">'+IC('i-arch')+' QUESTION '+(B.q+1)+' OF 8</p>'+
+ '<p class="qq">'+it.q+'</p><p class="qar" dir="rtl">'+it.ar+'</p>'+
+ '<div class="opts">'+it.opts.map(function(o,j){return '<button class="opt" data-j="'+j+'">'+o+'</button>'}).join('')+'</div>'+
+ '<div class="qfb"></div></div>';
+ var qz=box.querySelector('.qz'),hurt=false;
+ Array.prototype.forEach.call(box.querySelectorAll('.opt'),function(opt){
+  opt.addEventListener('click',function(){
+   if(qz.classList.contains('lock'))return;
+   var j=+opt.getAttribute('data-j'),fb=box.querySelector('.qfb');
+   if(j===it.ok){
+    qz.classList.add('lock');opt.classList.add('ok');
+    fb.className='qfb on good';
+    fb.innerHTML=IC('i-check')+'<b>History restored!</b><span class="fb-ar" dir="rtl">عادت قطعة من التاريخ! الوحش يتصدّع</span>';
+    sfx('correct');burst(opt,18);mascotReact('happy');addXP(15);bossHit();
+   }else{
+    sfx('wrong');mascotReact('sad');streakCut();
+    opt.classList.add('no');setTimeout(function(){opt.classList.remove('no')},500);
+    fb.className='qfb on bad';
+    fb.innerHTML='<b>Try again!</b><span class="fb-ar" dir="rtl">حاول مرة أخرى</span>';
+    if(!hurt){hurt=true;loseHeart()}
+   }})})}
+function bossHit(){
+ B.hp--;$('#hpFill').style.width=(B.hp/8*100)+'%';
+ var mon=$('#monSvg');mon.classList.remove('hit');void mon.offsetWidth;mon.classList.add('hit');
+ sfx('crack');
+ var d=document.createElement('span');d.className='dmg';d.textContent='−1';
+ $('#monWrap').appendChild(d);setTimeout(function(){d.remove()},900);
+ if(B.hp<=0){bossWin()}
+ else{setTimeout(function(){B.q++;renderBossQ()},800)}}
+function bossWin(){
+ $('#monSvg').classList.add('dead');
+ $('#bq').innerHTML='<div class="gcard mondead">'+IC('i-crown')+'<p>HISTORY SAVED!</p><p class="ar" dir="rtl">أعدتَ التاريخ إلى النور!</p></div>';
+ sfx('fanfare');confettiRain();award('boss');addXP(40);save();
+ setTimeout(function(){
+  ovl.innerHTML='<div class="ovl-card">'+
+  '<div class="ovl-kick" style="color:var(--sunD)">VICTORY!</div>'+
+  '<h3 class="ovl-t">You defeated the Ruin Monster!</h3>'+
+  '<p class="ovl-ar ar" dir="rtl">انتصرت على وحش الخرائب!</p>'+
+  '<div class="big-stars">'+starsRow(3)+'</div>'+
+  '<div class="ovl-btns"><button class="btn ghost" data-act="map"><span>Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>'+
+  '<button class="btn" data-act="win" style="--bc:var(--gold);--bcd:var(--goldD);color:#5A4500"><span>Claim Victory</span><span class="b-ar" dir="rtl">استلم نصرك</span></button></div></div>';
+  ovl.classList.add('on');
+  setTimeout(function(){litStars(ovl,300)},500)
+ },1300)}
+function bossFail(){
+ MODE=null;$('#hudHearts').classList.add('hidden');sfx('wrong');
+ ovl.innerHTML='<div class="ovl-card">'+
+ '<div class="ovl-kick" style="color:var(--coralD)">IN RUINS!</div>'+
+ '<h3 class="ovl-t">The Ruin Monster wins this round!</h3>'+
+ '<p class="ovl-ar ar" dir="rtl">انتصر وحش الخرائب هذه المرة!</p>'+
+ '<p class="ovl-p">Take a deep breath… and try again. History needs you!</p>'+
+ '<p class="ovl-ar ar" dir="rtl">خذ نفسًا عميقًا وحاول من جديد — التاريخ يحتاجك!</p>'+
+ '<div class="ovl-btns"><button class="btn ghost" data-act="map"><span>Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>'+
+ '<button class="btn" data-act="retry" style="--bc:var(--sun);--bcd:var(--sunD)"><span>Retry</span><span class="b-ar" dir="rtl">حاول مجددًا</span></button></div></div>';
+ ovl.classList.add('on')}
+
+/* ================= win ================= */
+function showWin(){
+ MODE=null;$('#hudHearts').classList.add('hidden');
+ show('win');
+ $('#winXp').textContent=S.xp;
+ $('#winStars').textContent=starTotal();
+ $('#winBdg').textContent=S.badges.length;
+ $('#winBadges').innerHTML=BADGES.map(function(b){
+  var has=S.badges.indexOf(b.id)>=0;
+  return '<div class="bdg'+(has?'':' lock')+'" style="--bc:'+b.c+'"><span class="bdg-ic">'+IC(has?b.ic:'i-lock')+'</span><b>'+b.t+'</b><span class="ar" dir="rtl">'+b.ar+'</span></div>'}).join('');
+ confettiRain();setTimeout(confettiRain,900);setTimeout(confettiRain,1800)}
+
+/* ================= global delegation ================= */
+document.addEventListener('click',function(e){
+ var sp=e.target.closest('.spk');if(sp){speakSay(sp);return}
+ var f=e.target.closest('.fc');if(f){f.classList.toggle('flip');sfx('pop');return}
+ var tl=e.target.closest('.tl-bar');
+ if(tl){sfx('pop');speakText(tl.getAttribute('data-say'));return}
+ var eco=e.target.closest('.ecochip');
+ if(eco){eco.classList.toggle('sel');sfx('pop');return}
+ var pic=e.target.closest('.plaqueic');
+ if(pic){sfx('pop');
+  Array.prototype.forEach.call($$('.plaqueic'),function(x){x.classList.remove('sel')});
+  pic.classList.add('sel');return}
+ var rv=e.target.closest('.rvbtn');
+ if(rv&&!rv.getAttribute('id')){
+  var box=rv.closest('.talkcard'),t=box.querySelector('.rvt');
+  t.classList.toggle('on');var open=t.classList.contains('on');
+  rv.querySelector('.rv-en').textContent=open?'Hide':'Show';
+  rv.querySelector('.rv-ar').textContent=open?'إخفاء':'أظهر';sfx('pop');return}
+ var nd=e.target.closest('.node');if(nd){nodeClick(nd);return}});
+ovl.addEventListener('click',function(e){
+ var b=e.target.closest('[data-act]');if(!b)return;
+ sfx('click');var a=b.getAttribute('data-act');
+ if(a==='map'){hideOvl();show('map')}
+ else if(a==='next'){hideOvl();startLevel(L.lvl+1)}
+ else if(a==='boss'){hideOvl();startBoss()}
+ else if(a==='retry'){hideOvl();startBoss()}
+ else if(a==='win'){hideOvl();showWin()}
+ else if(a==='resetNo'){hideOvl()}
+ else if(a==='resetYes'){doReset()}});
+document.addEventListener('keydown',function(e){
+ if(MODE!=='level'||!L||!L.steps)return;
+ if(e.key==='ArrowRight'&&L.step<L.steps.length-1)showStep(L.step+1);
+ else if(e.key==='ArrowLeft'&&L.step>0)showStep(L.step-1)});
+
+/* ================= plaque create ================= */
+ $('#plaqueGo').addEventListener('click',function(){
+ sfx('click');
+ var name=$('#plaqueName').value.trim();
+ var fact=$('#plaqueFact').value.trim();
+ var icEl=document.querySelector('.plaqueic.sel');
+ if(!name||!fact||!icEl){
+  sfx('wrong');
+  toast('Complete your plaque!','أكمل الاسم والسبب واختر رمزًا','i-crown','var(--ink)');
+  return}
+ var k=icEl.getAttribute('data-k'),p=PLAQ[k];
+ $('#plaqueBody').innerHTML=buildPlaqueSVG(k,name,fact)+
+ '<p style="font-weight:600;color:#8A5B00;margin-top:10px">'+p.n+' · '+p.arn+'</p>';
+ $('#plaquePrev').classList.add('ready');
+ burst($('#plaquePrev'),26);sfx('fanfare');
+ if(MODE==='level'&&!L.inv){L.inv=true;addXP(15);toast('Museum Curator!','أنشأت لوحة متحفك الأولى!','i-crown','var(--gold)')}
+ updateFinishBtn()});
+
+/* ================= reset ================= */
+function confirmReset(){sfx('click');
+ ovl.innerHTML='<div class="ovl-card"><h3 class="ovl-t">Reset progress?</h3>'+
+ '<p class="ovl-ar ar" dir="rtl">هل تريد حذف كل التقدم والبدء من جديد؟</p>'+
+ '<div class="ovl-btns"><button class="btn ghost" data-act="resetNo"><span>No</span><span class="b-ar" dir="rtl">لا</span></button>'+
+ '<button class="btn" data-act="resetYes" style="--bc:var(--coral);--bcd:var(--coralD)"><span>Yes, reset</span><span class="b-ar" dir="rtl">نعم، احذف</span></button></div></div>';
+ ovl.classList.add('on')}
+function doReset(){try{localStorage.removeItem(KEY)}catch(e){}
+ S={xp:0,stars:{},unlocked:1,badges:[],streak:0};xpShown=0;$('#xpN').textContent='0';
+ hideOvl();show('title')}
+
+/* ================= init ================= */
+Array.prototype.forEach.call($$('.tabby-slot'),function(s){s.innerHTML=tabbySVG()});
+var tkWords=['Mayan','Egyptian','Greek','Majan','Roman','Sumerian','cuneiform','hieroglyphics','ziggurat','Colosseum','dhows','pyramids','society','empire','monument','Lion of the Sea','human rights'];
+ $('#tk').innerHTML=tkWords.concat(tkWords).map(function(w){return '<span class="tkchip">'+w+'</span>'}).join('');
+ $('#startBtn').addEventListener('click',function(){initAudio();sfx('click');show('map')});
+ $('#hudHome').addEventListener('click',function(){sfx('click');show('map')});
+ $('#mapReset').addEventListener('click',confirmReset);
+ $('#winMapBtn').addEventListener('click',function(){sfx('click');show('map')});
+ $('#winAgainBtn').addEventListener('click',confirmReset);
+ $('#sndBtn').addEventListener('click',function(){
+ muted=!muted;
+ $('#sndUse').setAttribute('href',muted?'#i-voloff':'#i-vol');
+ if(!muted)sfx('click')});
+show('title');
+tweenXP();
+})();
+</script>
+</body>
+</html>

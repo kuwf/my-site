@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Energy Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka:wght@400;500;600;700&family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+--paper:#FFF6DE;--paper2:#FFFDF4;--ink:#3D3450;--ink2:#8B829E;
+--ar:#0E8074;
+--mint:#29C0B2;--mintD:#1B9C8F;--coral:#FF6B6B;--coralD:#E14F4F;
+--sun:#FFA62B;--sunD:#E08700;--sky:#4D96FF;--skyD:#3677D9;
+--grape:#9B5DE5;--grapeD:#7C3FD3;--pink:#F15BB5;--pinkD:#CF3E96;
+--gold:#FFD166;--goldD:#E5B84B;--green:#4FBF43;--greenD:#3AA334;
+--bord:#F0E4C2;--sh:0 5px 0 rgba(61,52,80,.08);
+}
+body{font-family:'Fredoka',sans-serif;color:var(--ink);min-height:100vh;overflow-x:hidden;
+background-color:var(--paper);
+background-image:radial-gradient(rgba(61,52,80,.055) 2.2px,transparent 2.3px);
+background-size:30px 30px;-webkit-user-select:none;user-select:none}
+input{-webkit-user-select:text;user-select:text}
+button{font-family:inherit;touch-action:manipulation}
+.ar{font-family:'Baloo Bhaijaan 2',sans-serif;color:var(--ar);font-weight:600}
+.hidden{display:none!important}
+.ico{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.svgic{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;flex-direction:column;align-items:center;line-height:1.15;gap:1px;
+font-family:'Lilita One';font-size:1.05rem;letter-spacing:.6px;color:#fff;text-transform:uppercase;
+background:var(--bc,var(--mint));border:none;border-radius:999px;padding:12px 26px 13px;cursor:pointer;
+box-shadow:0 6px 0 var(--bcd,var(--mintD)),0 14px 26px rgba(61,52,80,.16);transition:transform .12s,box-shadow .12s}
+.btn:active{transform:translateY(6px);box-shadow:0 0 0 var(--bcd,var(--mintD)),0 4px 10px rgba(61,52,80,.15)}
+.btn .b-ar{font-family:'Baloo Bhaijaan 2';font-size:.82rem;font-weight:600;opacity:.95;text-transform:none}
+.btn.ghost{--bc:#fff;--bcd:#DCCFA6;color:var(--ink)}
+
+/* ---------- HUD ---------- */
+#hud{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:90;display:none;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;
+background:rgba(255,253,244,.95);border:3px solid var(--bord);border-radius:999px;padding:6px 10px;
+box-shadow:var(--sh);max-width:calc(100vw - 20px)}
+#hud.on{display:flex}
+.hchip{display:flex;align-items:center;gap:6px;font-family:'Lilita One';font-size:.95rem;background:#fff;
+border:2.5px solid var(--bord);border-radius:999px;padding:4px 12px}
+.hchip .ico{width:17px;height:17px}
+.hbtn{cursor:pointer;transition:transform .12s}
+.hbtn:active{transform:scale(.92)}
+#hudXp{background:#FFF3D6;border-color:var(--gold)} #hudXp .ico{color:var(--sunD)}
+#hudStreak{display:none;background:#FFE3E3;border-color:#FFB3B3;color:#D64545}
+#hudStreak.on{display:flex}
+#hudStreak.pop{animation:hpop .35s}
+#hudHearts .ico{width:18px;height:18px}
+.hh{color:var(--coral);display:inline-flex}
+.hh.off .ico{color:#E3D9BC}
+#hudHearts.hpop{animation:hpop .4s}
+@keyframes hpop{40%{transform:scale(1.18)}}
+.spacer{flex:1}
+@media(max-width:520px){.hchip{font-size:.8rem;padding:3px 9px}.hchip .ico{width:14px;height:14px}#hud{gap:5px;padding:5px 8px}}
+
+/* ---------- screens ---------- */
+.wrap{max-width:920px;margin:0 auto;padding:86px 16px 40px}
+.level .wrap{padding-bottom:60px}
+.screen{display:none}
+.screen.on{display:block;animation:scrIn .45s cubic-bezier(.2,.8,.3,1) both}
+@keyframes scrIn{from{opacity:0;transform:translateY(22px) scale(.985)}}
+
+/* ---------- title ---------- */
+.title-wrap{text-align:center;position:relative;padding-top:26px}
+.kick{display:inline-block;background:#fff;border:3px solid var(--bord);border-radius:999px;padding:5px 18px;
+font-family:'Lilita One';letter-spacing:2px;font-size:.8rem;color:var(--ink2);box-shadow:var(--sh)}
+.logo{font-family:'Lilita One';font-size:clamp(3rem,10vw,4.7rem);line-height:.95;margin-top:18px;display:flex;justify-content:center;flex-wrap:wrap}
+.logo span{display:inline-block;animation:wig 2.6s ease-in-out infinite;animation-delay:calc(var(--i)*.13s);text-shadow:0 4px 0 rgba(61,52,80,.14)}
+.logo .sp{width:.45em}
+@keyframes wig{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-9px) rotate(3deg)}}
+.ribbon{display:inline-block;background:var(--green);color:#fff;font-family:'Lilita One';font-size:1.35rem;letter-spacing:4px;
+padding:5px 22px 6px;border-radius:14px;transform:rotate(-2deg);margin-top:12px;box-shadow:0 5px 0 var(--greenD)}
+.t-sub{margin-top:16px;font-weight:500;color:var(--ink2)}
+.t-sub-ar{margin-top:4px;font-size:1.1rem}
+.title-tabby{width:150px;margin:20px auto 0}
+.howto{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:20px}
+.howchip{background:#fff;border:3px solid var(--bord);border-radius:999px;padding:6px 16px;font-weight:600;box-shadow:var(--sh);font-size:.9rem;display:flex;align-items:center;gap:7px}
+.howchip .ico{width:17px;height:17px}
+.f-ico{position:absolute;animation:floaty 6s ease-in-out infinite;opacity:.9}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-20px) rotate(5deg)}}
+.ticker{overflow:hidden;background:#fff;border-top:3px solid var(--bord);border-bottom:3px solid var(--bord);margin-top:30px}
+.tk{display:flex;gap:12px;width:max-content;animation:tick 40s linear infinite;padding:10px 0}
+@keyframes tick{to{transform:translateX(-50%)}}
+.tkchip{background:#FFF3D6;border:2.5px solid var(--gold);color:#7A5B00;font-weight:600;font-size:.85rem;border-radius:999px;padding:4px 14px;white-space:nowrap}
+
+/* ---------- map ---------- */
+.map-head{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.map-logo{font-family:'Lilita One';font-size:1.7rem}
+.map-logo i{font-style:normal;color:var(--sunD)}
+.map-wrap{position:relative;width:min(460px,94vw);height:1310px;margin:10px auto 0}
+.map-path{position:absolute;inset:0;width:100%;height:100%}
+.deco{position:absolute;pointer-events:none}
+#mapNodes{position:absolute;inset:0}
+.node{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;z-index:2;padding:6px}
+.node-face{position:relative;width:78px;height:78px;border-radius:26px;background:var(--nc,var(--mint));border:4px solid #fff;
+box-shadow:0 7px 0 var(--ncd,var(--mintD)),0 16px 26px rgba(61,52,80,.2);display:flex;align-items:center;justify-content:center;color:#fff;transition:transform .2s}
+.node-face .ico{width:34px;height:34px}
+.node:hover .node-face{transform:translateY(-5px) rotate(-3deg) scale(1.05)}
+.node-num{position:absolute;top:-9px;left:-9px;width:27px;height:27px;background:var(--gold);border:3px solid #fff;border-radius:50%;
+font-family:'Lilita One';font-size:.9rem;color:#7A5B00;display:flex;align-items:center;justify-content:center}
+.node.lock .node-face{background:#CCC5A8;box-shadow:0 7px 0 #B0A887;color:#8B829E}
+.node.cur .node-face::after{content:'';position:absolute;inset:-9px;border:4px solid var(--nc,var(--mint));border-radius:34px;animation:ring 1.6s infinite}
+@keyframes ring{from{transform:scale(.92);opacity:1}to{transform:scale(1.4);opacity:0}}
+.go-arrow{position:absolute;top:-52px;color:var(--coral);animation:bob 1s infinite}
+.go-arrow .ico{width:26px;height:26px}
+@keyframes bob{50%{transform:translateY(8px)}}
+.node-stars{display:flex;gap:3px}
+.nstar .ico{width:14px;height:14px;color:var(--gold)}
+.nstar.off .ico{color:#DDD6BB}
+.node-name{font-family:'Lilita One';font-size:.82rem;background:#fff;border:2.5px solid var(--bord);border-radius:999px;padding:2px 12px 4px;box-shadow:var(--sh);text-align:center}
+.node-name .nar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.72rem;display:block}
+.node.nshake{animation:nsh .4s}
+@keyframes nsh{25%{transform:translate(-50%,-50%) translateX(-7px)}75%{transform:translate(-50%,-50%) translateX(7px)}}
+.boss-node .node-face{width:104px;height:104px;border-radius:32px;background:#3D3450;box-shadow:0 8px 0 #2A2440,0 18px 30px rgba(61,52,80,.3)}
+.boss-node .node-face .ico{width:46px;height:46px;color:#FFC93C}
+.boss-node.cur .node-face::after{border-color:#FFC93C}
+.boss-ribbon{background:var(--coral);color:#fff;font-family:'Lilita One';font-size:.7rem;letter-spacing:2px;padding:2px 12px 3px;border-radius:99px}
+.map-foot{text-align:center;margin-top:8px;font-weight:600;color:var(--ink2)}
+.map-foot .ar{display:block;margin-top:2px}
+
+/* ---------- level head + dots ---------- */
+.lvl-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:#fff;border:3px solid var(--bord);border-radius:24px;padding:14px 16px;box-shadow:var(--sh);margin-bottom:12px}
+.lvl-num{width:54px;height:54px;border-radius:18px;background:var(--lc);color:#fff;font-family:'Lilita One';font-size:1.6rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 var(--lcd);flex:none}
+.lt{font-family:'Lilita One';font-size:1.65rem;line-height:1.05}
+.lvl-ar{color:var(--ar);font-weight:600;font-size:1rem}
+.head-tabby{margin-left:auto;display:flex;align-items:center;gap:10px;max-width:340px}
+.tabby-slot{width:74px;flex:none}
+.tabby-slot.jump{animation:tjump .6s}
+.tabby-slot.shake{animation:nsh .4s}
+@keyframes tjump{30%{transform:translateY(-14px)}60%{transform:translateY(0)}80%{transform:translateY(-6px)}}
+.bubble{position:relative;background:var(--paper2);border:2.5px dashed var(--lc);border-radius:16px;padding:8px 12px;font-size:.83rem}
+.bubble::after{content:'';position:absolute;left:-9px;top:18px;border:7px solid transparent;border-right-color:var(--lc)}
+.bubble.bp{animation:bp .4s}
+@keyframes bp{from{transform:scale(.9);opacity:.4}}
+.tip-en{display:block;font-weight:600}
+.tip-ar{display:block;text-align:right;font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.8rem}
+.lvl-dots{display:flex;justify-content:center;gap:9px;margin:0 0 16px}
+.ldot{width:14px;height:14px;border-radius:50%;background:#F2EAD0;border:3px solid #DCCFA6;cursor:pointer;padding:0;transition:.2s;touch-action:manipulation}
+.ldot.cur{background:var(--lc,var(--mint));border-color:var(--lcd,var(--mintD));transform:scale(1.35)}
+.ldot.done{background:var(--gold);border-color:var(--goldD)}
+
+/* ---------- steps ---------- */
+.step{display:none}
+.step.on{display:block;animation:stepIn .4s ease both}
+@keyframes stepIn{from{opacity:0;transform:translateX(28px)}}
+.step-next{margin-top:20px;width:100%;font-size:1.12rem;--bc:var(--lc,var(--mint));--bcd:var(--lcd,var(--mintD))}
+.step-next.blocked{--bc:#CCC5A8;--bcd:#B0A887}
+.step-next.nshake{animation:nsh2 .4s}
+@keyframes nsh2{25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+.sh{font-family:'Lilita One';font-size:1.3rem;display:flex;align-items:center;gap:9px;margin:4px 0 2px}
+.sh .ico{color:var(--lcd)}
+.sh-ar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;text-align:right;margin-bottom:10px;display:block}
+
+/* ---------- cards / quiz ---------- */
+.gcard{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:18px;box-shadow:var(--sh)}
+.qz{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px 18px;margin:14px 0;box-shadow:var(--sh)}
+.qq{font-weight:600;font-size:1.05rem}
+.qar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.95rem;text-align:right;margin-top:3px}
+.opts{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.opt{font-weight:600;font-size:.95rem;color:var(--ink);background:var(--paper2);border:3px solid #F0E5C6;border-radius:14px;padding:9px 16px;cursor:pointer;box-shadow:0 4px 0 rgba(61,52,80,.08);transition:.15s;touch-action:manipulation}
+.opt:hover{transform:translateY(-2px);border-color:var(--lc,var(--mint))}
+.opt.ok{background:#DDF6D2;border-color:var(--green);color:#2C6B1F}
+.opt.no{background:#FDE0E0;border-color:var(--coral);color:#A31515;animation:shk .4s}
+.qz.lock .opt{pointer-events:none;opacity:.5}
+.qz.lock .opt.ok{opacity:1}
+.qfb{margin-top:10px;display:none;border-radius:12px;padding:9px 12px;font-weight:600;font-size:.9rem;align-items:center;gap:8px}
+.qfb.on{display:flex;flex-wrap:wrap;animation:pp .3s}
+.qfb.good{background:#DDF6D2;color:#2C6B1F;border:2.5px solid #A9DE98}
+.qfb.bad{background:#FDE0E0;color:#A31515;border:2.5px solid #FFB3B3}
+.qfb .fb-ar{display:block;width:100%;text-align:right;font-family:'Baloo Bhaijaan 2';font-weight:600;margin-top:2px}
+.qfb .fn{display:block;width:100%;font-size:.85rem;margin-top:2px}
+@keyframes shk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes pp{from{transform:scale(.93);opacity:0}}
+.bprog{font-family:'Lilita One';font-size:.72rem;letter-spacing:1.5px;color:var(--ink2);display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.bprog .ico{width:14px;height:14px;color:var(--coral)}
+
+/* ---------- vocab / flip ---------- */
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:14px}
+.wcard{position:relative;background:#fff;border:3px solid var(--bord);border-radius:18px;padding:18px 8px 12px;text-align:center;box-shadow:var(--sh);transition:transform .2s}
+.wcard:hover{transform:translateY(-5px) rotate(-1.2deg);border-color:var(--lc)}
+.wcard .ico{width:36px;height:36px;color:var(--lcd)}
+.wcard .w{font-weight:600;font-size:.98rem;margin-top:6px}
+.wcard .war{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.95rem}
+.spk{position:absolute;top:6px;right:6px;width:30px;height:30px;border-radius:50%;border:2.5px solid var(--bord);background:#fff;color:var(--lcd);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;z-index:2;touch-action:manipulation}
+.spk .ico{width:15px;height:15px}
+.spk:hover{background:var(--lc);color:#fff;transform:scale(1.12)}
+.spk.busy{animation:spkb 1s ease}
+@keyframes spkb{50%{transform:scale(1.2);background:var(--coral);color:#fff}}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:16px}
+.fc{perspective:1000px;height:225px;cursor:pointer;outline:none}
+.fi{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,1.4,.4,1)}
+.fc.flip .fi{transform:rotateY(180deg)}
+.ff,.fbk{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px}
+.ff{background:#fff;border:3px solid var(--bord);box-shadow:var(--sh)}
+.ff .ico{width:36px;height:36px;color:var(--lcd)}
+.fw{font-family:'Lilita One';font-size:1.2rem;margin-top:8px}
+.fhint{margin-top:12px;font-size:.7rem;color:var(--ink2);font-weight:600}
+.fhint .ar{display:block;font-weight:600}
+.fbk{background:linear-gradient(150deg,var(--lc),var(--lcd));color:#fff;transform:rotateY(180deg);box-shadow:0 6px 0 rgba(61,52,80,.18)}
+.den{font-weight:600;font-size:.92rem;line-height:1.3}
+.dar{font-family:'Baloo Bhaijaan 2';font-weight:600;font-size:1rem;margin-top:8px;color:#FFF3CE}
+.dex{margin-top:10px;background:rgba(255,255,255,.18);border-radius:12px;padding:6px 10px;font-size:.83rem;font-style:italic}
+
+/* ---------- LINK GAME ---------- */
+.lg{position:relative}
+.lg-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 60px;position:relative;z-index:2}
+.lg-col{display:flex;flex-direction:column;gap:10px}
+.lg-chip{position:relative;display:flex;align-items:center;gap:9px;background:#fff;border:3px solid #F0E5C6;border-radius:14px;padding:9px 12px;min-height:56px;cursor:pointer;font-weight:600;font-size:.95rem;box-shadow:0 4px 0 rgba(61,52,80,.08);transition:transform .15s,border-color .15s,background .15s;text-align:left;touch-action:manipulation}
+.lg-chip:hover{transform:translateY(-2px);border-color:var(--lc)}
+.lg-chip.sel{border-color:var(--lc);background:#FFF3CE;transform:scale(1.03)}
+.lg-chip.done{background:#DDF6D2;border-color:var(--green);color:#2C6B1F;animation:pp .4s}
+.lg-chip.done .ar{color:#1E6B4F}
+.lg-chip.err{animation:shk .4s;border-color:var(--coral)}
+.lg-chip .spk{position:static;flex:none;width:27px;height:27px}
+.lg-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:1}
+.lg-line{fill:none;stroke-width:5;stroke-linecap:round}
+.lg-temp{stroke-dasharray:9 7;animation:lgfade .65s forwards}
+@keyframes lgfade{0%{opacity:0}25%{opacity:1}70%{opacity:1}100%{opacity:0}}
+.wonbar{display:none;margin-top:14px;background:#DDF6D2;border:3px solid var(--green);border-radius:16px;padding:12px 16px;align-items:center;gap:10px;font-weight:600;color:#2C6B1F}
+.wonbar .ico{width:26px;height:26px;color:var(--greenD)}
+.wonbar.on{display:flex;animation:pp .4s}
+.wonbar .ar{color:#1E6B4F}
+@media(max-width:520px){.lg-grid{gap:10px 40px}.lg-chip{padding:8px 9px;font-size:.85rem;min-height:52px}}
+
+/* ---------- SORT GAME ---------- */
+.sg-hint{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:12px}
+.sg-hint span{background:#fff;border:2.5px solid var(--bord);border-radius:999px;padding:5px 14px;font-weight:600;font-size:.85rem}
+.sg-pool{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;min-height:64px;background:#fff;border:3px dashed var(--bord);border-radius:18px;padding:12px;margin-bottom:14px}
+.sg-chip{display:flex;align-items:center;gap:8px;background:var(--paper2);border:3px solid #F0E5C6;border-radius:14px;padding:8px 12px;cursor:pointer;font-weight:600;font-size:.92rem;box-shadow:0 4px 0 rgba(61,52,80,.08);transition:.15s;touch-action:manipulation}
+.sg-chip .ico{width:24px;height:24px;color:var(--lcd)}
+.sg-chip:hover{transform:translateY(-2px);border-color:var(--lc)}
+.sg-chip.sel{border-color:var(--lc);background:#FFF3CE;transform:scale(1.06)}
+.sg-chip.err{animation:shk .4s;border-color:var(--coral)}
+.sg-chip .ar{font-size:.78rem}
+.sg-bins{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sg-bin{border:3px dashed var(--bin,#D8CBA4);border-radius:18px;padding:12px;min-height:110px;background:rgba(255,255,255,.65);cursor:pointer;transition:.15s;touch-action:manipulation}
+.sg-bin:hover{border-color:var(--bin)}
+.sg-bin h4{font-family:'Lilita One';display:flex;justify-content:center;align-items:center;gap:8px;color:var(--bin,#999);font-size:1rem}
+.sg-bin h4 .ico{width:20px;height:20px}
+.sg-bin h4 .ar{font-size:.75rem;font-weight:600;color:var(--bin)}
+.sg-bin.flash{animation:shk .4s;border-color:var(--coral);background:#FDE0E0}
+.sg-bin-inner{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;min-height:40px}
+.sg-mini{display:flex;align-items:center;gap:6px;background:#fff;border:2.5px solid var(--bin,#999);border-radius:10px;padding:5px 10px;font-weight:600;font-size:.83rem;animation:pp .35s}
+.sg-mini .ico{width:15px;height:15px;color:var(--bin,#999)}
+.sg-empty{color:var(--ink2);font-weight:600;font-size:.85rem}
+@media(max-width:560px){.sg-bins{grid-template-columns:1fr}}
+
+/* ---------- ORDER GAME ---------- */
+.og-n{font-family:'Lilita One';font-size:.72rem;letter-spacing:1.5px;color:var(--ink2);display:flex;align-items:center;gap:6px}
+.og-n .ico{width:14px;height:14px;color:var(--grapeD)}
+.og-target{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:1rem;text-align:right;margin-top:4px}
+.og-line{min-height:58px;background:#fff;border:3px dashed #D8CBA4;border-radius:16px;padding:11px 14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:600;margin-top:10px}
+.og-w{background:var(--lc,var(--grape));color:#fff;border-radius:10px;padding:4px 10px;animation:pp .3s}
+.og-caret{width:3px;height:26px;background:var(--lc,var(--grape));animation:blink 1s infinite}
+@keyframes blink{50%{opacity:0}}
+.og-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.og-chip{border:3px solid #F0E5C6;background:#fff;border-radius:999px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:.9rem;transition:.15s;box-shadow:0 3px 0 rgba(61,52,80,.07);touch-action:manipulation;color:var(--ink)}
+.og-chip:hover{border-color:var(--lc)}
+.og-chip.err{animation:shk .4s;border-color:var(--coral)}
+.og-next{margin-top:14px}
+.wonbar.og-won{margin-top:12px}
+
+/* ---------- emails ---------- */
+.emails2{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.mail{background:#fff;border:3px solid var(--bord);border-radius:18px;box-shadow:var(--sh);overflow:hidden}
+.mail-top{display:flex;align-items:center;gap:8px;background:#F7EFD8;padding:9px 12px;flex-wrap:wrap}
+.mail-top .ico{color:var(--mintD);width:18px;height:18px}
+.mail-addr{background:#fff;border:2px solid #F0E5C6;border-radius:999px;padding:3px 11px;font-size:.68rem;font-weight:600;color:var(--ink2)}
+.mail-sub{font-family:'Lilita One';font-size:.8rem;color:#7A5B00}
+.mail-body{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.para{position:relative;background:var(--paper2);border:2.5px solid var(--bord);border-radius:14px;padding:10px 12px}
+.para .pen{font-weight:500;line-height:1.5;padding-right:34px;font-size:.9rem}
+.para .pen b{font-weight:700;color:var(--lcd,var(--mintD))}
+.para .par{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.85rem;text-align:right;margin-top:6px;border-top:2px dashed var(--bord);padding-top:6px}
+.para .spk{top:8px;right:8px}
+@media(max-width:760px){.emails2{grid-template-columns:1fr}}
+
+/* ---------- slides (Mir'aah / Solar Case) ---------- */
+.slidey{background:#fff;border:3px solid var(--bord);border-radius:18px;box-shadow:var(--sh);overflow:hidden;margin-bottom:14px}
+.slidey-bar{display:flex;align-items:center;gap:8px;padding:9px 14px;background:#F7EFD8;font-family:'Lilita One';font-size:.75rem;letter-spacing:1.5px;color:#7A5B00}
+.slidey-bar .ico{width:17px;height:17px;color:var(--sunD)}
+.slidey-body{padding:13px 16px}
+.sl-en{font-weight:600;font-size:.98rem;line-height:1.5}
+.sl-en b{color:var(--sunD)}
+.sl-ar{font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.9rem;text-align:right;margin-top:6px;border-top:2px dashed var(--bord);padding-top:6px}
+.sdeck{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+
+/* ---------- grammar ---------- */
+.fchips{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px;box-shadow:var(--sh);margin:12px 0}
+.fch{font-family:'Lilita One';font-size:1rem;padding:8px 15px;border-radius:12px;color:#fff;box-shadow:0 4px 0 rgba(61,52,80,.16)}
+.step.on .fch{animation:chipIn .45s both;animation-delay:var(--d,0s)}
+@keyframes chipIn{from{opacity:0;transform:scale(.5) rotate(-7deg)}}
+.fplus{font-family:'Lilita One';color:#B8AC8A;font-size:1.4rem}
+.f-eq{font-family:'Lilita One';color:#B8AC8A;font-size:1.2rem}
+.c-adj{background:var(--sky)} .c-er{background:var(--sun)} .c-than{background:var(--coral)}
+.c-more{background:var(--grape)}
+.hl{padding:1px 6px;border-radius:8px;font-weight:700}
+.hl-sky{background:#E3EEFF;color:#2557B0} .hl-sun{background:#FFEBD1;color:#9A5B00}
+.hl-coral{background:#FFE1E1;color:#C0392B} .hl-grape{background:#EFE0FC;color:#6B2FB3}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:14px;margin-top:12px}
+.rcard{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:16px;box-shadow:var(--sh);border-top:7px solid var(--rc)}
+.rtag{display:inline-block;background:var(--rc);color:#fff;font-family:'Lilita One';font-size:.72rem;letter-spacing:1px;padding:3px 12px;border-radius:99px}
+.rname{font-family:'Lilita One';font-size:1.05rem;margin-left:8px}
+.rar{display:block;font-family:'Baloo Bhaijaan 2';color:var(--ar);font-weight:600;font-size:.9rem;text-align:right;margin-top:4px}
+.rf{margin:11px 0;background:#FBF6E7;border:2.5px dashed var(--rc);border-radius:12px;padding:9px;text-align:center;font-weight:600;font-size:.98rem}
+.rex{background:#FFF8E8;border:2.5px solid #FFE3A1;border-radius:12px;padding:9px 12px;margin-top:8px}
+.rex .en{font-weight:600;font-size:.9rem;color:#6B4E00;display:block}
+.rex .ar{display:block;margin-top:4px;font-size:.85rem}
+.watch{background:#FFF0F0;border:3px solid #FFC9C9;border-radius:16px;padding:11px 14px;color:#B02A2A;font-weight:600;display:flex;gap:10px;align-items:center;margin-top:14px}
+.watch .ico{width:24px;height:24px;flex:none}
+.watch .ar{display:block;font-weight:600;color:#BE3A3A;text-align:right;margin-top:2px;font-size:.9rem}
+.stad{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:12px}
+.stad-card{background:#fff;border:3px solid var(--bord);border-radius:18px;padding:14px;box-shadow:var(--sh);border-top:6px solid var(--sc)}
+.stad-card .ico{width:30px;height:30px;color:var(--sc)}
+.stad-card p{font-weight:600;font-size:.88rem;margin-top:8px;line-height:1.45}
+.stad-card .ar{display:block;margin-top:6px;font-size:.82rem}
+.stad-names{margin-top:12px;text-align:center;font-weight:600;color:var(--ink2);font-size:.85rem;background:#fff;border:2.5px dashed var(--bord);border-radius:14px;padding:9px 14px}
+
+/* ---------- quiz helpers / talk ---------- */
+.datastrip{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.dschip{background:#FFF3D6;border:2.5px solid var(--gold);border-radius:999px;padding:5px 14px;font-weight:600;font-size:.85rem;color:#7A5B00}
+.talkcard{margin-top:14px}
+.rvbtn{display:inline-flex;flex-direction:column;align-items:center;background:#FFF3D6;border:2.5px solid var(--gold);color:#7A5B00;border-radius:12px;padding:7px 18px;cursor:pointer;font-weight:600;transition:.2s;margin-top:10px;touch-action:manipulation}
+.rvbtn:hover{background:var(--gold)}
+.rvbtn .rv-ar{font-family:'Baloo Bhaijaan 2';font-size:.82rem;font-weight:600}
+.rvt{display:none;margin-top:10px;background:linear-gradient(135deg,#FEFCE8,#F0FBEA);border:2.5px dashed var(--gold);border-radius:14px;padding:11px 15px;font-weight:600}
+.rvt.on{display:block;animation:pp .35s}
+.rvt .ar{display:block;text-align:right;margin-top:4px;font-size:.9rem}
+.eco{display:flex;flex-wrap:wrap;gap:9px;margin-top:10px}
+.ecochip{border:3px solid #F0E5C6;background:#fff;border-radius:999px;padding:7px 14px;font-weight:600;cursor:pointer;font-size:.85rem;transition:.15s;touch-action:manipulation;color:var(--ink)}
+.ecochip:hover{border-color:var(--mint)}
+.ecochip.sel{background:var(--mint);color:#fff;border-color:var(--mintD)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:14px}
+.pgroup{background:#fff;border:3px solid var(--bord);border-radius:20px;padding:14px;box-shadow:var(--sh);border-top:7px solid var(--pc)}
+.pg-h{font-family:'Lilita One';font-size:1rem;color:var(--ink)}
+.pg-h .ar{font-size:.85rem;display:block}
+.pchip{background:#FBF6E7;border:2.5px solid #F0E5C6;border-radius:12px;padding:7px 11px;margin-top:8px}
+.pchip .en{display:block;font-weight:600;font-size:.9rem}
+.pchip .ar{display:block;text-align:right;font-size:.82rem}
+.tipgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.tipcard{background:#fff;border-radius:16px;padding:14px;box-shadow:var(--sh);border-top:5px solid var(--tc)}
+.tipcard h4{font-family:'Lilita One';color:var(--ink);display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.tipcard h4 .ar{font-size:.82rem;font-weight:600}
+.tipitem{display:flex;align-items:flex-start;gap:8px;margin-top:10px;font-weight:600;color:#475569;font-size:.88rem}
+.tipitem .ico{width:15px;height:15px;color:var(--tc);margin-top:3px;flex:none}
+.tipitem .ti-ar{display:block;color:var(--ar);font-weight:600;font-size:.82rem;text-align:right}
+
+/* ---------- invention builder ---------- */
+.srow{display:flex;align-items:flex-start;gap:12px;margin-top:12px;flex-wrap:wrap}
+.slab{flex:0 0 88px;font-family:'Lilita One';color:var(--ink);padding-top:8px}
+.slab .ar{font-size:.75rem;display:block}
+.schips{display:flex;flex-wrap:wrap;gap:8px}
+.schip{border:3px solid #F0E5C6;background:#fff;border-radius:999px;padding:7px 14px;font-weight:600;cursor:pointer;font-size:.88rem;transition:.15s;box-shadow:0 3px 0 rgba(61,52,80,.07);touch-action:manipulation;color:var(--ink)}
+.schip:hover{border-color:var(--pink)}
+.schip.sel{background:var(--pink);color:#fff;border-color:var(--pinkD);transform:scale(1.04)}
+.schip .ico{width:16px;height:16px;vertical-align:-3px;margin-right:5px;color:var(--ec)}
+.schip.sel .ico{color:#fff}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+.field label{display:block;font-weight:600;text-align:left}
+.field .f-ar{display:block;color:var(--ar);font-weight:600;font-size:.88rem;text-align:right}
+.field input{width:100%;margin-top:6px;border:3px solid #F0E5C6;border-radius:14px;padding:10px 14px;font-family:'Fredoka';font-weight:600;font-size:1rem;color:var(--ink);outline:none;background:#fff;transition:.2s}
+.field input:focus{border-color:var(--pink)}
+.prevbox{margin-top:14px;text-align:center;border:3px dashed #D8CBA4;border-radius:20px;padding:14px}
+.prevbox .bp-h{color:var(--ink2);font-weight:600}
+.prevbox .bp-arh{font-weight:600;margin-top:2px}
+.prevbox .bp-body{display:none;padding:4px}
+.prevbox.ready{background:linear-gradient(135deg,#FFF3CE,#E9F4FF);border-color:var(--pink)}
+.prevbox.ready .bp-h,.prevbox.ready .bp-arh{display:none}
+.prevbox.ready .bp-body{display:block;animation:pp .4s}
+@media(max-width:640px){.fields{grid-template-columns:1fr}}
+
+/* ---------- boss ---------- */
+.mon-wrap{text-align:center;position:relative;padding:6px 0}
+#monSvg{width:min(280px,68vw);filter:drop-shadow(0 10px 0 rgba(61,52,80,.12))}
+#monSvg.hit{animation:mhit .45s}
+@keyframes mhit{20%{transform:translateX(-13px) rotate(-2deg)}55%{transform:translateX(11px)}80%{transform:translateX(-6px)}}
+#monSvg.dead{animation:mdead 1s forwards}
+@keyframes mdead{to{transform:rotate(9deg) translateY(16px);filter:grayscale(1);opacity:.45}}
+.m-dead{display:none}
+#monSvg.dead .m-eyes{display:none}
+#monSvg.dead .m-dead{display:block}
+.hpbar{max-width:430px;margin:12px auto 4px;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:5px}
+.hpfill{height:16px;border-radius:99px;background:linear-gradient(90deg,var(--coral),var(--sun));width:100%;transition:width .5s cubic-bezier(.3,.8,.3,1)}
+.hplbl{font-family:'Lilita One';font-size:.75rem;letter-spacing:2px;color:var(--ink2)}
+.dmg{position:absolute;top:26%;left:58%;font-family:'Lilita One';color:#C77800;font-size:1.6rem;animation:dmgUp .9s forwards;pointer-events:none}
+@keyframes dmgUp{to{transform:translateY(-52px) scale(1.4);opacity:0}}
+.mondead{text-align:center;padding:20px}
+.mondead .ico{width:64px;height:64px;color:var(--sunD)}
+
+/* ---------- win ---------- */
+.done-wrap{text-align:center;padding-top:20px}
+.trophy-big{width:100px;height:100px;color:var(--gold);filter:drop-shadow(0 8px 0 rgba(229,184,75,.4))}
+.done-title{font-family:'Lilita One';font-size:2.6rem;background:linear-gradient(90deg,var(--sun),var(--sky));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.done-sub{margin-top:10px;font-weight:500;color:var(--ink2)}
+.done-sub-ar{text-align:center;margin-top:6px;font-size:1.05rem}
+.statpills{display:flex;justify-content:center;gap:14px;margin:20px 0;flex-wrap:wrap}
+.statpill{background:#fff;border-radius:999px;padding:10px 22px;box-shadow:var(--sh);font-family:'Lilita One';font-size:1.05rem;display:flex;align-items:center;gap:8px;border:3px solid var(--bord)}
+.statpill .ico{color:var(--sunD)}
+.bdg-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:10px}
+.bdg{background:#fff;border:3px solid var(--bord);border-radius:18px;padding:12px 16px;text-align:center;box-shadow:var(--sh);min-width:130px}
+.bdg-ic{width:46px;height:46px;border-radius:14px;background:var(--bc);display:flex;align-items:center;justify-content:center;margin:0 auto;color:#fff}
+.bdg-ic .ico{width:24px;height:24px}
+.bdg b{font-family:'Lilita One';font-size:.8rem;display:block;margin-top:6px}
+.bdg .ar{font-size:.75rem;display:block;font-weight:600}
+.bdg.lock{opacity:.45;filter:grayscale(.8)}
+.bdg.lock .bdg-ic{background:#CCC5A8}
+.done-btns{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:22px}
+
+/* ---------- overlay / toasts / confetti ---------- */
+#ovl{position:fixed;inset:0;background:rgba(46,38,66,.55);backdrop-filter:blur(3px);z-index:120;display:none;align-items:center;justify-content:center;padding:20px}
+#ovl.on{display:flex;animation:fdi .3s}
+@keyframes fdi{from{opacity:0}}
+.ovl-card{background:var(--paper2);border:4px solid #fff;border-radius:28px;padding:28px;max-width:440px;width:100%;text-align:center;box-shadow:0 12px 0 rgba(61,52,80,.25),0 30px 60px rgba(0,0,0,.28);animation:ovlPop .5s cubic-bezier(.3,1.5,.4,1);max-height:calc(100vh - 40px);overflow:auto}
+@keyframes ovlPop{from{transform:scale(.7);opacity:0}}
+.ovl-kick{font-family:'Lilita One';letter-spacing:2px;font-size:.85rem}
+.ovl-t{font-family:'Lilita One';font-size:2rem;margin-top:4px}
+.ovl-ar{text-align:center;margin-top:4px;font-size:1.05rem}
+.ovl-p{margin-top:12px;font-weight:600;color:var(--ink2)}
+.big-stars{display:flex;justify-content:center;gap:12px;margin:16px 0}
+.bst .ico{width:58px;height:58px;color:#DDD6BB}
+.bst.lit .ico{color:var(--gold);animation:starPop .5s cubic-bezier(.3,1.8,.4,1);filter:drop-shadow(0 4px 0 rgba(229,184,75,.5))}
+@keyframes starPop{from{transform:scale(0) rotate(-100deg)}}
+.ovl-xp{font-family:'Lilita One';color:var(--sunD);display:flex;justify-content:center;gap:6px;align-items:center}
+.ovl-btns{display:flex;justify-content:center;gap:12px;margin-top:20px;flex-wrap:wrap}
+#toasts{position:fixed;top:72px;left:50%;transform:translateX(-50%);z-index:130;display:flex;flex-direction:column;gap:8px;pointer-events:none;align-items:center;width:max-content;max-width:92vw}
+.toast{display:flex;align-items:center;gap:10px;background:var(--ink);color:#fff;border-radius:16px;padding:10px 16px;box-shadow:0 8px 20px rgba(0,0,0,.3);animation:toastIn .4s cubic-bezier(.3,1.4,.4,1)}
+.toast .t-ic{width:36px;height:36px;border-radius:12px;background:var(--tc,var(--gold));display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+.toast .t-ic .ico{width:19px;height:19px}
+.toast b{font-family:'Lilita One';letter-spacing:.5px;display:block;font-size:.92rem}
+.toast .t-ar{font-family:'Baloo Bhaijaan 2';font-weight:600;font-size:.85rem;color:#FFEFC7;display:block;text-align:right}
+.toast.out{animation:toastOut .3s forwards}
+@keyframes toastIn{from{transform:translateY(-26px) scale(.9);opacity:0}}
+@keyframes toastOut{to{transform:translateY(-16px);opacity:0}}
+.cf{position:fixed;width:9px;height:14px;border-radius:2px;z-index:200;pointer-events:none;animation:cfall 1.6s ease-in forwards}
+@keyframes cfall{to{transform:translate(var(--dx,60px),70vh) rotate(720deg);opacity:.1}}
+
+@media(max-width:640px){
+.lvl-head .head-tabby{width:100%;margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ ICONS ============ -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+ <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2.5"/><line x1="10.5" y1="18" x2="13.5" y2="18"/></symbol>
+ <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.7 3.3a2.15 2.15 0 0 1 3 3L7.4 18.6 3 20l1.4-4.4z"/></symbol>
+ <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3.5 20.5l1.4-5.2A8.5 8.5 0 1 1 21 11.5z"/><path d="M8.3 12h.01M12 12h.01M15.7 12h.01" stroke-width="2.4"/></symbol>
+ <symbol id="i-speaker" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
+ <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.9 6.4.7-4.8 4.3 1.3 6.3-5.7-3.2-5.7 3.2 1.3-6.3L2.8 9.4l6.4-.7z"/></symbol>
+ <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21C12 21 3 15.5 3 9.5C3 6.5 5.5 4 8.5 4C10 4 11.3 4.8 12 6C12.7 4.8 14 4 15.5 4C18.5 4 21 6.5 21 9.5C21 15.5 12 21 12 21Z"/></symbol>
+ <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></symbol>
+ <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5 9.5 17.5 19.5 6.5"/></symbol>
+ <symbol id="i-arrowD" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></symbol>
+ <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 3.5l8 7V20a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 20z"/><path d="M9.5 21.5v-6h5v6"/></symbol>
+ <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12z"/></symbol>
+ <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 22a6.5 6.5 0 0 0 6.5-6.5c0-2.8-1.9-4.5-3.3-6.4C13.7 7 13 5 13 2.5c-3 2-4.3 4.5-4.3 6.3 0 1.2.4 2 .4 2S7.2 9.6 6.5 8.2A6.4 6.4 0 0 0 5.5 15.5C5.5 19.1 8.4 22 12 22z"/></symbol>
+ <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 17.5V21M7 4h10v4.5a5 5 0 0 1-10 0z"/><path d="M7 5.5H4v1.7a3.3 3.3 0 0 0 3.3 3.3M17 5.5h3v1.7a3.3 3.3 0 0 1-3.3 3.3"/></symbol>
+ <symbol id="i-medal" viewBox="0 0 24 24"><circle cx="12" cy="14.5" r="5.5"/><path d="M9 10 6.5 3h4L12 7l1.5-4h4L15 10"/></symbol>
+ <symbol id="i-crown" viewBox="0 0 24 24"><path d="M4 8.5 8 11.5l4-6 4 6 4-3-1.2 10.5H5.2z"/></symbol>
+ <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+ <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.8"/><path d="M4.5 21c0-4.1 3.4-7 7.5-7s7.5 2.9 7.5 7"/></symbol>
+ <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v4.5l3.2 1.9"/></symbol>
+ <symbol id="i-loop" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 1 2.2 5.3"/><path d="M4.5 20v-4.7h4.7"/></symbol>
+ <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></symbol>
+ <symbol id="i-vol" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></symbol>
+ <symbol id="i-voloff" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></symbol>
+ <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"/></symbol>
+ <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18.5a4.3 4.3 0 0 1-.5-8.6A6 6 0 0 1 18 9.2a3.9 3.9 0 0 1-.4 9.3z"/></symbol>
+ <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.5S6 10.5 6 14.5a6 6 0 0 0 12 0c0-4-6-11-6-11z"/></symbol>
+ <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 10c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/><path d="M2 16c2-3 4-3 6 0s4 3 6 0 4-3 6 0"/></symbol>
+ <symbol id="i-earth" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M4.5 8.5c4 2.5 11 2.5 15 0M4.5 15.5c4-2.5 11-2.5 15 0"/></symbol>
+ <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M6.5 18.5C6.5 10.5 11.5 4.5 19.5 4c0 8-5.5 14-13 14.5z"/><path d="M8 17c2.5-3.5 5.5-6 9.5-8"/></symbol>
+ <symbol id="i-bike" viewBox="0 0 24 24"><circle cx="6.5" cy="16.5" r="4"/><circle cx="17.5" cy="16.5" r="4"/><path d="M6.5 16.5 10 8h4l3 8.5M10 8l-1.5-2.5h-2"/></symbol>
+ <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.8.6 1.5 1.6 1.5 2.6h4c0-1 .7-2 1.5-2.6A6 6 0 0 0 12 3z"/></symbol>
+ <symbol id="i-oil" viewBox="0 0 24 24"><rect x="6" y="5.5" width="12" height="14" rx="2"/><line x1="6" y1="9.5" x2="18" y2="9.5"/><line x1="6" y1="15.5" x2="18" y2="15.5"/><path d="M9.5 12.5h5"/></symbol>
+ <symbol id="i-coal" viewBox="0 0 24 24"><path d="M7 18.5 4.5 12l4-6.5h7l4 6.5-2.5 6.5z"/><path d="M9.5 12.5 12 9l2.5 3.5-2.5 3z"/></symbol>
+ <symbol id="i-atom" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><ellipse cx="12" cy="12" rx="9" ry="3.8"/><ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(120 12 12)"/></symbol>
+ <symbol id="i-wind" viewBox="0 0 24 24"><line x1="12" y1="11" x2="12" y2="21"/><circle cx="12" cy="8.5" r="1.6" fill="currentColor" stroke="none"/><path d="M12 8.5V2.5M12 8.5l5.2 3M12 8.5l-5.2 3"/></symbol>
+ <symbol id="i-geo" viewBox="0 0 24 24"><path d="M4.5 19.5h15"/><path d="M8.5 19.5 12 8.5l3.5 11"/><path d="M12 6.5c-1.2-1 .8-2.2 0-3.4"/></symbol>
+ <symbol id="i-panel" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="9.5" rx="1.5"/><line x1="9.3" y1="5.5" x2="9.3" y2="15"/><line x1="14.6" y1="5.5" x2="14.6" y2="15"/><line x1="4" y1="10.2" x2="20" y2="10.2"/><line x1="12" y1="15" x2="12" y2="18.5"/><line x1="8.5" y1="18.5" x2="15.5" y2="18.5"/></symbol>
+ <symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5M15 3v5"/><rect x="6" y="8" width="12" height="7" rx="2.5"/><path d="M12 15v3.5c0 1.5 1.5 2.5 3 2.5h2"/></symbol>
+ <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3.5 7.5l8.5 6 8.5-6"/></symbol>
+ <symbol id="i-cart" viewBox="0 0 24 24"><path d="M4 5h2.2l2 10.5h9.8"/><path d="M7.5 8h11l-1.5 5.5H8.8"/><circle cx="10" cy="19" r="1.4"/><circle cx="16" cy="19" r="1.4"/></symbol>
+ <symbol id="i-stadium" viewBox="0 0 24 24"><path d="M4 16v-4c0-3 3.6-5 8-5s8 2 8 5v4c0 1.6-3.6 2.5-8 2.5S4 17.6 4 16z"/><path d="M4 12c0 1.4 3.6 2.4 8 2.4s8-1 8-2.4"/></symbol>
+ <symbol id="i-mirror" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="15" rx="2"/><line x1="10" y1="7" x2="14" y2="14"/><line x1="12" y1="18" x2="12" y2="21"/></symbol>
+ <symbol id="i-battery" viewBox="0 0 24 24"><rect x="3" y="8" width="15" height="9" rx="2"/><line x1="20.5" y1="10.5" x2="20.5" y2="14.5"/><path d="M11.8 10l-2.6 2.8h3L9.6 15.6"/></symbol>
+</svg>
+
+<!-- ============ HUD ============ -->
+<div id="hud">
+ <button id="hudHome" class="hchip hbtn" title="Map"><svg class="ico"><use href="#i-home"/></svg></button>
+ <div id="hudHearts" class="hchip hidden"></div>
+ <div class="spacer"></div>
+ <div id="hudStreak" class="hchip"><svg class="ico"><use href="#i-flame"/></svg><span id="streakN">x2</span></div>
+ <div id="hudXp" class="hchip"><svg class="ico"><use href="#i-bolt"/></svg><span id="xpN">0</span>&nbsp;XP</div>
+ <button id="sndBtn" class="hchip hbtn" title="Sound"><svg class="ico"><use id="sndUse" href="#i-vol"/></svg></button>
+</div>
+
+<div id="toasts"></div>
+<div id="ovl"></div>
+
+<!-- ============ TITLE ============ -->
+<section class="screen on" id="scr-title">
+ <div class="wrap title-wrap">
+  <div class="f-ico" style="top:6%;left:5%;color:var(--sun)"><svg class="ico" style="width:42px;height:42px"><use href="#i-sun"/></svg></div>
+  <div class="f-ico" style="top:10%;right:6%;color:var(--sky);animation-delay:-1.5s"><svg class="ico" style="width:40px;height:40px"><use href="#i-wind"/></svg></div>
+  <div class="f-ico" style="bottom:24%;left:7%;color:var(--mintD);animation-delay:-3s"><svg class="ico" style="width:38px;height:38px"><use href="#i-drop"/></svg></div>
+  <div class="f-ico" style="bottom:20%;right:9%;color:var(--grape);animation-delay:-2s"><svg class="ico" style="width:36px;height:36px"><use href="#i-bolt"/></svg></div>
+  <div class="f-ico" style="top:44%;left:2%;color:var(--green);animation-delay:-4s"><svg class="ico" style="width:32px;height:32px"><use href="#i-leaf"/></svg></div>
+  <div class="f-ico" style="top:46%;right:2%;color:var(--coral);animation-delay:-5s"><svg class="ico" style="width:32px;height:32px"><use href="#i-plug"/></svg></div>
+  <span class="kick">UNIT 3 · RENEWABLE ENERGY</span>
+  <h1 class="logo">
+   <span style="--i:0;color:var(--sun)">E</span><span style="--i:1;color:var(--sky)">N</span><span style="--i:2;color:var(--mint)">E</span><span style="--i:3;color:var(--grape)">R</span><span style="--i:4;color:var(--green)">G</span><span style="--i:5;color:var(--pink)">Y</span>
+  </h1>
+  <span class="ribbon">QUEST</span>
+  <p class="t-sub">A playful journey into the power of sun, wind and water</p>
+  <p class="t-sub-ar ar" dir="rtl">رحلة مرحة إلى قوة الشمس والرياح والماء</p>
+  <div class="title-tabby tabby-slot"></div>
+  <div class="howto">
+   <span class="howchip"><svg class="ico" style="color:var(--skyD)"><use href="#i-book"/></svg>Play the levels</span>
+   <span class="howchip"><svg class="ico" style="color:var(--goldD)"><use href="#i-star"/></svg>Earn stars</span>
+   <span class="howchip"><svg class="ico" style="color:var(--sunD)"><use href="#i-bolt"/></svg>Restore the power</span>
+  </div>
+  <p class="t-sub-ar ar" dir="rtl" style="margin-top:8px">العب المراحل · اجمع النجوم · أعد الكهرباء للمدينة</p>
+  <button id="startBtn" class="btn" style="--bc:var(--green);--bcd:var(--greenD);font-size:1.3rem;padding:15px 42px 16px;margin-top:24px">
+   <span>Press Start</span><span class="b-ar" dir="rtl">ابدأ اللعب</span>
+  </button>
+  <div class="ticker"><div class="tk" id="tk"></div></div>
+ </div>
+</section>
+
+<!-- ============ MAP ============ -->
+<section class="screen" id="scr-map">
+ <div class="wrap">
+  <div class="map-head">
+   <div class="map-logo">ENERGY <i>QUEST</i></div>
+   <div class="hchip"><svg class="ico" style="color:var(--sunD)"><use href="#i-star"/></svg><span id="mapStars">0</span>/18</div>
+   <div class="hchip"><svg class="ico" style="color:var(--grapeD)"><use href="#i-medal"/></svg><span id="mapBadges">0</span>/7</div>
+   <button id="mapReset" class="hchip hbtn" title="Reset"><svg class="ico"><use href="#i-loop"/></svg></button>
+  </div>
+  <div class="map-wrap">
+   <svg class="map-path" viewBox="0 0 400 1300" preserveAspectRatio="none">
+    <path d="M200 105 C200 190 96 185 96 285 C96 385 264 380 264 465 C264 555 104 555 104 645 C104 745 272 740 272 825 C272 915 120 915 120 1005 C120 1095 200 1100 200 1200" fill="none" stroke="#E9DCB2" stroke-width="24" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+    <path d="M200 105 C200 190 96 185 96 285 C96 385 264 380 264 465 C264 555 104 555 104 645 C104 745 272 740 272 825 C272 915 120 915 120 1005 C120 1095 200 1100 200 1200" fill="none" stroke="#FFF6DE" stroke-width="14" stroke-linecap="round" stroke-dasharray="1 24" vector-effect="non-scaling-stroke"/>
+   </svg>
+   <svg class="deco" style="right:2%;top:1%;width:64px" viewBox="0 0 64 64"><circle cx="32" cy="32" r="14" fill="#FFD166" stroke="#E5B84B" stroke-width="4"/><g stroke="#FFA62B" stroke-width="4" stroke-linecap="round"><line x1="32" y1="4" x2="32" y2="12"/><line x1="32" y1="52" x2="32" y2="60"/><line x1="4" y1="32" x2="12" y2="32"/><line x1="52" y1="32" x2="60" y2="32"/></g></svg>
+   <svg class="deco" style="left:3%;top:16%;width:56px" viewBox="0 0 60 84"><line x1="30" y1="24" x2="30" y2="78" stroke="#A8B694" stroke-width="5" stroke-linecap="round"/><g stroke="#8FA3B5" stroke-width="5" stroke-linecap="round" style="animation:turb 7s linear infinite;transform-origin:30px 20px"><line x1="30" y1="20" x2="30" y2="5"/><line x1="30" y1="20" x2="43" y2="27.5"/><line x1="30" y1="20" x2="17" y2="27.5"/></g><circle cx="30" cy="20" r="3.5" fill="#8FA3B5"/></svg>
+   <style>@keyframes turb{to{transform:rotate(360deg)}}</style>
+   <svg class="deco" style="right:5%;top:44%;width:46px" viewBox="0 0 60 84"><line x1="30" y1="24" x2="30" y2="78" stroke="#A8B694" stroke-width="5" stroke-linecap="round"/><g stroke="#8FA3B5" stroke-width="5" stroke-linecap="round" style="animation:turb 9s linear infinite;transform-origin:30px 20px"><line x1="30" y1="20" x2="30" y2="5"/><line x1="30" y1="20" x2="43" y2="27.5"/><line x1="30" y1="20" x2="17" y2="27.5"/></g><circle cx="30" cy="20" r="3.5" fill="#8FA3B5"/></svg>
+   <svg class="deco" style="left:5%;top:58%;width:80px" viewBox="0 0 80 40"><path d="M20 32a12 12 0 0 1 2-23 14 14 0 0 1 26 2 11 11 0 0 1 12 21z" fill="#fff" stroke="#E9DCB2" stroke-width="3"/></svg>
+   <svg class="deco" style="left:8%;top:90%;width:46px" viewBox="0 0 40 52"><rect x="17" y="26" width="6" height="22" rx="3" fill="#B0895A"/><circle cx="20" cy="18" r="14" fill="#FFDD66" stroke="#E5B84B" stroke-width="3"/></svg>
+   <svg class="deco" style="right:8%;top:76%;width:40px" viewBox="0 0 40 52"><rect x="17" y="26" width="6" height="22" rx="3" fill="#B0895A"/><circle cx="20" cy="18" r="14" fill="#8ED0F5" stroke="#3677D9" stroke-width="3"/></svg>
+   <div id="mapNodes"></div>
+  </div>
+  <div class="map-foot">
+   Complete all six levels to open the Boss Gate and restore the power!
+   <span class="ar" dir="rtl">أكمل المراحل الست لفتح بوابة الوحش وإعادة الكهرباء للمدينة!</span>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 1 ============ -->
+<section class="screen level" id="scr-l1" style="--lc:var(--sky);--lcd:var(--skyD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">1</span>
+   <div><h2 class="lt">Energy Harbor</h2><span class="lvl-ar" dir="rtl">ميناء الطاقة</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Hi! I am Watty! Let's discover the power of nature!" data-tipar="مرحبًا! أنا واتي! هيا نكتشف قوة الطبيعة!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>What is Renewable Energy?</h3>
+    <span class="sh-ar" dir="rtl">ما هي الطاقة المتجددة؟ — طالبٌ اتصل بخالته ليسألها عن الطاقة</span>
+    <div class="gcard" style="background:linear-gradient(135deg,#E9F4FF,#F0FBEA)">
+     <p style="font-size:1.08rem;font-weight:600;line-height:1.5"><b class="hl hl-sky">Renewable energy</b> is generated from sources that <b class="hl hl-sun">never run out</b> — like the sun, wind and water.</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:8px">الطاقة المتجددة تُولَّد من مصادر لا تنفد أبدًا — كالشمس والرياح والماء.</p>
+    </div>
+    <div class="rgrid">
+     <div class="rcard" style="--rc:var(--greenD)"><svg class="ico" style="color:var(--greenD)"><use href="#i-sun"/></svg><p style="font-weight:600;margin-top:8px">Renewable = never runs out: the sun, wind, water, geothermal heat and biomass.</p><p class="rar" dir="rtl">متجدد = لا ينفد: الشمس والرياح والماء والحرارة الأرضية والكتلة الحيوية.</p></div>
+     <div class="rcard" style="--rc:var(--coralD)"><svg class="ico" style="color:var(--coralD)"><use href="#i-oil"/></svg><p style="font-weight:600;margin-top:8px">Non-renewable = will run out one day: oil, coal, natural gas and nuclear power.</p><p class="rar" dir="rtl">غير متجدد = سينفد يومًا: النفط والفحم والغاز الطبيعي والطاقة النووية.</p></div>
+     <div class="rcard" style="--rc:var(--mintD)"><svg class="ico" style="color:var(--mintD)"><use href="#i-leaf"/></svg><p style="font-weight:600;margin-top:8px">Renewable energy is better for the environment — it does not produce greenhouse gases.</p><p class="rar" dir="rtl">أفضل للبيئة — لأنها لا تنتج غازات الدفيئة.</p></div>
+    </div>
+    <div class="gcard talkcard">
+     <p style="font-weight:600"><svg class="ico" style="width:18px;height:18px;color:var(--skyD);vertical-align:-3px"><use href="#i-chat"/></svg> What is the difference between renewable and non-renewable energy?</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">ما الفرق بين المتجدد وغير المتجدد؟ فكّر ثم اكشف</p>
+     <button class="rvbtn"><span class="rv-en">Show answer</span><span class="rv-ar" dir="rtl">أظهر الإجابة</span></button>
+     <div class="rvt"><span class="rvv">Renewable sources never run out (sun, wind, water); non-renewable sources will run out one day (oil, coal, gas).</span>
+      <span class="ar" dir="rtl">المتجددة لا تنفد أبدًا، وغير المتجددة ستنفد يومًا ما.</span></div>
+    </div>
+    <div class="gcard talkcard">
+     <p style="font-weight:600"><svg class="ico" style="width:18px;height:18px;color:var(--greenD);vertical-align:-3px"><use href="#i-bolt"/></svg> Do you think renewable energy is important? Tap your answer!</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">هل تعتقد أن الطاقة المتجددة مهمة؟ انكر رأيك ثم اذكر السبب</p>
+     <div class="eco">
+      <button class="ecochip">Yes — because…</button>
+      <button class="ecochip">A little — because…</button>
+      <button class="ecochip">Not sure — because…</button>
+     </div>
+    </div>
+   </div>
+   <div class="step" data-tip="Tap the speaker to hear each word!" data-tipar="انقر زرّ السماعة لتسمع الكلمة!">
+    <h3 class="sh"><svg class="ico"><use href="#i-plug"/></svg>Energy Sources</h3>
+    <span class="sh-ar" dir="rtl">مصادر الطاقة — عشرة مصادر من الكتاب</span>
+    <div class="wgrid" id="m-l1voc"></div>
+   </div>
+   <div class="step" data-tip="Tap a card, then tap the right bin!" data-tipar="انقر البطاقة ثم الصندوق المناسب!">
+    <h3 class="sh"><svg class="ico"><use href="#i-search"/></svg>Sort the Energy!</h3>
+    <span class="sh-ar" dir="rtl">رتّب مصادر الطاقة — انقر البطاقة ثم الصندوق الصحيح</span>
+    <div class="sg-hint">
+     <span><svg class="ico" style="width:15px;height:15px;color:var(--greenD);vertical-align:-3px"><use href="#i-check"/></svg> Renewable = never runs out · <span class="ar">لا تنفد</span></span>
+     <span><svg class="ico" style="width:15px;height:15px;color:var(--coralD);vertical-align:-3px"><use href="#i-flame"/></svg> Non-renewable = will run out · <span class="ar">سينفد</span></span>
+    </div>
+    <div id="m-sort"></div>
+   </div>
+   <div class="step" data-tip="Quick check — show me your power!" data-tipar="اختبار أخير — أرني قوتك!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Quick Check</h3>
+    <span class="sh-ar" dir="rtl">تحقّق سريع — اختر الإجابة الصحيحة</span>
+    <div id="m-l1q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 2 ============ -->
+<section class="screen level" id="scr-l2" style="--lc:var(--mint);--lcd:var(--mintD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">2</span>
+   <div><h2 class="lt">The Email Valley</h2><span class="lvl-ar" dir="rtl">وادي البريد</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Read Luke's email to his friend Bill!" data-tipar="اقرأ بريد لوك إلى صديقه بيل!">
+    <h3 class="sh"><svg class="ico"><use href="#i-mail"/></svg>Two Emails, One Idea</h3>
+    <span class="sh-ar" dir="rtl">رسالتان وفكرة واحدة — عربة التسوّق الآلية</span>
+    <div class="emails2">
+     <div class="mail">
+      <div class="mail-top"><svg class="ico"><use href="#i-mail"/></svg><span class="mail-addr">From: luke2005@gmail.com</span><span class="mail-addr">To: bill.hope@hotmail.com</span><span class="mail-sub">Subject: Request for help</span></div>
+      <div class="mail-body">
+       <div class="para"><button class="spk" data-say="Hi Bill! I am emailing to ask if you can help with a school project. I have to design an invention that is powered by a renewable energy source."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">Hi Bill! I'm emailing to ask if you can help with a school project. I have to <b>design an invention</b> that is powered by a <b>renewable energy source</b>.</p>
+        <p class="par" dir="rtl">يطلب لوك المساعدة: عليه تصميم اختراع يعمل بمصدر طاقة متجددة.</p></div>
+       <div class="para"><button class="spk" data-say="My idea is an automatic shopping trolley. When we go shopping, my father always asks me to push the trolley. But it gets really heavy and difficult to push. So I want to design a trolley that can move by itself."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">My idea is an <b>automatic shopping trolley</b>. My father always asks me to push the trolley — but it gets really <b>heavy and difficult to push</b>. So I want a trolley that can move by itself!</p>
+        <p class="par" dir="rtl">فكرته: عربة تسوّق آلية تتحرك بنفسها، لأن دفعها يصبح شاقًا عندما تثقل.</p></div>
+       <div class="para"><button class="spk" data-say="The trolley will be powered by the lights in the mall. It will have a small panel which will convert light from the mall into electricity."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">The trolley will be powered by <b>the lights in the mall</b>. It will have a small <b>panel</b> which will <b>convert</b> light from the mall into electricity.</p>
+        <p class="par" dir="rtl">ستعمل العربة بأضواء المركز التجاري عبر لوح صغير يحوّل الضوء إلى كهرباء.</p></div>
+       <div class="para"><button class="spk" data-say="I know that you know a lot about renewable energy, so I want to ask what you think about my idea. Thanks, Luke."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">I know that you <b>know a lot about renewable energy</b> — what do you think about my idea? Thanks, Luke</p>
+        <p class="par" dir="rtl">يسأل بيل رأيه لأنه خبير في الطاقة المتجددة.</p></div>
+      </div>
+     </div>
+     <div class="mail">
+      <div class="mail-top"><svg class="ico"><use href="#i-mail"/></svg><span class="mail-addr">From: bill.hope@hotmail.com</span><span class="mail-sub">Subject: RE: Request for help</span></div>
+      <div class="mail-body">
+       <div class="para"><button class="spk" data-say="Hello there Luke! Thanks for your email. I would love to help you with your project. Your idea sounds great!"><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">Hello there Luke! Thanks for your email. I'd love to help. <b>Your idea sounds great!</b></p>
+        <p class="par" dir="rtl">يرى بيل أن الفكرة رائعة ويسعد بمساعدته.</p></div>
+       <div class="para"><button class="spk" data-say="Firstly, is it possible to convert energy from electric lights into electricity? Are the lights in a shopping mall a renewable source of energy?"><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen">But there are a couple of things to consider: <b>Firstly</b>, is it possible to convert energy from electric lights into electricity? Are the lights in a shopping mall a <b>renewable source</b>?</p>
+        <p class="par" dir="rtl">لكنه يطرح أسئلة للتفكير النقدي: هل أضواء المركز مصدر متجدد فعلًا؟</p></div>
+       <div class="para"><button class="spk" data-say="Secondly, is there a more suitable source of renewable energy you could use to power the trolley? I have attached some information about renewable energy for you. Take care, Bill."><svg class="ico"><use href="#i-speaker"/></svg></button>
+        <p class="pen"><b>Secondly</b>, is there a <b>more suitable source</b> of renewable energy for the trolley? I have <b>attached some information</b> about renewable energy. Take care, Bill</p>
+        <p class="par" dir="rtl">ويقترح مصدرًا أنسب، ويُرفق معلومات عن أنواع الطاقة المتجددة.</p></div>
+      </div>
+     </div>
+    </div>
+    <h3 class="sh" style="margin-top:18px"><svg class="ico"><use href="#i-chat"/></svg>Bill's Questions — Think Critically!</h3>
+    <span class="sh-ar" dir="rtl">أسئلة بيل — فكّر نقديًا ثم اكشف الأفكار</span>
+    <div class="gcard talkcard">
+     <p style="font-weight:600">1. Is it possible to convert energy from electric lights into electricity?</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">هل يمكن تحويل ضوء المصابيح إلى كهرباء؟</p>
+     <button class="rvbtn"><span class="rv-en">Show ideas</span><span class="rv-ar" dir="rtl">أظهر الأفكار</span></button>
+     <div class="rvt"><span class="rvv">Yes — light can be converted into electricity (that is what solar panels do), but it would only produce a little power.</span>
+      <span class="ar" dir="rtl">نعم — يمكن ذلك كما تفعل الألواح الشمسية، لكن الإنتاج سيكون ضئيلًا.</span></div>
+    </div>
+    <div class="gcard talkcard">
+     <p style="font-weight:600">2. Are the lights in a shopping mall a renewable source of energy?</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">هل أضواء المركز مصدر طاقة متجدد؟</p>
+     <button class="rvbtn"><span class="rv-en">Show ideas</span><span class="rv-ar" dir="rtl">أظهر الأفكار</span></button>
+     <div class="rvt"><span class="rvv">No — the mall's electricity usually comes from power stations, which often burn fossil fuels.</span>
+      <span class="ar" dir="rtl">لا — كهرباء المركز تأتي عادة من محطات تحرق الوقود الأحفوري.</span></div>
+    </div>
+    <div class="gcard talkcard">
+     <p style="font-weight:600">3. Is there a more suitable source of renewable energy for the trolley?</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">هل ثمة مصدر أنسب لتحريك العربة؟</p>
+     <button class="rvbtn"><span class="rv-en">Show ideas</span><span class="rv-ar" dir="rtl">أظهر الأفكار</span></button>
+     <div class="rvt"><span class="rvv">Solar energy! A panel could use real sunlight — or the trolley's battery could be charged from a solar station.</span>
+      <span class="ar" dir="rtl">الطاقة الشمسية! لوح يستخدم ضوء الشمس الحقيقي أو شحن البطارية من محطة شمسية.</span></div>
+    </div>
+   </div>
+   <div class="step" data-tip="Flip the cards — Bill's attachment!" data-tipar="اقلب البطاقات — مرفق بيل!">
+    <h3 class="sh"><svg class="ico"><use href="#i-book"/></svg>Bill's Attachment</h3>
+    <span class="sh-ar" dir="rtl">مرفق بيل: أنواع الطاقة المتجددة — انقر البطاقة لتقلبها</span>
+    <div class="fgrid" id="m-types"></div>
+   </div>
+   <div class="step" data-tip="Answer about Luke and Bill!" data-tipar="أجب عن أسئلة لوك وبيل!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Did You Understand?</h3>
+    <span class="sh-ar" dir="rtl">هل فهمت الرسائل؟ — الرسالتان أمامك</span>
+    <div id="m-l2q"></div>
+   </div>
+   <div class="step" data-tip="Complete the facts with the right words!" data-tipar="أكمل الحقائق بالكلمة المناسبة!">
+    <h3 class="sh"><svg class="ico"><use href="#i-panel"/></svg>Renewable Energy Facts</h3>
+    <span class="sh-ar" dir="rtl">حقائق الطاقة — أكمل الفراغ من بنك الكلمات (كلمتان زائدتان!)</span>
+    <div class="datastrip">
+     <span class="dschip">renewable sources</span><span class="dschip">generate</span><span class="dschip">turbines</span><span class="dschip">solar panels</span><span class="dschip">electricity</span><span class="dschip">to power</span><span class="dschip">convert</span><span class="dschip">invention</span>
+    </div>
+    <div id="m-facts"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 3 ============ -->
+<section class="screen level" id="scr-l3" style="--lc:var(--sun);--lcd:var(--sunD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">3</span>
+   <div><h2 class="lt">Grammar Station</h2><span class="lvl-ar" dir="rtl">محطة القواعد</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Words that describe — let's build adjectives!" data-tipar="كلمات تصف — هيا نبني الصفات!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bulb"/></svg>Forming Adjectives</h3>
+    <span class="sh-ar" dir="rtl">بناء الصفات — جذر + لاحقة = صفة جديدة</span>
+    <div class="fchips">
+     <span class="fch c-adj" style="--d:.1s">root word</span><span class="fplus">+</span><span class="fch c-er" style="--d:.25s">suffix</span><span class="fplus">=</span><span class="fch c-more" style="--d:.4s">adjective!</span>
+    </div>
+    <div class="rgrid">
+     <div class="rcard" style="--rc:var(--skyD)"><div><span class="rtag">SUFFIX 1</span><span class="rname">-able</span><span class="rar" dir="rtl">بمعنى «قابل لـ»</span></div>
+      <div class="rf">renew → renew<b class="hl hl-sky">able</b></div>
+      <div class="rex"><span class="en">renewable = can be renewed</span><span class="ar" dir="rtl">متجدد: يمكن تجديده.</span></div></div>
+     <div class="rcard" style="--rc:var(--greenD)"><div><span class="rtag">SUFFIX 2</span><span class="rname">-ful</span><span class="rar" dir="rtl">بمعنى «مليء بـ»</span></div>
+      <div class="rf">beauty → beauti<b class="hl hl-sun">ful</b> · colour → colour<b class="hl hl-sun">ful</b></div>
+      <div class="rex"><span class="en">beautiful = full of beauty</span><span class="ar" dir="rtl">جميل: ممتلئ بالجمال.</span></div></div>
+     <div class="rcard" style="--rc:var(--coralD)"><div><span class="rtag">SUFFIX 3</span><span class="rname">-ous</span><span class="rar" dir="rtl">تمنح قوة المعنى</span></div>
+      <div class="rf">fame → fam<b class="hl hl-coral">ous</b> · danger → danger<b class="hl hl-coral">ous</b></div>
+      <div class="rex"><span class="en">famous = known by many people</span><span class="ar" dir="rtl">مشهور: يعرفه الكثيرون.</span></div></div>
+     <div class="rcard" style="--rc:var(--grapeD)"><div><span class="rtag">SUFFIX 4</span><span class="rname">-ive</span><span class="rar" dir="rtl">صفة فاعلة</span></div>
+      <div class="rf">create → creat<b class="hl hl-grape">ive</b> · product → product<b class="hl hl-grape">ive</b></div>
+      <div class="rex"><span class="en">creative = full of new ideas</span><span class="ar" dir="rtl">مبدع: مليء بالأفكار الجديدة.</span></div></div>
+     <div class="rcard" style="--rc:var(--mintD)"><div><span class="rtag">SUFFIX 5</span><span class="rname">-al</span><span class="rar" dir="rtl">صفة مرتبطة بالاسم</span></div>
+      <div class="rf">option → option<b class="hl hl-sky">al</b> · centre → centr<b class="hl hl-sky">al</b></div>
+      <div class="rex"><span class="en">optional = you can choose it</span><span class="ar" dir="rtl">اختياري: يمكنك اختياره أو لا.</span></div></div>
+    </div>
+    <div class="watch"><svg class="ico"><use href="#i-flame"/></svg><div>Spelling! If the root ends in e, remove it (create → creative). If it ends in y, change it to i (beauty → beautiful)!
+     <span class="ar" dir="rtl">انتبه للإملاء: احذف e الأخيرة (create→creative)، وحوّل y إلى i (beauty→beautiful).</span></div></div>
+    <div class="gcard" style="margin-top:14px;background:#FFF8E8">
+     <p style="font-weight:600;font-size:.95rem;line-height:1.7">Rahma works at <b class="hl hl-sun">be'ah</b> in Oman: "I work as a <b class="hl hl-sun">Sustainable</b> Development Executive at an <b class="hl hl-sun">environmental</b> service company that provides <b class="hl hl-sun">sustainable</b> waste management. My job involves communicating with <b class="hl hl-sun">senior</b> management. My work is very <b class="hl hl-sun">creative</b> and I enjoy doing something <b class="hl hl-sun">useful</b> to improve the environment."</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:8px">ترحيبة تعمل في «be'ah» العمانية — الكلمات المظللة صفات بُنيت بلاحقات!</p>
+    </div>
+   </div>
+   <div class="step" data-tip="Connect each root to its adjective!" data-tipar="وصّل كل جذر بصفته!">
+    <h3 class="sh"><svg class="ico"><use href="#i-search"/></svg>Connect!</h3>
+    <span class="sh-ar" dir="rtl">وصّل الجذر بالصفة — انقر الكلمة ثم قرينتها فيُرسم خط بينهما</span>
+    <div id="m-roots"></div>
+   </div>
+   <div class="step" data-tip="Linking words make writing flow!" data-tipar="أدوات الربط تجعل الكتابة سلسة!">
+    <h3 class="sh"><svg class="ico"><use href="#i-loop"/></svg>Conjunctions</h3>
+    <span class="sh-ar" dir="rtl">أدوات الربط — ثلاث عائلات بألوان مختلفة</span>
+    <div class="rgrid">
+     <div class="rcard" style="--rc:var(--skyD)"><div><span class="rtag">ADD INFO</span><span class="rname">moreover · in addition · also</span><span class="rar" dir="rtl">تضيف معلومة</span></div>
+      <div class="rex"><span class="en">Renewable energy is good for the environment. <b class="hl hl-sky">Moreover</b>, it will not run out.</span><span class="ar" dir="rtl">الطاقة المتجددة جيدة للبيئة، كما أنها لا تنفد.</span></div>
+      <div class="rex"><span class="en">Learning English is fun. <b class="hl hl-sky">In addition</b>, it will help my future career.</span><span class="ar" dir="rtl">تعلم الإنجليزية ممتع، وبالإضافة إلى ذلك سيفيد مستقبلي.</span></div></div>
+     <div class="rcard" style="--rc:var(--coralD)"><div><span class="rtag">CONTRAST</span><span class="rname">however · on the other hand · but</span><span class="rar" dir="rtl">تعارض فكرتين</span></div>
+      <div class="rex"><span class="en">Solar power has a lot of potential. <b class="hl hl-coral">On the other hand</b>, solar panels are quite expensive.</span><span class="ar" dir="rtl">للطاقة الشمسية إمكانات كبيرة، لكن تركيب الألواح مكلف.</span></div>
+      <div class="rex"><span class="en">I love tennis, <b class="hl hl-coral">but</b> I never have time to play.</span><span class="ar" dir="rtl">أحب التنس لكن لا وقت لدي للعب.</span></div></div>
+     <div class="rcard" style="--rc:var(--grapeD)"><div><span class="rtag">REASON / RESULT</span><span class="rname">because · so · therefore</span><span class="rar" dir="rtl">سبب / نتيجة</span></div>
+      <div class="rex"><span class="en">I got good grades <b class="hl hl-grape">because</b> I studied hard.</span><span class="ar" dir="rtl">حصلت على درجات جيدة لأنني درست بجد.</span></div>
+      <div class="rex"><span class="en">I want to be healthier <b class="hl hl-grape">so</b> I started exercising every day.</span><span class="ar" dir="rtl">أريد صحة أفضل لذا بدأت التمرين يوميًا.</span></div>
+      <div class="rex"><span class="en">I am doing a project about renewable energy. <b class="hl hl-grape">Therefore</b>, I would like to visit your company.</span><span class="ar" dir="rtl">أعمل على مشروع عن الطاقة المتجددة، ولذلك أود زيارة شركتكم.</span></div></div>
+    </div>
+    <div class="watch"><svg class="ico"><use href="#i-flame"/></svg><div>'also' comes BEFORE a single action verb (I also play the guitar), but AFTER be or a modal verb (I am also studying · I can also speak Spanish)!
+     <span class="ar" dir="rtl">موقع also: قبل الفعل العادي وبعد be والأفعال الناقصة.</span></div></div>
+    <h3 class="sh" style="margin-top:18px"><svg class="ico"><use href="#i-stadium"/></svg>The Greenest Football Stadiums</h3>
+    <span class="sh-ar" dir="rtl">أخضر ملاعب كرة القدم — اقرأ الحقائق الرائعة</span>
+    <div class="stad">
+     <div class="stad-card" style="--sc:var(--sunD)"><svg class="ico"><use href="#i-panel"/></svg><p>A stadium in <b>Brazil</b> generates its own electricity <b class="hl hl-grape">because</b> its roof is covered in solar panels — it even supplies electricity to <b>1,000 homes</b> per year!</p><p class="ar" dir="rtl">ملعب في البرازيل يولّد كهرباءه لأن سقفه مغطى بالألواح الشمسية ويغذي 1000 منزل سنويًا!</p></div>
+     <div class="stad-card" style="--sc:var(--skyD)"><svg class="ico"><use href="#i-earth"/></svg><p>A stadium in <b>Europe</b> only uses renewable energy, <b class="hl hl-grape">so</b> it has reduced its carbon footprint by <b>20,000 tonnes</b> — like flying an airplane around the Earth 500 times!</p><p class="ar" dir="rtl">ملعب أوروبي يستخدم الطاقة المتجددة فقط، فخفض بصمته الكربونية 20 ألف طن!</p></div>
+     <div class="stad-card" style="--sc:var(--greenD)"><svg class="ico"><use href="#i-leaf"/></svg><p>One of the most eco-friendly stadiums in the world has <b>4,200 solar panels</b> and is cooled with water from a nearby lake. <b class="hl hl-sky">In addition</b>, its seats are made from <b>sugarcane</b> instead of plastic!</p><p class="ar" dir="rtl">4200 لوح شمسي وتبريد بماء البحيرة، ومقاعده من قصب السكر بدل البلاستيك!</p></div>
+     <div class="stad-card" style="--sc:var(--coralD)"><svg class="ico"><use href="#i-bolt"/></svg><p>Football pitches are usually made of grass. <b class="hl hl-coral">However</b>, there are <b>200 kinetic tiles</b> under the pitch at a stadium in <b>Brazil</b> — they turn the players' movements into energy to power the stadium lights!</p><p class="ar" dir="rtl">200 بلاطة حركية تحت أرضية ملعب برازيلي تحول حركات اللاعبين إلى طاقة للأنوار!</p></div>
+    </div>
+    <div class="stad-names">🏟️ Morro da Mineira (Brazil) · Aviva Stadium (Ireland) · Estadio Mineirão (Brazil) · Amsterdam ArenA (The Netherlands)<span class="ar" dir="rtl" style="display:block;margin-top:4px">أخضر ملاعب العالم — من البرازيل إلى أيرلندا وهولندا</span></div>
+   </div>
+   <div class="step" data-tip="Grammar battle — good luck!" data-tipar="معركة القواعد — بالتوفيق!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Grammar Battle</h3>
+    <span class="sh-ar" dir="rtl">تدريب على القواعد — اختبر قوتك</span>
+    <div class="datastrip">
+     <span class="dschip">-able · -ful · -ous · -ive · -al</span><span class="dschip">ADD: moreover/in addition/also</span><span class="dschip">CONTRAST: however/but</span><span class="dschip">REASON: because · RESULT: so/therefore</span>
+    </div>
+    <div id="m-l3q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 4 ============ -->
+<section class="screen level" id="scr-l4" style="--lc:var(--coral);--lcd:var(--coralD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">4</span>
+   <div><h2 class="lt">Mir'aah Desert</h2><span class="lvl-ar" dir="rtl">صحراء مرآة</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Welcome to the Mir'aah desert — the sun at work!" data-tipar="أهلًا بك في صحراء مرآة — الشمس في العمل!">
+    <h3 class="sh"><svg class="ico"><use href="#i-sun"/></svg>The Mir'aah Solar Project</h3>
+    <span class="sh-ar" dir="rtl">مشروع مرآة الشمسي — من عُمان إلى العالم</span>
+    <div class="sdeck">
+     <div class="slidey"><div class="slidey-bar"><svg class="ico"><use href="#i-sun"/></svg>SLIDE 1 · THE PROJECT</div>
+      <div class="slidey-body"><p class="sl-en"><b>Mir'aah</b> (which means <b>mirror</b>!) is a renewable energy project in an <b>oilfield in Oman</b>. It uses <b>solar power</b>.</p><p class="sl-ar" dir="rtl">«مرآة» مشروع طاقة متجددة في حقل نفط بسلطنة عمان يستخدم الطاقة الشمسية.</p></div></div>
+     <div class="slidey"><div class="slidey-bar"><svg class="ico"><use href="#i-stadium"/></svg>SLIDE 2 · ONE OF THE LARGEST</div>
+      <div class="slidey-body"><p class="sl-en">Mir'aah is one of the <b>largest solar energy plants in the world</b>!</p><p class="sl-ar" dir="rtl">مرآة واحدة من أكبر محطات الطاقة الشمسية في العالم!</p></div></div>
+     <div class="slidey"><div class="slidey-bar"><svg class="ico"><use href="#i-mirror"/></svg>SLIDE 3 · HOW IT WORKS</div>
+      <div class="slidey-body"><p class="sl-en"><b>Large mirrors</b> collect sunshine and <b>generate steam</b>. The steam is used to <b>extract oil</b> — instead of natural gas, which is not <b>environmentally friendly</b>.</p><p class="sl-ar" dir="rtl">مرايا ضخمة تولّد بخارًا يُستخدم لاستخراج النفط بدل الغاز الطبيعي الأقل ودّية للبيئة.</p></div></div>
+     <div class="slidey"><div class="slidey-bar"><svg class="ico"><use href="#i-check"/></svg>SLIDE 4 · SOLAR STEAM GENERATOR</div>
+      <div class="slidey-body"><p class="sl-en">Advantages: <b>Low cost</b> · <b>Reliable</b> · <b>Eco-friendly</b> · Reduces our carbon footprint by <b>300,000 tonnes per year</b>!</p><p class="sl-ar" dir="rtl">منخفض التكلفة · موثوق · صديق للبيئة · يقلل البصمة الكربونية 300 ألف طن سنويًا!</p></div></div>
+    </div>
+   </div>
+   <div class="step" data-tip="What did you learn about Mir'aah?" data-tipar="ماذا تعلمت عن مرآة؟">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Mir'aah Check</h3>
+    <span class="sh-ar" dir="rtl">اختبار مرآة — الشرائح أمامك</span>
+    <div id="m-miraah"></div>
+   </div>
+   <div class="step" data-tip="Sort the advantages from the disadvantages!" data-tipar="افصل المزايا عن العيوب!">
+    <h3 class="sh"><svg class="ico"><use href="#i-panel"/></svg>Solar: Good or Bad?</h3>
+    <span class="sh-ar" dir="rtl">الألواح الشمسية: رتّب المزايا والعيوب — انقر البطاقة ثم الصندوق</span>
+    <div class="sg-hint">
+     <span><svg class="ico" style="width:15px;height:15px;color:var(--greenD);vertical-align:-3px"><use href="#i-check"/></svg> Advantage = a good point · <span class="ar">ميزة</span></span>
+     <span><svg class="ico" style="width:15px;height:15px;color:var(--coralD);vertical-align:-3px"><use href="#i-flame"/></svg> Disadvantage = a bad point · <span class="ar">عيب</span></span>
+    </div>
+    <div id="m-adsort"></div>
+   </div>
+   <div class="step" data-tip="Big ideas for Oman — what do you think?" data-tipar="أفكار كبيرة لعُمان — ما رأيك؟">
+    <h3 class="sh"><svg class="ico"><use href="#i-earth"/></svg>Green Ideas for Oman</h3>
+    <span class="sh-ar" dir="rtl">أفكار خضراء لعُمان — ناقش ثم تحدث بلغة المزايا والعيوب</span>
+    <div class="tipgrid">
+     <div class="tipcard" style="--tc:var(--skyD)"><h4><span>A wind turbine at school</span><span class="ar" dir="rtl">توربينة رياح</span></h4>
+      <div class="tipitem"><svg class="ico"><use href="#i-wind"/></svg><span>Generate electricity to power the lights in your school.<span class="ti-ar" dir="rtl">توليد كهرباء لأضواء مدرستك.</span></span></div></div>
+     <div class="tipcard" style="--tc:var(--mintD)"><h4><span>Underwater turbines</span><span class="ar" dir="rtl">توربينات بحرية</span></h4>
+      <div class="tipitem"><svg class="ico"><use href="#i-wave"/></svg><span>Off the coast of Oman — generate <b>tidal energy</b>.<span class="ti-ar" dir="rtl">قبالة سواحل عمان لتوليد طاقة المدّ.</span></span></div></div>
+     <div class="tipcard" style="--tc:var(--grapeD)"><h4><span>Energy bikes</span><span class="ar" dir="rtl">دراجات الطاقة</span></h4>
+      <div class="tipitem"><svg class="ico"><use href="#i-bike"/></svg><span>Students' bikes generate electricity to charge electronic devices.<span class="ti-ar" dir="rtl">دراجات الطلاب تولّد كهرباء لشحن الأجهزة.</span></span></div></div>
+    </div>
+    <div class="pgrid" style="margin-top:14px">
+     <div class="pgroup" style="--pc:var(--greenD)"><div class="pg-h">Advantages<span class="ar" dir="rtl">للمزايا</span></div>
+      <div class="pchip"><span class="en">The greatest advantage of (solar energy) is…</span><span class="ar" dir="rtl">أعظم ميزة للطاقة الشمسية هي…</span></div>
+      <div class="pchip"><span class="en">The main benefit of (wind power) is…</span><span class="ar" dir="rtl">الفائدة الرئيسية لطاقة الرياح هي…</span></div>
+      <div class="pchip"><span class="en">Another advantage is…</span><span class="ar" dir="rtl">ميزة أخرى هي…</span></div></div>
+     <div class="pgroup" style="--pc:var(--coralD)"><div class="pg-h">Disadvantages<span class="ar" dir="rtl">للعيوب</span></div>
+      <div class="pchip"><span class="en">The biggest disadvantage of (biofuel) is…</span><span class="ar" dir="rtl">أكبر عيب للوقود الحيوي هو…</span></div>
+      <div class="pchip"><span class="en">One disadvantage is…</span><span class="ar" dir="rtl">أحد العيوب هو…</span></div></div>
+     <div class="pgroup" style="--pc:var(--skyD)"><div class="pg-h">Your verdict<span class="ar" dir="rtl">حكمك النهائي</span></div>
+      <div class="pchip"><span class="en">Overall, the advantages outweigh the disadvantages.</span><span class="ar" dir="rtl">إجمالًا، المزايا تفوق العيوب.</span></div></div>
+    </div>
+    <div class="gcard talkcard">
+     <p style="font-weight:600"><svg class="ico" style="width:18px;height:18px;color:var(--coralD);vertical-align:-3px"><use href="#i-chat"/></svg> Which idea is the most suitable for Oman? Why?</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:4px">أي فكرة أنسب لعُمان برأيك؟ لماذا؟</p>
+     <button class="rvbtn"><span class="rv-en">Show ideas</span><span class="rv-ar" dir="rtl">أظهر الأفكار</span></button>
+     <div class="rvt"><span class="rvv">Oman has a lot of sunshine → solar energy works very well · long coasts → tidal energy · bikes keep students fit AND make power!</span>
+      <span class="ar" dir="rtl">الشمس ساطعة معظم العام فالطاقة الشمسية مثالية · سواحل طويلة تناسب طاقة المدّ · والدراجات تجمع بين اللياقة وتوليد الطاقة!</span></div>
+    </div>
+    <div id="m-l4q"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 5 ============ -->
+<section class="screen level" id="scr-l5" style="--lc:var(--grape);--lcd:var(--grapeD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">5</span>
+   <div><h2 class="lt">Polite Workshop</h2><span class="lvl-ar" dir="rtl">ورشة الطلبات المهذبة</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="A very polite email — meet Mazin!" data-tipar="بريد شديد المهذب — تعرّف على مازن!">
+    <h3 class="sh"><svg class="ico"><use href="#i-mail"/></svg>Mazin's Request Email</h3>
+    <span class="sh-ar" dir="rtl">بريد مازن — لاحظ أدوات الربط الملوّنة داخل النص</span>
+    <div class="mail">
+     <div class="mail-top"><svg class="ico"><use href="#i-mail"/></svg><span class="mail-addr">To: s.brown@miraah.com</span><span class="mail-sub">Subject: Visit request</span></div>
+     <div class="mail-body">
+      <div class="para"><button class="spk" data-say="Dear Mr Brown, I hope that you are very well. My name is Mazin. I am a third-year student at the Science and Technology College. I study Engineering."><svg class="ico"><use href="#i-speaker"/></svg></button>
+       <p class="pen">Dear Mr Brown, I hope that you are very well. My name is Mazin. I am a <b>third-year student</b> at the Science and Technology College. I study <b>Engineering</b>.</p>
+       <p class="par" dir="rtl">يقدّم نفسه: مازن، طالب سنة ثالثة يدرس الهندسة.</p></div>
+      <div class="para"><button class="spk" data-say="As part of our course this year, we have been learning about renewable energy. For our final assignment, we have to research and write a report about a sustainable project in Oman."><svg class="ico"><use href="#i-speaker"/></svg></button>
+       <p class="pen">As part of our course, we have been learning about <b>renewable energy</b>. For our final assignment, we have to write a report about a <b>sustainable project in Oman</b>.</p>
+       <p class="par" dir="rtl">عليهم كتابة تقرير عن مشروع مستدام في عُمان.</p></div>
+      <div class="para"><button class="spk=" data-say="My team would like to write a report about the Mir'aah project. Therefore, I am writing to request a visit to the Mir'aah site. We would like to learn about how the plant operates. In addition, it would also be helpful to speak to an engineer because we have some questions about how the plant was built. We would also like to take some photographs for our report."><svg class="ico"><use href="#i-speaker"/></svg></button>
+       <p class="pen">My team would like to write about the <b>Mir'aah project</b>. <b class="hl hl-grape">Therefore</b>, I am writing to <b>request a visit</b> to the Mir'aah site. We would like to learn how the plant operates. <b class="hl hl-sky">In addition</b>, it would <b class="hl hl-sky">also</b> be helpful to speak to an engineer <b class="hl hl-grape">because</b> we have some questions. We would <b class="hl hl-sky">also</b> like to take photographs.</p>
+       <p class="par" dir="rtl">يطلب الزيارة رسميًا: تعلّم آلية العمل والتحدث مع مهندس والتقاط صور.</p></div>
+      <div class="para"><button class="spk=" data-say="If a visit is possible, we would like to visit at the start of next month, and there will be four of us. Any help you can provide will be greatly appreciated. Kind regards, Mazin."><svg class="ico"><use href="#i-speaker"/></svg></button>
+       <p class="pen">If a visit is possible, we would like to visit <b>at the start of next month</b>, and there will be <b>four of us</b>. Any help you can provide will be greatly appreciated. Kind regards, Mazin</p>
+       <p class="par" dir="rtl">يفضّلون مطلع الشهر القادم وعددهم أربعة.</p></div>
+     </div>
+    </div>
+   </div>
+   <div class="step" data-tip="Check your understanding of the email!" data-tipar="تحقّق من فهمك للبريد!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bolt"/></svg>Did You Understand?</h3>
+    <span class="sh-ar" dir="rtl">تحقّق من فهمك — البريد أمامك</span>
+    <div id="m-l5q"></div>
+   </div>
+   <div class="step" data-tip="Match each phrase to its job!" data-tipar="طابق كل عبارة بوظيفتها!">
+    <h3 class="sh"><svg class="ico"><use href="#i-search"/></svg>Connect!</h3>
+    <span class="sh-ar" dir="rtl">وصّل كل عبارة بوظيفتها — انقر العبارة ثم وظيفتها</span>
+    <div id="m-polite"></div>
+   </div>
+   <div class="step" data-tip="Build the sentences in the right order!" data-tipar="ابنِ الجمل بالترتيب الصحيح!">
+    <h3 class="sh"><svg class="ico"><use href="#i-pen"/></svg>Sentence Builder</h3>
+    <span class="sh-ar" dir="rtl">رتّب الجمل المهذبة — انقر الكلمات بالترتيب الصحيح</span>
+    <div id="m-order"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ LEVEL 6 ============ -->
+<section class="screen level" id="scr-l6" style="--lc:var(--pink);--lcd:var(--pinkD)">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num">6</span>
+   <div><h2 class="lt">Invention Studio</h2><span class="lvl-ar" dir="rtl">استوديو الاختراعات</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en"></span><span class="tip-ar" dir="rtl"></span></div></div>
+  </header>
+  <div class="lvl-dots"></div>
+  <div class="steps">
+   <div class="step" data-tip="Meet Ali's team and their invention!" data-tipar="تعرّف على فريق علي واختراعهم!">
+    <h3 class="sh"><svg class="ico"><use href="#i-battery"/></svg>The Solar Case Presentation</h3>
+    <span class="sh-ar" dir="rtl">عرض «العلبة الشمسية» — اختراع فريق علي</span>
+    <div class="sdeck">
+     <div class="slidey"><div class="slidey-bar"><svg class="ico"><use href="#i-bolt"/></svg>THE PROBLEM</div>
+      <div class="slidey-body"><p class="sl-en">Do you ever <b>run out of battery</b> on your phone while you are out, with no way to charge it?</p><p class="sl-ar" dir="rtl">هل نفدت بطارية هاتفك يومًا وأنت خارج المنزل دون وسيلة شحن؟</p></div></div>
+     <div class="slidey"><div class="slidey-bar"><svg class="ico"><use href="#i-phone"/></svg>OUR INVENTION</div>
+      <div class="slidey-body"><p class="sl-en">The <b>Solar Case</b> — a <b>solar-powered phone case</b> that charges your phone <b>anytime, anywhere</b>!</p><p class="sl-ar" dir="rtl">علبة شمسية: غلاف هاتف يعمل بالطاقة الشمسية ويشحن هاتفك في أي وقت وأي مكان.</p></div></div>
+     <div class="slidey"><div class="slidey-bar"><svg class="ico"><use href="#i-panel"/></svg>HOW DOES IT WORK?</div>
+      <div class="slidey-body"><p class="sl-en">A <b>solar panel</b> on the case converts sunlight into electricity. A <b>battery</b> stores it, and a small <b>cable</b> connects the case to your phone.</p><p class="sl-ar" dir="rtl">لوح شمسي يحوّل ضوء الشمس إلى كهرباء، وبطارية تخزّنها، وكابل صغير يوصلها بالهاتف.</p></div></div>
+     <div class="slidey"><div class="slidey-bar"><svg class="ico"><use href="#i-star"/></svg>THE ADVANTAGES</div>
+      <div class="slidey-body"><p class="sl-en">It is <b>eco-friendly</b> · It <b>protects</b> your phone · Charge <b>anywhere</b> · No charger to carry!</p><p class="sl-ar" dir="rtl">صديقة للبيئة · تحمي هاتفك · اشحن في أي مكان · لا حاجة لحمل الشاحن!</p></div></div>
+     <div class="slidey"><div class="slidey-bar"><svg class="ico"><use href="#i-chat"/></svg>THANK YOU!</div>
+      <div class="slidey-body"><p class="sl-en">Thank you for listening! Does anyone have any <b>questions</b>?</p><p class="sl-ar" dir="rtl">شكرًا لاستماعكم — هل من أسئلة؟</p></div></div>
+    </div>
+    <div class="gcard" style="margin-top:14px;background:#FFF3CE">
+     <p style="font-weight:600">🎤 Tips for giving presentations: Practise before · Use notes · Open body language · Don't read from slides · Relax and smile · Speak clearly · Pause regularly · Keep it simple · Make eye contact</p>
+     <p class="ar" dir="rtl" style="text-align:right;margin-top:6px">نصائح العرض: تدرّب مسبقًا · استخدم ملاحظاتك · لغة جسد مفتوحة · لا تقرأ من الشرائح · استرح وابتسم · تحدث بوضوح · توقف بشكل منتظم · اجعلها بسيطة · تواصل بصريًا.</p>
+    </div>
+   </div>
+   <div class="step" data-tip="Match each slide to its content!" data-tipar="طابق كل شريحة بمحتواها!">
+    <h3 class="sh"><svg class="ico"><use href="#i-search"/></svg>Connect!</h3>
+    <span class="sh-ar" dir="rtl">وصّل كل شريحة بمحتواها — انقر الشريحة ثم محتواها</span>
+    <div id="m-slides"></div>
+   </div>
+   <div class="step" data-tip="Now invent YOUR own machine — I can't wait!" data-tipar="الآن اخترع جهازك أنت — لا أستطيع الانتظار!">
+    <h3 class="sh"><svg class="ico"><use href="#i-bulb"/></svg>Your Turn: Invent It!</h3>
+    <span class="sh-ar" dir="rtl">دورك الآن — صمّم اختراعك الذي يعمل بطاقة متجددة</span>
+    <div class="gcard">
+     <div class="fields">
+      <div class="field"><label>Invention name</label><span class="f-ar" dir="rtl">اسم الاختراع</span><input id="invName" placeholder="e.g. The Sunny Fan" maxlength="30"></div>
+      <div class="field"><label>What problem does it solve?</label><span class="f-ar" dir="rtl">ما المشكلة التي يحلها؟</span><input id="invProblem" placeholder="e.g. it is too hot at lunchtime" maxlength="40"></div>
+     </div>
+     <div class="field" style="margin-top:12px"><label>How does it work?</label><span class="f-ar" dir="rtl">كيف يعمل؟</span><input id="invHow" placeholder="e.g. a small panel charges it in the sun" maxlength="60"></div>
+     <div class="srow"><span class="slab">Energy<span class="ar" dir="rtl">الطاقة</span></span>
+      <div class="schips" id="enRow">
+       <button class="schip enchip" data-k="solar" style="--ec:var(--sunD)"><svg class="ico"><use href="#i-sun"/></svg>Solar Energy</button>
+       <button class="schip enchip" data-k="wind" style="--ec:var(--skyD)"><svg class="ico"><use href="#i-wind"/></svg>Wind Power</button>
+       <button class="schip enchip" data-k="hydro" style="--ec:var(--mintD)"><svg class="ico"><use href="#i-drop"/></svg>Hydropower</button>
+       <button class="schip enchip" data-k="geo" style="--ec:var(--coralD)"><svg class="ico"><use href="#i-geo"/></svg>Geothermal</button>
+       <button class="schip enchip" data-k="bio" style="--ec:var(--greenD)"><svg class="ico"><use href="#i-leaf"/></svg>Biofuel</button>
+      </div>
+     </div>
+     <button id="invGo" class="btn" style="--bc:var(--pink);--bcd:var(--pinkD);margin-top:16px"><span>Create my invention</span><span class="b-ar" dir="rtl">أنشئ اختراعي</span></button>
+     <div class="prevbox" id="invPrev">
+      <p class="bp-h">Your invention poster appears here</p>
+      <p class="bp-arh ar" dir="rtl">ستظهر بطاقة اختراعك هنا</p>
+      <div class="bp-body" id="invBody"></div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ BOSS ============ -->
+<section class="screen level" id="scr-boss" style="--lc:#3D3450;--lcd:#2A2440">
+ <div class="wrap">
+  <header class="lvl-head">
+   <span class="lvl-num" style="background:#3D3450;box-shadow:0 4px 0 #2A2440"><svg class="ico" style="width:26px;height:26px"><use href="#i-plug"/></svg></span>
+   <div><h2 class="lt">The Blackout Monster</h2><span class="lvl-ar" dir="rtl">وحش انقطاع الطاقة</span></div>
+   <div class="head-tabby"><div class="tabby-slot"></div><div class="bubble"><span class="tip-en">This is it! Restore the city's power!</span><span class="tip-ar" dir="rtl">لحظة الحسم! أعد الكهرباء للمدينة!</span></div></div>
+  </header>
+  <div class="mon-wrap" id="monWrap">
+   <svg id="monSvg" viewBox="0 0 240 210">
+    <rect x="88" y="8" width="15" height="36" rx="6" fill="#FFC93C" stroke="#3D3450" stroke-width="4"/>
+    <rect x="137" y="8" width="15" height="36" rx="6" fill="#FFC93C" stroke="#3D3450" stroke-width="4"/>
+    <path d="M170 148q28 8 16 32q-8 16 12 20" fill="none" stroke="#3D3450" stroke-width="8" stroke-linecap="round"/>
+    <rect x="50" y="44" width="140" height="132" rx="26" fill="#3D3450" stroke="#2A2440" stroke-width="6"/>
+    <g class="m-eyes">
+     <path d="M70 80 L102 92" stroke="#B02323" stroke-width="7" stroke-linecap="round"/>
+     <path d="M170 80 L138 92" stroke="#B02323" stroke-width="7" stroke-linecap="round"/>
+     <rect x="72" y="92" width="30" height="20" rx="8" fill="#fff"/>
+     <rect x="138" y="92" width="30" height="20" rx="8" fill="#fff"/>
+     <circle cx="88" cy="102" r="6" fill="#B02323"/><circle cx="152" cy="102" r="6" fill="#B02323"/>
+    </g>
+    <g class="m-dead">
+     <path d="M74 94 L100 114 M100 94 L74 114" stroke="#8B829E" stroke-width="6" stroke-linecap="round"/>
+     <path d="M140 94 L166 114 M166 94 L140 114" stroke="#8B829E" stroke-width="6" stroke-linecap="round"/>
+    </g>
+    <path class="m-mouth" d="M88 140 L98 132 L108 140 L118 132 L128 140 L138 132 L148 140" fill="none" stroke="#B02323" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+   </svg>
+   <div class="hpbar"><div class="hpfill" id="hpFill"></div></div>
+   <p class="hplbl">BLACKOUT POWER · قوة الظلام</p>
+   <p style="font-weight:600;margin-top:10px">Answer 8 questions to defeat it — every correct answer is a zap of clean energy!</p>
+   <p class="ar" dir="rtl" style="text-align:center;margin-top:4px">أجب عن 8 أسئلة لتهزمه — كل إجابة صحيحة صعقة طاقة نظيفة تعيد النور!</p>
+  </div>
+  <div id="bq"></div>
+ </div>
+</section>
+
+<!-- ============ WIN ============ -->
+<section class="screen" id="scr-win">
+ <div class="wrap done-wrap">
+  <svg class="trophy-big"><use href="#i-bolt"/></svg>
+  <h2 class="done-title">POWER RESTORED!</h2>
+  <p class="done-sub">You defeated the Blackout Monster and mastered Renewable Energy.</p>
+  <p class="done-sub-ar ar" dir="rtl">هزمت وحش انقطاع الطاقة وأتقنت وحدة الطاقة المتجددة — أحسنت!</p>
+  <div class="statpills">
+   <div class="statpill"><svg class="ico"><use href="#i-bolt"/></svg><span id="winXp">0</span>&nbsp;XP</div>
+   <div class="statpill"><svg class="ico"><use href="#i-star"/></svg><span id="winStars">0</span>/18</div>
+   <div class="statpill"><svg class="ico"><use href="#i-medal"/></svg><span id="winBdg">0</span>/7</div>
+  </div>
+  <h3 class="sh" style="justify-content:center"><svg class="ico"><use href="#i-medal"/></svg>Your Badges</h3>
+  <span class="sh-ar" dir="rtl" style="text-align:center">أوسمتك — اجمعها كلها!</span>
+  <div class="bdg-grid" id="winBadges"></div>
+  <div class="done-btns">
+   <button id="winMapBtn" class="btn ghost"><span>Back to Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>
+   <button id="winAgainBtn" class="btn" style="--bc:var(--green);--bcd:var(--greenD)"><span>Play Again</span><span class="b-ar" dir="rtl">العب من جديد</span></button>
+  </div>
+ </div>
+</section>
+
+<script>
+(function(){
+'use strict';
+/* ================= helpers ================= */
+var $=function(s){return document.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+var IC=function(n){return '<svg class="ico"><use href="#'+n+'"/></svg>'};
+var shuffle=function(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t}return b};
+var esc=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')};
+
+/* ================= audio ================= */
+var actx=null,muted=false;
+function initAudio(){if(actx)return;try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}
+function tone(f,d,type,v,dl){if(!actx||muted)return;type=type||'sine';v=v||.12;dl=dl||0;
+ var t=actx.currentTime+dl,o=actx.createOscillator(),g=actx.createGain();
+ o.type=type;o.frequency.setValueAtTime(f,t);
+ g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+ o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+d+.05)}
+function sfx(n,i){switch(n){
+ case 'click':tone(560,.07,'triangle',.06);break;
+ case 'pop':tone(340,.06,'sine',.08);break;
+ case 'correct':tone(660,.12,'sine',.12);tone(880,.16,'sine',.12,.09);break;
+ case 'wrong':tone(220,.18,'sawtooth',.06);tone(160,.22,'sawtooth',.05,.09);break;
+ case 'match':tone(523,.09,'sine',.1);tone(659,.09,'sine',.1,.08);tone(784,.14,'sine',.1,.16);break;
+ case 'heart':tone(392,.12,'sine',.1);tone(294,.18,'sine',.09,.1);break;
+ case 'hit':tone(130,.14,'square',.09);tone(90,.2,'square',.07,.05);break;
+ case 'zap':tone(987,.09,'square',.08);tone(1318,.12,'square',.08,.07);break;
+ case 'unlock':tone(600,.1,'triangle',.09);tone(900,.16,'triangle',.09,.09);break;
+ case 'star':tone(700+(i||0)*160,.16,'sine',.12);break;
+ case 'fanfare':[523,659,784,1046].forEach(function(f,k){tone(f,.16,'triangle',.11,k*.13)});tone(1318,.3,'triangle',.1,.55);break;
+}}
+document.addEventListener('pointerdown',function once(){initAudio();document.removeEventListener('pointerdown',once)});
+
+/* ================= state ================= */
+var KEY='req1';
+function load(){try{var d=JSON.parse(localStorage.getItem(KEY));
+ if(d&&typeof d.xp==='number')return{xp:d.xp,stars:d.stars||{},unlocked:d.unlocked||1,badges:d.badges||[],streak:0}}catch(e){}
+ return{xp:0,stars:{},unlocked:1,badges:[],streak:0}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({xp:S.xp,stars:S.stars,unlocked:S.unlocked,badges:S.badges}))}catch(e){}}
+var S=load();
+var MODE=null,L=null,B=null;
+
+/* ================= speech ================= */
+var voices=[];
+function loadVoices(){try{voices=window.speechSynthesis.getVoices()}catch(e){}}
+if('speechSynthesis' in window){loadVoices();window.speechSynthesis.addEventListener('voiceschanged',loadVoices)}
+var VPREF=['Google UK English Female','Microsoft Sonia','Microsoft Libby','Microsoft Aria','Microsoft Michelle','Samantha','Serena','Kate','Moira','Zira','Victoria','Google US English'];
+function pickVoice(){var i,j;
+ for(i=0;i<VPREF.length;i++){for(j=0;j<voices.length;j++){if(voices[j].name===VPREF[i])return voices[j]}}
+ for(j=0;j<voices.length;j++){if(/female/i.test(voices[j].name))return voices[j]}
+ for(j=0;j<voices.length;j++){if(/^en/i.test(voices[j].lang))return voices[j]}
+ return null}
+function speakSay(btn){var t=btn.getAttribute('data-say');if(!t)return;
+ if(!('speechSynthesis' in window))return;
+ try{window.speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=.85;u.pitch=1.05;
+  var v=pickVoice();if(v)u.voice=v;
+  btn.classList.add('busy');u.onend=u.onerror=function(){btn.classList.remove('busy')};
+  window.speechSynthesis.speak(u)}catch(e){}}
+
+/* ================= confetti ================= */
+var CCOL=['#FFC93C','#4D96FF','#4FBF43','#FF6B6B','#9B5DE5','#29C0B2'];
+function confetti(x,y,n){n=n||24;
+ for(var i=0;i<n;i++){var c=document.createElement('i');c.className='cf';
+  c.style.left=x+'px';c.style.top=y+'px';c.style.background=CCOL[Math.floor(Math.random()*CCOL.length)];
+  c.style.setProperty('--dx',(Math.random()*200-100)+'px');
+  c.style.animationDuration=(1+Math.random()*.9)+'s';
+  if(Math.random()<.4)c.style.borderRadius='50%';
+  document.body.appendChild(c);
+  (function(el){setTimeout(function(){el.remove()},2200)})(c)}}
+function burst(el,n){if(!el)return;var r=el.getBoundingClientRect();confetti(r.left+r.width/2,r.top+r.height/2,n||22)}
+function confettiRain(){for(var i=0;i<5;i++)setTimeout(function(){confetti(Math.random()*window.innerWidth,-10,26)},i*250)}
+
+/* ================= HUD ================= */
+var xpShown=0;
+function addXP(d){S.xp+=d;save();tweenXP()}
+function tweenXP(){var el=$('#xpN'),from=xpShown,to=S.xp,t0=performance.now(),dur=450;
+ function f(t){var k=Math.min(1,(t-t0)/dur);xpShown=Math.round(from+(to-from)*k);el.textContent=xpShown;if(k<1)requestAnimationFrame(f)}
+ requestAnimationFrame(f)}
+function streakUp(){S.streak++;
+ if(S.streak>=2){var h=$('#hudStreak');h.classList.add('on');$('#streakN').textContent='x'+S.streak;
+  h.classList.remove('pop');void h.offsetWidth;h.classList.add('pop')}
+ if(S.streak>0&&S.streak%4===0){addXP(5);toast('On Fire!','أداؤك مشتعل — واصل!','i-flame','var(--coral)');sfx('match')}}
+function streakCut(){S.streak=0;$('#hudStreak').classList.remove('on')}
+function renderHearts(){var h=$('#hudHearts');
+ var n=MODE==='boss'?B.hearts:(MODE==='level'?L.hearts:3);
+ h.innerHTML=[0,1,2].map(function(i){return '<span class="hh'+(i<n?'':' off')+'">'+IC('i-heart')+'</span>'}).join('')}
+function loseHeart(){sfx('heart');
+ if(MODE==='boss'){B.hearts=Math.max(0,B.hearts-1);renderHearts();
+  var el=$('#hudHearts');el.classList.remove('hpop');void el.offsetWidth;el.classList.add('hpop');
+  if(B.hearts<=0){setTimeout(bossFail,600)}return}
+ if(MODE!=='level')return;
+ L.hearts=Math.max(0,L.hearts-1);renderHearts();
+ var el=$('#hudHearts');el.classList.remove('hpop');void el.offsetWidth;el.classList.add('hpop')}
+
+/* ================= toasts / badges ================= */
+function toast(t,ar,ic,col){var w=$('#toasts');
+ if(w.children.length>2)w.firstChild.remove();
+ var d=document.createElement('div');d.className='toast';d.style.setProperty('--tc',col||'var(--gold)');
+ d.innerHTML='<span class="t-ic">'+IC(ic||'i-star')+'</span><span><b>'+t+'</b><span class="t-ar" dir="rtl">'+ar+'</span></span>';
+ w.appendChild(d);
+ setTimeout(function(){d.classList.add('out');setTimeout(function(){d.remove()},350)},2400)}
+var BADGES=[
+ {id:'words',t:'Source Master',ar:'سيّد المصادر',ic:'i-plug',c:'var(--sky)'},
+ {id:'story',t:'Email Explorer',ar:'مستكشف البريد',ic:'i-mail',c:'var(--mint)'},
+ {id:'gram',t:'Word Wizard',ar:'ساحر الكلمات',ic:'i-bulb',c:'var(--sun)'},
+ {id:'desert',t:'Desert Star',ar:'نجم الصحراء',ic:'i-sun',c:'var(--coral)'},
+ {id:'polite',t:'Polite Pro',ar:'خبير الأدب',ic:'i-pen',c:'var(--grape)'},
+ {id:'create',t:'Young Inventor',ar:'مخترع صغير',ic:'i-bolt',c:'var(--pink)'},
+ {id:'boss',t:'Power Hero',ar:'بطل الطاقة',ic:'i-crown',c:'var(--gold)'}];
+var BMAP={1:'words',2:'story',3:'gram',4:'desert',5:'polite',6:'create'};
+function award(id){if(S.badges.indexOf(id)>=0)return;
+ S.badges.push(id);save();
+ var b=BADGES.filter(function(x){return x.id===id})[0];
+ if(b){toast(b.t,b.ar,b.ic,b.c);sfx('unlock')}}
+
+/* ================= mascot (Watty) ================= */
+function tabbySVG(){return '<svg class="tabby-svg" viewBox="0 0 120 134">'+
+ '<line x1="60" y1="24" x2="60" y2="14" stroke="#3D3450" stroke-width="4" stroke-linecap="round"/>'+
+ '<path d="M63.5 3.5l-4 7h2.8l-2 5.5 5.4-7.5h-2.9z" fill="#FFC93C" stroke="#3D3450" stroke-width="2" stroke-linejoin="round"/>'+
+ '<rect x="6" y="58" width="13" height="30" rx="6.5" fill="#E08700"/>'+
+ '<rect x="101" y="58" width="13" height="30" rx="6.5" fill="#E08700"/>'+
+ '<rect x="28" y="120" width="17" height="11" rx="5.5" fill="#3D3450"/>'+
+ '<rect x="75" y="120" width="17" height="11" rx="5.5" fill="#3D3450"/>'+
+ '<rect x="17" y="24" width="86" height="102" rx="20" fill="#FFC93C" stroke="#3D3450" stroke-width="4.5"/>'+
+ '<rect x="27" y="34" width="66" height="82" rx="13" fill="#FFFEF2"/>'+
+ '<circle cx="60" cy="41" r="2.4" fill="#3D3450"/>'+
+ '<g class="tabby-eyes"><circle cx="47" cy="59" r="5.6" fill="#3D3450"/><circle cx="73" cy="59" r="5.6" fill="#3D3450"/>'+
+ '<circle cx="49" cy="57" r="1.9" fill="#fff"/><circle cx="75" cy="57" r="1.9" fill="#fff"/></g>'+
+ '<circle cx="36" cy="70" r="4" fill="#FFB3C6" opacity=".85"/><circle cx="84" cy="70" r="4" fill="#FFB3C6" opacity=".85"/>'+
+ '<path class="tabby-mouth" d="M52 66 Q60 73 68 66" fill="none" stroke="#3D3450" stroke-width="3.5" stroke-linecap="round"/></svg>'}
+function mascotReact(mood){var scr=document.querySelector('.screen.on');if(!scr)return;
+ var slot=scr.querySelector('.tabby-slot');if(!slot)return;
+ var mouth=slot.querySelector('.tabby-mouth');if(!mouth)return;
+ if(mood==='happy'){mouth.setAttribute('d','M46 61 Q60 82 74 61 Z');mouth.setAttribute('fill','#3D3450')}
+ else{mouth.setAttribute('d','M52 72 Q60 63 68 72');mouth.setAttribute('fill','none')}
+ slot.classList.remove('jump','shake');void slot.offsetWidth;
+ slot.classList.add(mood==='happy'?'jump':'shake');
+ setTimeout(function(){mouth.setAttribute('d','M52 66 Q60 73 68 66');mouth.setAttribute('fill','none');
+  slot.classList.remove('jump','shake')},1300)}
+
+/* ================= screens ================= */
+var ovl=$('#ovl');
+function show(id){
+ var el=$('#scr-'+id);
+ $$('.screen').forEach(function(s){s.classList.remove('on')});
+ if(!el)return;
+ el.classList.add('on');
+ $('#hud').classList.toggle('on',id!=='title');
+ if(id!=='map')window.scrollTo(0,0);
+ if(id==='map'){MODE=null;$('#hudHearts').classList.add('hidden');renderMap();
+  setTimeout(function(){var c=$('#mapNodes .node.cur')||$('#mapNodes .node:not(.lock)');if(c)c.scrollIntoView({block:'center',behavior:'smooth'})},150)}}
+function hideOvl(){ovl.classList.remove('on')}
+
+/* ================= map ================= */
+var LEVELS=[
+ {name:'Energy Harbor',ar:'ميناء الطاقة',c:'sky',ic:'i-plug'},
+ {name:'The Email Valley',ar:'وادي البريد',c:'mint',ic:'i-mail'},
+ {name:'Grammar Station',ar:'محطة القواعد',c:'sun',ic:'i-bulb'},
+ {name:"Mir'aah Desert",ar:'صحراء مرآة',c:'coral',ic:'i-sun'},
+ {name:'Polite Workshop',ar:'ورشة الطلبات',c:'grape',ic:'i-pen'},
+ {name:'Invention Studio',ar:'استوديو الاختراعات',c:'pink',ic:'i-bolt'}];
+var POS=[{x:50,y:8.1},{x:24,y:21.9},{x:66,y:35.8},{x:26,y:49.6},{x:68,y:63.5},{x:30,y:77.3}];
+function renderMap(){
+ $('#mapStars').textContent=Object.keys(S.stars).reduce(function(a,k){return a+S.stars[k]},0);
+ $('#mapBadges').textContent=S.badges.length;
+ var h='';
+ LEVELS.forEach(function(lv,i){var n=i+1,unlocked=n<=S.unlocked,st=S.stars[n]||0,cur=(n===S.unlocked&&!st);
+  h+='<button class="node'+(unlocked?'':' lock')+(cur?' cur':'')+'" style="left:'+POS[i].x+'%;top:'+POS[i].y+'%" data-n="'+n+'">'+
+  (cur?'<span class="go-arrow">'+IC('i-arrowD')+'</span>':'')+
+  '<span class="node-face" style="--nc:var(--'+lv.c+');--ncd:var(--'+lv.c+'D)">'+(unlocked?IC(lv.ic):IC('i-lock'))+'<span class="node-num">'+n+'</span></span>'+
+  '<span class="node-stars">'+[1,2,3].map(function(s){return '<span class="nstar'+(s<=st?'':' off')+'">'+IC('i-star')+'</span>'}).join('')+'</span>'+
+  '<span class="node-name">'+lv.name+'<span class="nar" dir="rtl">'+lv.ar+'</span></span></button>'});
+ var bOpen=S.unlocked>=7, bCur=bOpen&&S.badges.indexOf('boss')<0;
+ h+='<button class="node boss-node'+(bOpen?'':' lock')+(bCur?' cur':'')+'" style="left:50%;top:92.3%" data-n="7">'+
+ (bCur?'<span class="go-arrow">'+IC('i-arrowD')+'</span>':'')+
+ '<span class="node-face" style="--nc:#3D3450;--ncd:#2A2440">'+(bOpen?IC('i-plug'):IC('i-lock'))+'</span>'+
+ '<span class="boss-ribbon">BOSS</span>'+
+ '<span class="node-name">The Blackout Monster<span class="nar" dir="rtl">وحش انقطاع الطاقة</span></span></button>';
+ $('#mapNodes').innerHTML=h}
+function nodeClick(nd){var n=+nd.getAttribute('data-n');
+ if(n===7){
+  if(S.unlocked>=7){sfx('click');startBoss()}else{locked(nd)}
+  return}
+ if(n<=S.unlocked){sfx('click');startLevel(n)}else{locked(nd)}}
+function locked(nd){sfx('wrong');nd.classList.remove('nshake');void nd.offsetWidth;nd.classList.add('nshake');
+ toast('Locked!','أكمل المرحلة السابقة أولًا','i-lock','var(--ink)')}
+
+/* ================= vocab data ================= */
+var V_EN=[
+ {w:'oil',ar:'نفط',ic:'i-oil'},{w:'coal',ar:'فحم',ic:'i-coal'},
+ {w:'natural gas',ar:'غاز طبيعي',ic:'i-flame'},{w:'nuclear power',ar:'طاقة نووية',ic:'i-atom'},
+ {w:'the sun',ar:'الشمس',ic:'i-sun'},{w:'wind',ar:'الرياح',ic:'i-wind'},
+ {w:'water',ar:'الماء',ic:'i-drop'},{w:'geothermal heat',ar:'حرارة الأرض',ic:'i-geo'},
+ {w:'biomass',ar:'كتلة حيوية',ic:'i-leaf'},{w:'electricity',ar:'كهرباء',ic:'i-bolt'}];
+var V_TYPES=[
+ {w:'Wind Power',ic:'i-wind',en:'The wind powers wind turbines on wind farms which generate electricity.',ar:'طاقة الرياح: تدير التوربينات في مزارع الرياح لتوليد الكهرباء',ex:'Wind turbines generate electricity.'},
+ {w:'Solar Energy',ic:'i-sun',en:'Heat from the sun is collected using solar panels and converted into electricity.',ar:'الطاقة الشمسية: تُجمع حرارة الشمس بالألواح وتتحول إلى كهرباء',ex:'Solar panels convert heat from the sun into electricity.'},
+ {w:'Geothermal Energy',ic:'i-geo',en:'Natural heat and steam in the ground can be used to generate electricity.',ar:'الحرارية الأرضية: حرارة وبخار الأرض الطبيعيان يولّدان الكهرباء',ex:'Geothermal power uses natural heat from the earth.'},
+ {w:'Biofuel',ic:'i-leaf',en:'Organic mass from plants and animals can be burned to create electricity or power vehicles.',ar:'الوقود الحيوي: كتلة عضوية تُحرق لإنتاج الكهرباء أو تشغيل المركبات',ex:'Biofuel can power vehicles.'},
+ {w:'Hydropower',ic:'i-wave',en:'Hydropower plants use turbines which are turned by water passing through dams or from waves in the ocean.',ar:'الطاقة المائية: توربينات تدور بمرور الماء عبر السدود أو بموجات المحيط',ex:'Hydropower plants use turbines turned by water.'}];
+
+/* ================= quiz data ================= */
+var Q1=[
+ {q:'Renewable energy and non-renewable energy come from the same sources.',ar:'الطاقة المتجددة وغير المتجددة تأتيان من المصادر نفسها.',opts:['True','False'],ok:1,n:'Renewable comes from the sun, wind and water; non-renewable comes from oil, coal and gas.',nar:'المتجددة من الشمس والرياح والماء، وغير المتجددة من النفط والفحم والغاز.'},
+ {q:'Renewable energy is generated from sources that never run out.',ar:'تُولَّد الطاقة المتجددة من مصادر لا تنفد أبدًا.',opts:['True','False'],ok:0,n:'The sun, wind and water will never run out!',nar:'الشمس والرياح والماء لا تنفد أبدًا!'},
+ {q:'The most common types of renewable energy are solar power, wind power, hydropower, geothermal power and biofuel.',ar:'أشهر أنواع الطاقة المتجددة: الشمسية والرياح والمائية والحرارية الأرضية والوقود الحيوي.',opts:['True','False'],ok:0,n:'All five are the most common types!',nar:'الأنواع الخمسة كلها هي الأكثر شيوعًا!'},
+ {q:'Biofuel is produced using water.',ar:'يُنتَج الوقود الحيوي باستخدام الماء.',opts:['True','False'],ok:1,n:'Biofuel is produced using organic mass from plants and animals.',nar:'يُنتَج من الكتلة العضوية للنباتات والحيوانات.'},
+ {q:'Renewable energy is cheaper than non-renewable energy.',ar:'الطاقة المتجددة أرخص من غير المتجددة.',opts:['True','False'],ok:1,n:'Not always — solar panels, for example, are expensive to install.',nar:'ليس دائمًا — فالألواح الشمسية مكلفة التركيب مثلًا.'},
+ {q:'Renewable energy is better for the environment.',ar:'الطاقة المتجددة أفضل للبيئة.',opts:['True','False'],ok:0,n:'It does not produce greenhouse gases.',nar:'لأنها لا تنتج غازات الدفيئة.'},
+ {q:'Which of these is a NON-renewable energy source?',ar:'أيّ مما يلي مصدر طاقة غير متجدد؟',opts:['the sun','oil','wind','water'],ok:1,n:'Oil is a fossil fuel — one day it will run out.',nar:'النفط وقود أحفوري سينفد يومًا ما.'},
+ {q:'Geothermal heat comes from…',ar:'الحرارة الجوفية تأتي من…',opts:['the sun','the ocean','the ground','the wind'],ok:2,n:'Geothermal = natural heat from the earth.',nar:'الحرارية الأرضية = الحرارة الطبيعية من الأرض.'}];
+var Q2=[
+ {q:'What does Luke have to do for his school project?',ar:'ما المطلوب من لوك في مشروع مدرسته؟',opts:['design an invention powered by renewable energy','write a report about shopping','build a wind farm'],ok:0,n:'He has to design an invention powered by a renewable energy source.',nar:'عليه تصميم اختراع يعمل بمصدر طاقة متجددة.'},
+ {q:'What problem does Luke face when he goes shopping?',ar:'ما المشكلة التي يواجهها لوك عند التسوّق؟',opts:['he always loses his father in the mall','the trolley gets heavy and difficult to push','he forgets his shopping list'],ok:1,n:'His father asks him to push the trolley, but it gets really heavy.',nar:'والده يطلب منه دفع العربة لكنها تصبح ثقيلة جدًا.'},
+ {q:'What does Luke want to invent?',ar:'ماذا يريد لوك أن يخترع؟',opts:['a robot that cleans the mall','a solar-powered car','an automatic shopping trolley'],ok:2,n:'A trolley that can move by itself!',nar:'عربة تسوّق تتحرك بنفسها!'},
+ {q:'Why does Luke ask Bill for help?',ar:'لماذا يطلب لوك المساعدة من بيل؟',opts:['Bill is his teacher','Bill knows a lot about renewable energy','Bill works at the mall'],ok:1,n:'"I know that you know a lot about renewable energy!"',nar:'لأن بيل خبير في الطاقة المتجددة.'},
+ {q:'What does Bill think about Luke’s idea?',ar:'ما رأي بيل بفكرة لوك؟',opts:['It sounds great!','It is a bad idea.','It is too expensive.'],ok:0,n:'He thinks it sounds great — but he asks Luke to consider a couple of things.',nar:'يجدها رائعة لكنه يطلب منه مراعاة بعض النقاط.'},
+ {q:'What information is included in Bill’s attachment?',ar:'ما المعلومات الموجودة في مرفق بيل؟',opts:['types of renewable energy','a map of the mall','a list of inventions'],ok:0,n:'The attachment explains the types of renewable energy.',nar:'المرفق يشرح أنواع الطاقة المتجددة.'}];
+var QFACTS=[
+ {q:'______ of energy include solar, wind and hydropower.',ar:'______ من الطاقة تشمل الشمسية والرياح والمائية.',opts:['renewable sources','turbines','solar panels','invention'],ok:0,n:'Renewable sources of energy.',nar:'مصادر متجددة للطاقة.'},
+ {q:'Energy from renewable sources can be used to ______ electricity.',ar:'يمكن استخدام طاقة المصادر المتجددة ______ الكهرباء.',opts:['convert','generate','install','save'],ok:1,n:'generate = to produce electricity.',nar:'generate تعني يولّد الكهرباء.'},
+ {q:'______ are used on wind farms and hydropower plants.',ar:'تُستخدم ______ في مزارع الرياح ومحطات الطاقة المائية.',opts:['solar panels','mirrors','turbines','cables'],ok:2,n:'Turbines are turned by wind or water.',nar:'التوربينات تدور بالرياح أو الماء.'},
+ {q:'______ are used to convert heat from the sun into electricity.',ar:'تُستخدم ______ لتحويل حرارة الشمس إلى كهرباء.',opts:['turbines','mirrors','solar panels','batteries'],ok:2,n:'Solar panels convert heat from the sun.',nar:'الألواح الشمسية تحوّل حرارة الشمس.'},
+ {q:'Natural heat from the earth can also be used to generate ______.',ar:'يمكن أيضًا استخدام حرارة الأرض لتوليد ______.',opts:['biofuel','wind','electricity','oil'],ok:2,n:'Geothermal energy generates electricity.',nar:'الطاقة الحرارية الأرضية تولّد الكهرباء.'},
+ {q:'Electricity from renewable sources can be used ______ our homes, schools and cities.',ar:'يمكن استخدام كهرباء المصادر المتجددة ______ منازلنا ومدارسنا ومدننا.',opts:['to convert','to power','to install','to save'],ok:1,n:'to power = to provide energy for.',nar:'to power تعني يشغّل ويغذي بالطاقة.'}];
+var Q3=[
+ {q:'renew + ______ = renewable',ar:'renew + ______ = متجدد',opts:['-able','-ful','-ous','-ive'],ok:0,n:'-able means "can be done".',nar:'اللاحقة -able تعني «قابل لـ».'},
+ {q:'beauty + ______ = beautiful',ar:'beauty + ______ = جميل',opts:['-ous','-ful','-al','-ive'],ok:1,n:'Remove the y and add an i: beauty → beautiful.',nar:'نحذف y ونضع i: beauty → beautiful.'},
+ {q:'fame + ______ = famous',ar:'fame + ______ = مشهور',opts:['-ful','-al','-ive','-ous'],ok:3,n:'fame + -ous = famous.',nar:'fame مع -ous تصبح famous.'},
+ {q:'create + ______ = creative',ar:'create + ______ = مبدع',opts:['-able','-ive','-ful','-ous'],ok:1,n:'Remove the final e: create → creative.',nar:'نحذف e الأخيرة: create → creative.'},
+ {q:'Renewable energy is good for the environment. ______, it will not run out.',ar:'الطاقة المتجددة جيدة للبيئة. ______ لا تنفد أبدًا.',opts:['However','Moreover','Because','But'],ok:1,n:'Moreover adds information.',nar:'Moreover تضيف معلومة جديدة.'},
+ {q:'Solar power has a lot of potential. ______, solar panels are quite expensive.',ar:'للطاقة الشمسية إمكانات كبيرة. ______ تركيب الألواح مكلف.',opts:['Moreover','In addition','On the other hand','Therefore'],ok:2,n:'"On the other hand" contrasts two different ideas.',nar:'On the other hand تعارض بين فكرتين.'},
+ {q:'I got good grades in my exam ______ I studied hard.',ar:'حصلت على درجات جيدة ______ني درست بجد.',opts:['so','because','therefore','but'],ok:1,n:'because introduces the reason.',nar:'because تقدّم السبب.'},
+ {q:'I want to be healthier ______ I started exercising every day.',ar:'أريد صحة أفضل ______ بدأت التمرين يوميًا.',opts:['because','so','moreover','but'],ok:1,n:'so introduces the result.',nar:'so تقدّم النتيجة.'},
+ {q:'Which sentence uses "also" correctly?',ar:'أيّ جملة تستخدم also بشكل صحيح؟',opts:['I also am studying Biology.','I am also studying Biology.','I am studying also Biology.'],ok:1,n:'"also" comes after the verb "be".',nar:'also تأتي بعد الفعل be.'},
+ {q:'A stadium generates its own electricity ______ its roof is covered in solar panels.',ar:'يولّد الملعب كهرباءه ______ سقفه مغطى بالألواح الشمسية.',opts:['so','because','however','in addition'],ok:1,n:'The roof is the reason!',nar:'السقف هو السبب — إذن because.'},
+ {q:'Football pitches are usually made of grass. ______, there are 200 kinetic tiles under this pitch.',ar:'أرضيات الملاعب عادة من العشب. ______ توجد 200 بلاطة حركية تحت هذه الأرضية.',opts:['Moreover','However','Because','So'],ok:1,n:'However contrasts with what we normally expect.',nar:'However تعارض المتوقع المعتاد.'}];
+var Q4A=[
+ {q:'Mir’aah is one of the largest solar energy plants in…',ar:'مرآة واحدة من أكبر محطات الطاقة الشمسية في…',opts:['Oman','the world','Asia'],ok:1,n:'One of the largest in the world!',nar:'من الأكبر في العالم!'},
+ {q:'Mir’aah uses… to generate steam.',ar:'تستخدم مرآة ______ لتوليد البخار.',opts:['solar panels','large mirrors','wind turbines'],ok:1,n:'Large mirrors collect sunshine and generate steam.',nar:'مرايا ضخمة تجمع أشعة الشمس وتولّد البخار.'},
+ {q:'The steam is used to extract…',ar:'يُستخدم البخار لاستخراج…',opts:['oil','natural gas','sea water'],ok:0,n:'Steam extracts oil — instead of natural gas.',nar:'البخار يستخرج النفط بدل الغاز الطبيعي.'},
+ {q:'Using natural gas to extract oil is not…',ar:'استخدام الغاز الطبيعي لاستخراج النفط ليس…',opts:['cost effective','environmentally friendly','popular'],ok:1,n:'Burning gas is not environmentally friendly — that is why Mir’aah uses the sun!',nar:'حرق الغاز غير ودود للبيئة — لذلك تستخدم مرآة الشمس!'},
+ {q:'Using solar power will reduce the oilfield’s carbon footprint by… per year.',ar:'الطاقة الشمسية ستقلل البصمة الكربونية للحقل بمقدار… سنويًا.',opts:['20,000 tonnes','200,000 tonnes','300,000 tonnes'],ok:2,n:'300,000 tonnes per year!',nar:'300 ألف طن سنويًا!'}];
+var Q4B=[
+ {q:'On cloudy days, solar panels…',ar:'في الأيام الغائمة، الألواح الشمسية…',opts:['generate more electricity','do not generate electricity','break down'],ok:1,n:'No sun, no electricity — a real disadvantage!',nar:'لا شمس لا كهرباء — عيب حقيقي!'},
+ {q:'What is the greatest advantage of solar energy?',ar:'ما أعظم ميزة للطاقة الشمسية؟',opts:['It does not produce greenhouse gases','It is cheap to install','It works at night'],ok:0,n:'Solar energy does not produce greenhouse gases.',nar:'لا تنتج غازات الدفيئة.'},
+ {q:'Underwater turbines off the coast of Oman could generate… energy.',ar:'التوربينات تحت الماء قبالة سواحل عمان ستولّد طاقة…',opts:['tidal','solar','geothermal'],ok:0,n:'Tidal energy — from the movement of the sea.',nar:'طاقة المدّ — من حركة البحر.'}];
+var Q5=[
+ {q:'The purpose of Mazin’s email is…',ar:'الغرض من بريد مازن هو…',opts:['to make a complaint','to make a request','to send an invitation'],ok:1,n:'"I am writing to request a visit to the Mir’aah site."',nar:'يكتب لتقديم طلب زيارة.'},
+ {q:'What does Mazin study?',ar:'ماذا يدرس مازن؟',opts:['Engineering','Medicine','Art'],ok:0,n:'He studies Engineering at the Science and Technology College.',nar:'يدرس الهندسة في كلية العلوم والتقنية.'},
+ {q:'Why does the team want to visit Mir’aah?',ar:'لماذا يريد الفريق زيارة مرآة؟',opts:['to write a report about it for their final assignment','to take a holiday','to work there'],ok:0,n:'Their final assignment is a report about a sustainable project in Oman.',nar:'مهمتهم النهائية تقرير عن مشروع مستدام في عمان.'},
+ {q:'What do they want to do during the visit?',ar:'ماذا يريدون أن يفعلوا خلال الزيارة؟',opts:['learn how the plant operates and speak to an engineer','play football near the plant','buy solar panels'],ok:0,n:'Learn how it operates, speak to an engineer, and take photographs.',nar:'يتعلمون آلية العمل ويتحدثون مع مهندس ويصوّرون.'},
+ {q:'When do they want to visit, and how many are they?',ar:'متى يريدون الزيارة وكم عددهم؟',opts:['at the start of next month, four of them','next week, ten of them','at the end of the year, two of them'],ok:0,n:'At the start of next month — four students.',nar:'مطلع الشهر القادم — أربعة طلاب.'},
+ {q:'"Dear Mr Brown" is…',ar:'عبارة «Dear Mr Brown» هي…',opts:['a polite greeting','a request','a closing'],ok:0,n:'A polite greeting at the start of the email.',nar:'تحية مهذبة في بداية البريد.'},
+ {q:'"I hope that you are very well" is…',ar:'عبارة «أتمنى أن تكون بخير» هي…',opts:['a polite opening sentence','a complaint','a question'],ok:0,n:'A polite opening sentence.',nar:'جملة افتتاحية مهذبة.'},
+ {q:'"Kind regards" is…',ar:'عبارة «Kind regards» هي…',opts:['a polite closing','a greeting','a request'],ok:0,n:'A polite closing at the end.',nar:'خاتمة مهذبة في النهاية.'}];
+var BOSSQ=[
+ {q:'Renewable energy comes from sources that…',ar:'الطاقة المتجددة تأتي من مصادر…',opts:['never run out','run out quickly','are man-made'],ok:0},
+ {q:'Which one is NON-renewable?',ar:'أيّ مما يلي غير متجدد؟',opts:['wind','coal','water'],ok:1},
+ {q:'Solar panels convert heat from…',ar:'تحوّل الألواح الشمسية حرارة…',opts:['the earth','the sun','the ocean'],ok:1},
+ {q:'Wind turbines on wind farms generate…',ar:'توربينات الرياح تولّد…',opts:['steam','electricity','oil'],ok:1},
+ {q:'beauty + ful = ?',ar:'beauty + ful = ؟',opts:['beautyful','beautiful','beautifull'],ok:1},
+ {q:'"I was hungry ____ I ate a snack."',ar:'«كنت جائعًا ____ أكلت وجبة خفيفة».',opts:['because','so','however'],ok:1},
+ {q:'Mir’aah, one of the largest solar plants in the world, is in…',ar:'مرآة، من أكبر المحطات الشمسية عالميًا، تقع في…',opts:['Oman','Brazil','Ireland'],ok:0},
+ {q:'The Solar Case is…',ar:'«العلبة الشمسية» هي…',opts:['a solar-powered phone case','an electric car','a wind turbine'],ok:0}];
+
+/* ================= renderers ================= */
+function spk(t){return '<button class="spk" data-say="'+t+'">'+IC('i-speaker')+'</button>'}
+function renderVocab(mount,items){document.getElementById(mount).innerHTML=items.map(function(it){
+ return '<div class="wcard">'+spk(it.w)+IC(it.ic)+'<div class="w">'+it.w+'</div><div class="war" dir="rtl">'+it.ar+'</div></div>'}).join('')}
+function renderFlip(mount,items){document.getElementById(mount).innerHTML=items.map(function(it){
+ return '<div class="fc" tabindex="0"><div class="fi">'+
+ '<div class="ff">'+spk(it.w)+IC(it.ic)+'<div class="fw">'+it.w+'</div><div class="fhint">tap to flip<span class="ar" dir="rtl">انقر للقلب</span></div></div>'+
+ '<div class="fbk"><p class="den">'+it.en+'</p><p class="dar" dir="rtl">'+it.ar+'</p><p class="dex">'+it.ex+'</p></div>'+
+ '</div></div>'}).join('')}
+function renderQuiz(mount,list){var m=document.getElementById(mount);
+ m.innerHTML=list.map(function(it,i){
+ return '<div class="qz" data-i="'+i+'"><p class="qq">'+(i+1)+'. '+it.q+'</p><p class="qar" dir="rtl">'+it.ar+'</p>'+
+ '<div class="opts">'+it.opts.map(function(o,j){return '<button class="opt" data-j="'+j+'">'+o+'</button>'}).join('')+'</div>'+
+ '<div class="qfb"></div></div>'}).join('');
+ Array.prototype.forEach.call(m.querySelectorAll('.qz'),function(qz){
+  var tries=0,hurt=false,it=list[+qz.getAttribute('data-i')];
+  if(MODE==='level')L.qNeed++;
+  Array.prototype.forEach.call(qz.querySelectorAll('.opt'),function(opt){
+   opt.addEventListener('click',function(){
+    if(qz.classList.contains('lock'))return;
+    var j=+opt.getAttribute('data-j'),fb=qz.querySelector('.qfb');
+    if(j===it.ok){
+     qz.classList.add('lock');opt.classList.add('ok');
+     var first=(tries===0);
+     addXP(first?10:5);if(first)streakUp();
+     if(MODE==='level'){L.qDone++;updateFinishBtn()}
+     fb.className='qfb on good';
+     fb.innerHTML=IC('i-check')+'<b>'+(first?'Perfect! +10 XP':'Correct! +5 XP')+'</b>'+
+      '<span class="fb-ar" dir="rtl">إجابة صحيحة</span>'+
+      (it.n?'<span class="fn">'+it.n+'</span><span class="fb-ar" dir="rtl">'+(it.nar||'')+'</span>':'');
+     sfx('correct');burst(opt,18);mascotReact('happy');
+    }else{
+     tries++;opt.classList.add('no');setTimeout(function(){opt.classList.remove('no')},500);
+     sfx('wrong');mascotReact('sad');streakCut();
+     if(!hurt){hurt=true;if(MODE==='level'){L.wrongs++;loseHeart()}}
+     fb.className='qfb on bad';
+     fb.innerHTML='<b>Not quite — try again!</b><span class="fb-ar" dir="rtl">ليست الإجابة — حاول مرة أخرى</span>';
+    }})})})}
+
+/* ================= LINK GAME ================= */
+var LCOLORS=['#4D96FF','#29C0B2','#FFA62B','#9B5DE5','#F15BB5','#FF6B6B'];
+function LinkGame(rootId,pairs){
+ var root=document.getElementById(rootId);
+ root.classList.add('lg');
+ root.innerHTML='';
+ var grid=document.createElement('div');grid.className='lg-grid';
+ var colL=document.createElement('div');colL.className='lg-col';
+ var colR=document.createElement('div');colR.className='lg-col';
+ grid.appendChild(colL);grid.appendChild(colR);
+ var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+ svg.setAttribute('class','lg-svg');
+ var won=document.createElement('div');won.className='wonbar';
+ won.innerHTML=IC('i-check')+'<div><b>All connected! Great job!</b><span class="ar" dir="rtl">وصلت كل العناصر بنجاح!</span></div>';
+ root.appendChild(grid);root.appendChild(svg);root.appendChild(won);
+ shuffle(pairs).forEach(function(p){
+  var c=document.createElement('div');c.className='lg-chip';c.setAttribute('data-k',p.k);
+  c.innerHTML=p.a;colL.appendChild(c)});
+ shuffle(pairs).forEach(function(p){
+  var c=document.createElement('div');c.className='lg-chip';c.setAttribute('data-k',p.k);
+  c.innerHTML=p.b;colR.appendChild(c)});
+ var selL=null,selR=null,done=0,lines=[];
+ function anchor(el,side){var c=root.getBoundingClientRect(),r=el.getBoundingClientRect();
+  return side==='L'?{x:r.right-c.left,y:r.top-c.top+r.height/2}:{x:r.left-c.left,y:r.top-c.top+r.height/2}}
+ function pathD(a,b){var dx=Math.max(36,Math.abs(b.x-a.x)*.45);
+  return 'M'+a.x+' '+a.y+' C'+(a.x+dx)+' '+a.y+', '+(b.x-dx)+' '+b.y+', '+b.x+' '+b.y}
+ function solidPath(d,color){var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d',d);p.setAttribute('class','lg-line');p.setAttribute('stroke',color);
+  svg.appendChild(p);
+  var len=p.getTotalLength();
+  p.style.strokeDasharray=len;p.style.strokeDashoffset=len;
+  requestAnimationFrame(function(){p.style.transition='stroke-dashoffset .45s cubic-bezier(.3,.8,.3,1)';p.style.strokeDashoffset='0'});
+  setTimeout(function(){p.style.strokeDasharray='none';p.style.transition='none'},520);
+  return p}
+ function tempPath(d){var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d',d);p.setAttribute('class','lg-line lg-temp');p.setAttribute('stroke','#FF6B6B');
+  svg.appendChild(p);setTimeout(function(){p.remove()},680)}
+ function redraw(){if(!root.offsetWidth)return;
+  lines.forEach(function(o){o.p.setAttribute('d',pathD(anchor(o.a,'L'),anchor(o.b,'R')))})}
+ var rt=null;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(redraw,160)});
+ function evaluate(){var a=selL,b=selR;selL=selR=null;
+  if(a.getAttribute('data-k')===b.getAttribute('data-k')){
+   a.classList.remove('sel');b.classList.remove('sel');
+   a.classList.add('done');b.classList.add('done');
+   lines.push({a:a,b:b,p:solidPath(pathD(anchor(a,'L'),anchor(b,'R')),LCOLORS[done%LCOLORS.length])});
+   done++;addXP(8);streakUp();sfx('match');burst(b,14);
+   if(done===pairs.length){won.classList.add('on');sfx('fanfare');confettiRain();
+    if(MODE==='level'&&L.matchNeed){L.matchDone=true;updateFinishBtn()}}
+  }else{
+   sfx('wrong');streakCut();
+   if(MODE==='level')L.wrongs++;
+   tempPath(pathD(anchor(a,'L'),anchor(b,'R')));
+   [a,b].forEach(function(x){x.classList.remove('sel');x.classList.add('err')});
+   setTimeout(function(){[a,b].forEach(function(x){x.classList.remove('err')})},520)
+  }}
+ function wire(col,side){Array.prototype.forEach.call(col.children,function(chip){
+  chip.addEventListener('click',function(e){
+   if(e.target.closest('.spk'))return;
+   if(chip.classList.contains('done'))return;
+   sfx('pop');
+   Array.prototype.forEach.call(col.children,function(x){if(x!==chip)x.classList.remove('sel')});
+   var cur=(side==='L')?selL:selR;
+   if(cur===chip){chip.classList.remove('sel');if(side==='L')selL=null;else selR=null;return}
+   chip.classList.add('sel');
+   if(side==='L')selL=chip;else selR=chip;
+   if(selL&&selR)evaluate()})})}
+ wire(colL,'L');wire(colR,'R')}
+
+/* ================= SORT GAME ================= */
+function SortGame(rootId,items,binA,binB){
+ var root=document.getElementById(rootId);
+ root.classList.add('sg');
+ var placed={},hurt={},selT=null,done=0;
+ items.forEach(function(it){placed[it.t]=null;hurt[it.t]=false});
+ render();
+ function chip(it){
+  return '<button class="sg-chip'+(selT===it.t?' sel':'')+'" data-t="'+it.t+'">'+IC(it.ic)+
+  '<span>'+it.t+'</span><span class="ar" dir="rtl">'+it.ar+'</span></button>'}
+ function binHtml(b,list){
+  return '<div class="sg-bin" data-b="'+b.k+'" style="--bin:'+b.c+'">'+
+  '<h4>'+IC(b.ic)+b.name+'<span class="ar" dir="rtl">'+b.ar+'</span></h4>'+
+  '<div class="sg-bin-inner">'+
+  (list.length?list.map(function(it){return '<span class="sg-mini">'+IC(it.ic)+it.t+'</span>'}).join(''):'<span class="sg-empty">'+b.hint+'</span>')+
+  '</div></div>'}
+ function render(){
+  var pool=items.filter(function(it){return placed[it.t]===null});
+  var a=items.filter(function(it){return placed[it.t]==='A'});
+  var b=items.filter(function(it){return placed[it.t]==='B'});
+  root.innerHTML='<div class="sg-pool">'+
+  (pool.length?pool.map(chip).join(''):'<span class="sg-empty">Everything is sorted! · <span class="ar">رُتِّب كل شيء!</span></span>')+
+  '</div><div class="sg-bins">'+binHtml(binA,a)+binHtml(binB,b)+'</div>'+
+  '<div class="wonbar'+(pool.length===0?' on':'')+'">'+IC('i-check')+
+  '<div><b>All sorted! Great job!</b><span class="ar" dir="rtl">رتبت كل شيء بنجاح!</span></div></div>';
+  wire()}
+ function wire(){
+  Array.prototype.forEach.call(root.querySelectorAll('.sg-chip'),function(c){
+   c.addEventListener('click',function(){sfx('pop');
+    selT=(selT===c.getAttribute('data-t'))?null:c.getAttribute('data-t');
+    render()})});
+  Array.prototype.forEach.call(root.querySelectorAll('.sg-bin'),function(bEl){
+   bEl.addEventListener('click',function(){
+    if(!selT){sfx('pop');return}
+    var it=null,i;
+    for(i=0;i<items.length;i++){if(items[i].t===selT){it=items[i];break}}
+    if(!it)return;
+    var k=bEl.getAttribute('data-b');
+    if(it.bin===k){
+     placed[it.t]=k;selT=null;done++;
+     addXP(8);streakUp();sfx('match');
+     var r=bEl.getBoundingClientRect();confetti(r.left+r.width/2,r.top+34,12);
+     render();
+     if(done===items.length){sfx('fanfare');confettiRain();
+      if(MODE==='level'&&L.sortNeed){L.sortDone=true;updateFinishBtn()}}
+    }else{
+     sfx('wrong');streakCut();
+     bEl.classList.add('flash');setTimeout(function(){bEl.classList.remove('flash')},450);
+     var chipEl=root.querySelector('.sg-chip.sel');
+     if(chipEl){chipEl.classList.add('err');setTimeout(function(){chipEl.classList.remove('err')},450)}
+     if(MODE==='level'&&!hurt[it.t]){hurt[it.t]=true;L.wrongs++;loseHeart()}
+    }})})}
+}
+
+/* ================= ORDER GAME ================= */
+function OrderGame(rootId,sentences){
+ var root=document.getElementById(rootId);
+ root.classList.add('og');
+ var si=0,built=[],hurt=false;
+ render();
+ function render(){
+  var s=sentences[si];
+  var remaining=shuffle(s.parts.map(function(p,i){return{p:p,i:i}}).filter(function(o){return o.i>=built.length}));
+  var complete=(built.length===s.parts.length);
+  root.innerHTML=
+  '<p class="og-n">'+IC('i-pen')+' SENTENCE '+(si+1)+' OF '+sentences.length+'</p>'+
+  '<p class="og-target" dir="rtl">'+s.ar+'</p>'+
+  '<div class="og-line">'+built.map(function(w){return '<span class="og-w">'+esc(w)+'</span>'}).join('')+
+  (complete?'':'<span class="og-caret"></span>')+'</div>'+
+  '<div class="og-chips">'+remaining.map(function(o){return '<button class="og-chip" data-i="'+o.i+'">'+esc(o.p)+'</button>'}).join('')+'</div>'+
+  '<div class="wonbar og-won'+(complete?' on':'')+'">'+IC('i-check')+
+  '<div><b>'+esc(s.full)+'</b><span class="ar" dir="rtl">أحسنت! جملة صحيحة</span></div></div>'+
+  (complete&&si<sentences.length-1?'<button class="btn og-next" style="--bc:var(--grape);--bcd:var(--grapeD)"><span>Next sentence</span><span class="b-ar" dir="rtl">الجملة التالية</span></button>':'')+
+  (complete&&si===sentences.length-1?'<p style="text-align:center;font-weight:600;margin-top:10px">All sentences built! · <span class="ar" dir="rtl">بنيت كل الجمل المهذبة!</span></p>':'');
+  wire()}
+ function wire(){
+  Array.prototype.forEach.call(root.querySelectorAll('.og-chip'),function(c){
+   c.addEventListener('click',function(){
+    var i=+c.getAttribute('data-i'),s=sentences[si];
+    if(built.length>=s.parts.length)return;
+    if(i===built.length){
+     sfx('pop');built.push(s.parts[i]);
+     if(built.length===s.parts.length){
+      sfx('fanfare');addXP(10);streakUp();burst(c,20);
+      if(MODE==='level'&&si===sentences.length-1&&L.orderNeed){L.orderDone=true;updateFinishBtn()}}
+     render();
+    }else{
+     sfx('wrong');streakCut();
+     c.classList.add('err');setTimeout(function(){c.classList.remove('err')},450);
+     if(MODE==='level'&&!hurt){hurt=true;L.wrongs++;loseHeart()}
+    }})});
+  var nx=root.querySelector('.og-next');
+  if(nx)nx.addEventListener('click',function(){sfx('click');si++;built=[];hurt=false;render()})}
+}
+
+/* ================= invention builder ================= */
+var ENERGIES={
+ solar:{n:'Solar Energy',arn:'الطاقة الشمسية',ic:'i-sun',c:'#E08700'},
+ wind:{n:'Wind Power',arn:'طاقة الرياح',ic:'i-wind',c:'#3677D9'},
+ hydro:{n:'Hydropower',arn:'الطاقة المائية',ic:'i-drop',c:'#1B9C8F'},
+ geo:{n:'Geothermal Energy',arn:'الحرارية الأرضية',ic:'i-geo',c:'#E14F4F'},
+ bio:{n:'Biofuel',arn:'الوقود الحيوي',ic:'i-leaf',c:'#3AA334'}};
+function wrapText(s,max){var words=String(s).split(' '),lines=[],cur='';
+ words.forEach(function(w){
+  if((cur+' '+w).trim().length<=max){cur=(cur+' '+w).trim()}
+  else{if(cur)lines.push(cur);cur=w}});
+ if(cur)lines.push(cur);
+ if(lines.length>3){lines=lines.slice(0,3);lines[2]=lines[2].slice(0,max-1)+'…'}
+ return lines}
+function buildInvSVG(en,name,problem,how){
+ var nl=wrapText(name,18).slice(0,2);
+ var pl=wrapText(problem,26).slice(0,2);
+ var hl=wrapText(how,28).slice(0,2);
+ var nfs=nl.some(function(l){return l.length>15})?15:17;
+ var t='',i;
+ for(i=0;i<nl.length;i++){t+='<text x="120" y="'+(158+i*20)+'" text-anchor="middle" font-family="Lilita One" font-size="'+nfs+'" fill="#3D3450">'+esc(nl[i])+'</text>'}
+ t+='<text x="120" y="'+(158+nl.length*20+4)+'" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="12" fill="'+en.c+'">Powered by '+esc(en.n)+'</text>';
+ var y0=158+nl.length*20+24;
+ for(i=0;i<pl.length;i++){t+='<text x="120" y="'+(y0+i*15)+'" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="11" fill="#6B6280">'+esc(pl[i])+'</text>'}
+ var y1=y0+pl.length*15+8;
+ for(i=0;i<hl.length;i++){t+='<text x="120" y="'+(y1+i*15)+'" text-anchor="middle" font-family="Fredoka" font-size="10.5" font-style="italic" fill="#8B829E">'+esc(hl[i])+'</text>'}
+ var vb=Math.max(250,y1+hl.length*15+8);
+ return '<svg viewBox="0 0 240 '+vb+'" style="width:min(240px,82vw);height:auto;filter:drop-shadow(0 7px 0 rgba(61,52,80,.15))">'+
+ '<g stroke="#FFA62B" stroke-width="5" stroke-linecap="round">'+
+ '<line x1="120" y1="10" x2="120" y2="20"/><line x1="86" y1="24" x2="93" y2="31"/><line x1="154" y1="24" x2="147" y2="31"/>'+
+ '<line x1="74" y1="58" x2="84" y2="58"/><line x1="156" y1="58" x2="166" y2="58"/></g>'+
+ '<circle cx="120" cy="62" r="40" fill="#FFDD66" stroke="#3D3450" stroke-width="5"/>'+
+ '<rect x="106" y="98" width="28" height="9" rx="3" fill="#3D3450"/>'+
+ '<rect x="110" y="109" width="20" height="7" rx="3" fill="#3D3450"/>'+
+ '<svg class="svgic" x="103" y="45" width="34" height="34" viewBox="0 0 24 24" style="color:#7A5B00"><use href="#'+en.ic+'"/></svg>'+
+ t+'</svg>'}
+
+/* ================= level machinery ================= */
+var SORT1=[
+ {t:'oil',ar:'نفط',ic:'i-oil',bin:'B'},{t:'biomass',ar:'كتلة حيوية',ic:'i-leaf',bin:'A'},
+ {t:'nuclear power',ar:'نووية',ic:'i-atom',bin:'B'},{t:'natural gas',ar:'غاز طبيعي',ic:'i-flame',bin:'B'},
+ {t:'water',ar:'ماء',ic:'i-drop',bin:'A'},{t:'wind',ar:'رياح',ic:'i-wind',bin:'A'},
+ {t:'coal',ar:'فحم',ic:'i-coal',bin:'B'},{t:'the sun',ar:'الشمس',ic:'i-sun',bin:'A'},
+ {t:'geothermal heat',ar:'حرارة الأرض',ic:'i-geo',bin:'A'}];
+var ADSORT=[
+ {t:'No greenhouse gases',ar:'لا غازات دفيئة',ic:'i-leaf',bin:'A'},
+ {t:'Expensive to install',ar:'تركيبها مكلف',ic:'i-flame',bin:'B'},
+ {t:'Saves money over time',ar:'توفّر المال لاحقًا',ic:'i-star',bin:'A'},
+ {t:'Requires a lot of space',ar:'تحتاج مساحة كبيرة',ic:'i-earth',bin:'B'},
+ {t:'No electricity on cloudy days',ar:'لا كهرباء بالأيام الغائمة',ic:'i-cloud',bin:'B'},
+ {t:'Not much maintenance',ar:'لا تحتاج صيانة كثيرة',ic:'i-check',bin:'A'}];
+var OS=[
+ {parts:['I am writing','to ask','if you','would be able to','help me','with my project.'],full:'I am writing to ask if you would be able to help me with my project.',ar:'أكتب إليك لأطلب مساعدتك في مشروعي.'},
+ {parts:['We would like','to invite you','to the Science Fair','at our school','next Monday.'],full:'We would like to invite you to the Science Fair at our school next Monday.',ar:'نودّ دعوتك إلى معرض العلوم في مدرستنا يوم الاثنين القادم.'},
+ {parts:['I am writing','to ask','whether it','would be possible','to visit','your company.'],full:'I am writing to ask whether it would be possible to visit your company.',ar:'أكتب لأسأل إن كان من الممكن زيارة شركتكم.'},
+ {parts:['We are looking for','a presenter','for our Earth Day event','at our college.','Would you be available','to give a presentation?'],full:'We are looking for a presenter for our Earth Day event at our college. Would you be available to give a presentation?',ar:'نبحث عن مُلقٍ في فعالية يوم الأرض بكليتنا — هل ستكون متاحًا لإلقاء عرض؟'}];
+function buildLevel(n){
+ switch(n){
+  case 1:
+   renderVocab('m-l1voc',V_EN);
+   L.sortNeed=true;
+   SortGame('m-sort',SORT1,
+    {k:'A',name:'RENEWABLE',ar:'متجددة',ic:'i-sun',c:'var(--greenD)',hint:'never run out · لا تنفد'},
+    {k:'B',name:'NON-RENEWABLE',ar:'غير متجددة',ic:'i-oil',c:'var(--coralD)',hint:'will run out · ستنفد'});
+   renderQuiz('m-l1q',Q1);break;
+  case 2:
+   renderFlip('m-types',V_TYPES);
+   renderQuiz('m-l2q',Q2);renderQuiz('m-facts',QFACTS);break;
+  case 3:
+   L.matchNeed=true;
+   LinkGame('m-roots',[
+    {k:'r1',a:spk('renew')+'<span>renew</span>',b:'<span>renewable</span><span class="ar" dir="rtl">متجدد</span>'},
+    {k:'r2',a:spk('beauty')+'<span>beauty</span>',b:'<span>beautiful</span><span class="ar" dir="rtl">جميل</span>'},
+    {k:'r3',a:spk('fame')+'<span>fame</span>',b:'<span>famous</span><span class="ar" dir="rtl">مشهور</span>'},
+    {k:'r4',a:spk('create')+'<span>create</span>',b:'<span>creative</span><span class="ar" dir="rtl">مبدع</span>'},
+    {k:'r5',a:spk('option')+'<span>option</span>',b:'<span>optional</span><span class="ar" dir="rtl">اختياري</span>'},
+    {k:'r6',a:spk('danger')+'<span>danger</span>',b:'<span>dangerous</span><span class="ar" dir="rtl">خطير</span>'},
+    {k:'r7',a:spk('colour')+'<span>colour</span>',b:'<span>colourful</span><span class="ar" dir="rtl">ملوّن</span>'},
+    {k:'r8',a:spk('product')+'<span>product</span>',b:'<span>productive</span><span class="ar" dir="rtl">مُثمر</span>'}]);
+   renderQuiz('m-l3q',Q3);break;
+  case 4:
+   renderQuiz('m-miraah',Q4A);
+   L.sortNeed=true;
+   SortGame('m-adsort',ADSORT,
+    {k:'A',name:'ADVANTAGES',ar:'المزايا',ic:'i-check',c:'var(--greenD)',hint:'good points · نقاط جيدة'},
+    {k:'B',name:'DISADVANTAGES',ar:'العيوب',ic:'i-flame',c:'var(--coralD)',hint:'bad points · نقاط سلبية'});
+   renderQuiz('m-l4q',Q4B);break;
+  case 5:
+   renderQuiz('m-l5q',Q5);
+   L.matchNeed=true;
+   LinkGame('m-polite',[
+    {k:'p1',a:spk('Dear Mr Brown')+'<span>Dear Mr Brown</span>',b:'a polite greeting<span class="ar" dir="rtl">تحية مهذبة</span>'},
+    {k:'p2',a:spk('I hope that you are very well')+'<span>I hope that you are very well</span>',b:'a polite opening sentence<span class="ar" dir="rtl">جملة افتتاحية مهذبة</span>'},
+    {k:'p3',a:spk("I am writing to request a visit to the Mir'aah site")+'<span>I am writing to request a visit…</span>',b:'a request<span class="ar" dir="rtl">طلب</span>'},
+    {k:'p4',a:spk('Any help you can provide will be greatly appreciated')+'<span>Any help… greatly appreciated</span>',b:'a closing comment<span class="ar" dir="rtl">تعليق ختامي</span>'},
+    {k:'p5',a:spk('Kind regards')+'<span>Kind regards</span>',b:'a polite closing<span class="ar" dir="rtl">خاتمة مهذبة</span>'}]);
+   L.orderNeed=true;
+   OrderGame('m-order',OS);break;
+  case 6:
+   L.matchNeed=true;
+   LinkGame('m-slides',[
+    {k:'s1',a:'<span>The Problem</span>',b:'Do you ever run out of battery while you are out?<span class="ar" dir="rtl">المشكلة</span>'},
+    {k:'s2',a:'<span>Our Invention</span>',b:'A solar-powered phone case that charges your phone<span class="ar" dir="rtl">اختراعنا</span>'},
+    {k:'s3',a:'<span>How does it work?</span>',b:'A solar panel converts sunlight into electricity<span class="ar" dir="rtl">كيف يعمل</span>'},
+    {k:'s4',a:'<span>The Advantages</span>',b:'Eco-friendly · protects your phone · charge anywhere<span class="ar" dir="rtl">المزايا</span>'},
+    {k:'s5',a:'<span>Any Questions?</span>',b:'Thank you for listening!<span class="ar" dir="rtl">الختام</span>'}]);
+   break}}
+function startLevel(n){
+ MODE='level';
+ L={lvl:n,step:0,hearts:3,wrongs:0,qNeed:0,qDone:0,matchNeed:false,matchDone:false,sortNeed:false,sortDone:false,orderNeed:false,orderDone:false,inv:false};
+ buildLevel(n);
+ show('l'+n);
+ var scr=$('#scr-l'+n);
+ if(!scr){show('map');return}
+ L.steps=scr.querySelectorAll('.step');
+ var dots=scr.querySelector('.lvl-dots');
+ dots.innerHTML='';
+ Array.prototype.forEach.call(L.steps,function(_,i){
+  var d=document.createElement('button');d.className='ldot';d.type='button';
+  d.addEventListener('click',function(){if(MODE==='level'&&i<=L.step){sfx('click');showStep(i)}});
+  dots.appendChild(d)});
+ Array.prototype.forEach.call(scr.querySelectorAll('.step-next'),function(b){b.remove()});
+ var last=L.steps.length-1;
+ Array.prototype.forEach.call(L.steps,function(s,i){
+  var b=document.createElement('button');b.type='button';b.className='btn step-next';
+  b.innerHTML='<span class="sn-en">Next</span><span class="b-ar sn-ar" dir="rtl">التالي</span>';
+  b.addEventListener('click',function(){sfx('click');
+   if(i<last)showStep(i+1);else finishLevel()});
+  s.appendChild(b)});
+ $('#hudHearts').classList.remove('hidden');
+ renderHearts();showStep(0)}
+function showStep(i){L.step=i;
+ var scr=$('#scr-l'+L.lvl);
+ Array.prototype.forEach.call(L.steps,function(s,j){s.classList.toggle('on',j===i)});
+ Array.prototype.forEach.call(scr.querySelectorAll('.ldot'),function(d,j){d.className='ldot'+(j===i?' cur':(j<i?' done':''))});
+ var st=L.steps[i];
+ scr.querySelector('.tip-en').textContent=st.getAttribute('data-tip')||'';
+ scr.querySelector('.tip-ar').textContent=st.getAttribute('data-tipar')||'';
+ var bub=scr.querySelector('.bubble');bub.classList.remove('bp');void bub.offsetWidth;bub.classList.add('bp');
+ updateFinishBtn();
+ window.scrollTo({top:0,behavior:'smooth'})}
+function reqState(){var left=0;
+ if(L.qNeed>L.qDone)left+=L.qNeed-L.qDone;
+ if(L.matchNeed&&!L.matchDone)left++;
+ if(L.sortNeed&&!L.sortDone)left++;
+ if(L.orderNeed&&!L.orderDone)left++;
+ if(L.lvl===6&&!L.inv)left++;
+ return{ok:left===0,left:left}}
+function updateFinishBtn(){
+ if(MODE!=='level'||!L.steps)return;
+ var b=L.steps[L.steps.length-1].querySelector('.step-next');if(!b)return;
+ var r=reqState(),en=b.querySelector('.sn-en'),ar=b.querySelector('.sn-ar');
+ if(r.ok){b.classList.remove('blocked');en.textContent='Finish Level!';ar.textContent='أنهِ المرحلة'}
+ else{b.classList.add('blocked');
+  en.textContent='Finish · '+r.left+' task'+(r.left>1?'s':'')+' left';
+  ar.textContent='أكمل المهام المتبقية'}}
+function finishLevel(){
+ var r=reqState();
+ if(!r.ok){sfx('wrong');
+  toast('Not so fast!','أجب عن جميع الأسئلة وأكمل الألعاب أولًا','i-flame','var(--ink)');
+  var b=L.steps[L.steps.length-1].querySelector('.step-next');
+  if(b){b.classList.remove('nshake');void b.offsetWidth;b.classList.add('nshake')}
+  return}
+ MODE=null;$('#hudHearts').classList.add('hidden');
+ var stars=Math.max(1,3-Math.min(2,L.wrongs));
+ S.stars[L.lvl]=Math.max(S.stars[L.lvl]||0,stars);
+ S.unlocked=Math.max(S.unlocked,L.lvl<6?L.lvl+1:7);
+ var bonus=15+stars*5;addXP(bonus);
+ award(BMAP[L.lvl]);
+ if(L.wrongs===0){addXP(10);toast('Perfect!','مرحلة كاملة بلا أخطاء!','i-star','var(--gold)')}
+ save();sfx('fanfare');showComplete(stars,bonus)}
+function showComplete(stars,bonus){
+ var lv=LEVELS[L.lvl-1];
+ var nextBtn=L.lvl<6
+  ?'<button class="btn" data-act="next" style="--bc:var(--'+lv.c+');--bcd:var(--'+lv.c+'D)"><span>Next Level</span><span class="b-ar" dir="rtl">المرحلة التالية</span></button>'
+  :'<button class="btn" data-act="boss" style="--bc:var(--green);--bcd:var(--greenD)"><span>Face the Boss!</span><span class="b-ar" dir="rtl">واجه الوحش!</span></button>';
+ ovl.innerHTML='<div class="ovl-card">'+
+ '<div class="ovl-kick" style="color:var(--'+lv.c+'D)">LEVEL '+L.lvl+' COMPLETE</div>'+
+ '<h3 class="ovl-t">Great job!</h3>'+
+ '<p class="ovl-ar ar" dir="rtl">أحسنت! أكملت «'+lv.ar+'»</p>'+
+ '<div class="big-stars">'+[0,1,2].map(function(){return '<span class="bst">'+IC('i-star')+'</span>'}).join('')+'</div>'+
+ '<p class="ovl-xp">'+IC('i-bolt')+' +'+bonus+' XP bonus</p>'+
+ '<div class="ovl-btns"><button class="btn ghost" data-act="map"><span>Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>'+nextBtn+'</div></div>';
+ ovl.classList.add('on');
+ Array.prototype.forEach.call(ovl.querySelectorAll('.bst'),function(s,i){
+  if(i<stars)setTimeout(function(){s.classList.add('lit');sfx('star',i)},600+i*420)})}
+
+/* ================= boss ================= */
+function startBoss(){
+ MODE='boss';B={q:0,hp:8,hearts:3};
+ show('boss');
+ $('#hudHearts').classList.remove('hidden');
+ var mon=$('#monSvg');mon.classList.remove('dead');
+ $('#hpFill').style.width='100%';
+ renderHearts();renderBossQ()}
+function renderBossQ(){
+ var it=BOSSQ[B.q],box=$('#bq');
+ box.innerHTML='<div class="qz"><p class="bprog">'+IC('i-plug')+' QUESTION '+(B.q+1)+' OF 8</p>'+
+ '<p class="qq">'+it.q+'</p><p class="qar" dir="rtl">'+it.ar+'</p>'+
+ '<div class="opts">'+it.opts.map(function(o,j){return '<button class="opt" data-j="'+j+'">'+o+'</button>'}).join('')+'</div>'+
+ '<div class="qfb"></div></div>';
+ var qz=box.querySelector('.qz'),hurt=false;
+ Array.prototype.forEach.call(box.querySelectorAll('.opt'),function(opt){
+  opt.addEventListener('click',function(){
+   if(qz.classList.contains('lock'))return;
+   var j=+opt.getAttribute('data-j'),fb=box.querySelector('.qfb');
+   if(j===it.ok){
+    qz.classList.add('lock');opt.classList.add('ok');
+    fb.className='qfb on good';
+    fb.innerHTML=IC('i-check')+'<b>ZAP! A bolt of clean energy!</b><span class="fb-ar" dir="rtl">صعقة طاقة نظيفة! الظلام يتراجع</span>';
+    sfx('correct');burst(opt,18);mascotReact('happy');addXP(15);bossHit();
+   }else{
+    sfx('wrong');mascotReact('sad');streakCut();
+    opt.classList.add('no');setTimeout(function(){opt.classList.remove('no')},500);
+    fb.className='qfb on bad';
+    fb.innerHTML='<b>Try again!</b><span class="fb-ar" dir="rtl">حاول مرة أخرى</span>';
+    if(!hurt){hurt=true;loseHeart()}
+   }})})}
+function bossHit(){
+ B.hp--;$('#hpFill').style.width=(B.hp/8*100)+'%';
+ var mon=$('#monSvg');mon.classList.remove('hit');void mon.offsetWidth;mon.classList.add('hit');
+ sfx('zap');
+ var d=document.createElement('span');d.className='dmg';d.textContent='⚡';
+ $('#monWrap').appendChild(d);setTimeout(function(){d.remove()},900);
+ if(B.hp<=0){bossWin()}
+ else{setTimeout(function(){B.q++;renderBossQ()},800)}}
+function bossWin(){
+ $('#monSvg').classList.add('dead');
+ $('#bq').innerHTML='<div class="gcard mondead">'+IC('i-bulb')+'<p>POWER RESTORED!</p><p class="ar" dir="rtl">عادت الكهرباء إلى المدينة!</p></div>';
+ sfx('fanfare');confettiRain();award('boss');addXP(40);save();
+ setTimeout(function(){
+  ovl.innerHTML='<div class="ovl-card">'+
+  '<div class="ovl-kick" style="color:var(--sunD)">VICTORY!</div>'+
+  '<h3 class="ovl-t">You defeated the Blackout Monster!</h3>'+
+  '<p class="ovl-ar ar" dir="rtl">انتصرت على وحش انقطاع الطاقة!</p>'+
+  '<div class="big-stars">'+[0,1,2].map(function(){return '<span class="bst">'+IC('i-star')+'</span>'}).join('')+'</div>'+
+  '<div class="ovl-btns"><button class="btn ghost" data-act="map"><span>Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>'+
+  '<button class="btn" data-act="win" style="--bc:var(--gold);--bcd:var(--goldD);color:#7A5B00"><span>Claim Victory</span><span class="b-ar" dir="rtl">استلم نصرك</span></button></div></div>';
+  ovl.classList.add('on');
+  Array.prototype.forEach.call(ovl.querySelectorAll('.bst'),function(s,i){setTimeout(function(){s.classList.add('lit');sfx('star',i)},500+i*380)})
+ },1300)}
+function bossFail(){
+ MODE=null;$('#hudHearts').classList.add('hidden');sfx('wrong');
+ ovl.innerHTML='<div class="ovl-card">'+
+ '<div class="ovl-kick" style="color:var(--coralD)">BLACKOUT!</div>'+
+ '<h3 class="ovl-t">The Blackout Monster wins this round!</h3>'+
+ '<p class="ovl-ar ar" dir="rtl">انتصر وحش الظلام هذه المرة!</p>'+
+ '<p class="ovl-p">Take a deep breath… and try again. The city needs your clean energy!</p>'+
+ '<p class="ovl-ar ar" dir="rtl">خذ نفسًا عميقًا وحاول من جديد — المدينة تحتاج طاقتك النظيفة!</p>'+
+ '<div class="ovl-btns"><button class="btn ghost" data-act="map"><span>Map</span><span class="b-ar" dir="rtl">الخريطة</span></button>'+
+ '<button class="btn" data-act="retry" style="--bc:var(--sun);--bcd:var(--sunD)"><span>Retry</span><span class="b-ar" dir="rtl">حاول مجددًا</span></button></div></div>';
+ ovl.classList.add('on')}
+
+/* ================= win ================= */
+function showWin(){
+ MODE=null;$('#hudHearts').classList.add('hidden');
+ show('win');
+ $('#winXp').textContent=S.xp;
+ $('#winStars').textContent=Object.keys(S.stars).reduce(function(a,k){return a+S.stars[k]},0);
+ $('#winBdg').textContent=S.badges.length;
+ $('#winBadges').innerHTML=BADGES.map(function(b){
+  var has=S.badges.indexOf(b.id)>=0;
+  return '<div class="bdg'+(has?'':' lock')+'" style="--bc:'+b.c+'"><span class="bdg-ic">'+IC(has?b.ic:'i-lock')+'</span><b>'+b.t+'</b><span class="ar" dir="rtl">'+b.ar+'</span></div>'}).join('');
+ confettiRain();setTimeout(confettiRain,900);setTimeout(confettiRain,1800)}
+
+/* ================= global delegation ================= */
+document.addEventListener('click',function(e){
+ var sp=e.target.closest('.spk');if(sp){speakSay(sp);return}
+ var f=e.target.closest('.fc');if(f){f.classList.toggle('flip');sfx('pop');return}
+ var eco=e.target.closest('.ecochip');
+ if(eco){eco.classList.toggle('sel');sfx('pop');return}
+ var en=e.target.closest('.enchip');
+ if(en){sfx('pop');
+  Array.prototype.forEach.call($$('.enchip'),function(x){x.classList.remove('sel')});
+  en.classList.add('sel');return}
+ var rv=e.target.closest('.rvbtn');
+ if(rv&&!rv.getAttribute('id')){
+  var box=rv.closest('.talkcard'),t=box.querySelector('.rvt');
+  t.classList.toggle('on');var open=t.classList.contains('on');
+  rv.querySelector('.rv-en').textContent=open?'Hide':'Show';
+  rv.querySelector('.rv-ar').textContent=open?'إخفاء':'أظهر';sfx('pop');return}
+ var nd=e.target.closest('.node');if(nd){nodeClick(nd);return}});
+ovl.addEventListener('click',function(e){
+ var b=e.target.closest('[data-act]');if(!b)return;
+ sfx('click');var a=b.getAttribute('data-act');
+ if(a==='map'){hideOvl();show('map')}
+ else if(a==='next'){hideOvl();startLevel(L.lvl+1)}
+ else if(a==='boss'){hideOvl();startBoss()}
+ else if(a==='retry'){hideOvl();startBoss()}
+ else if(a==='win'){hideOvl();showWin()}
+ else if(a==='resetNo'){hideOvl()}
+ else if(a==='resetYes'){doReset()}});
+document.addEventListener('keydown',function(e){
+ if(MODE!=='level'||!L||!L.steps)return;
+ if(e.key==='ArrowRight'&&L.step<L.steps.length-1)showStep(L.step+1);
+ else if(e.key==='ArrowLeft'&&L.step>0)showStep(L.step-1)});
+
+/* ================= invention create ================= */
+ $('#invGo').addEventListener('click',function(){
+ sfx('click');
+ var name=$('#invName').value.trim();
+ var problem=$('#invProblem').value.trim();
+ var how=$('#invHow').value.trim();
+ var enEl=document.querySelector('.enchip.sel');
+ if(!name||!problem||!how||!enEl){
+  sfx('wrong');
+  toast('Complete your design!','أكمل الاسم والمشكلة والطريقة واختر نوع الطاقة','i-bulb','var(--ink)');
+  return}
+ var en=ENERGIES[enEl.getAttribute('data-k')];
+ $('#invBody').innerHTML=buildInvSVG(en,name,problem,how)+
+ '<p style="font-weight:600;color:'+en.c+';margin-top:10px">'+en.n+' · '+en.arn+'</p>';
+ $('#invPrev').classList.add('ready');
+ burst($('#invPrev'),26);sfx('fanfare');
+ if(MODE==='level'&&!L.inv){L.inv=true;addXP(15);toast('Young Inventor!','صممت اختراعك الأول بالطاقة المتجددة!','i-bulb','var(--pink)')}
+ updateFinishBtn()});
+
+/* ================= reset ================= */
+function confirmReset(){sfx('click');
+ ovl.innerHTML='<div class="ovl-card"><h3 class="ovl-t">Reset progress?</h3>'+
+ '<p class="ovl-ar ar" dir="rtl">هل تريد حذف كل التقدم والبدء من جديد؟</p>'+
+ '<div class="ovl-btns"><button class="btn ghost" data-act="resetNo"><span>No</span><span class="b-ar" dir="rtl">لا</span></button>'+
+ '<button class="btn" data-act="resetYes" style="--bc:var(--coral);--bcd:var(--coralD)"><span>Yes, reset</span><span class="b-ar" dir="rtl">نعم، احذف</span></button></div></div>';
+ ovl.classList.add('on')}
+function doReset(){try{localStorage.removeItem(KEY)}catch(e){}
+ S={xp:0,stars:{},unlocked:1,badges:[],streak:0};xpShown=0;$('#xpN').textContent='0';
+ hideOvl();show('title')}
+
+/* ================= init ================= */
+Array.prototype.forEach.call($$('.tabby-slot'),function(s){s.innerHTML=tabbySVG()});
+var tkWords=['solar power','wind power','hydropower','geothermal power','biofuel','renewable sources','turbines','solar panels','generate electricity','carbon footprint','eco-friendly',"Mir'aah"];
+ $('#tk').innerHTML=tkWords.concat(tkWords).map(function(w){return '<span class="tkchip">'+w+'</span>'}).join('');
+ $('#startBtn').addEventListener('click',function(){initAudio();sfx('click');show('map')});
+ $('#hudHome').addEventListener('click',function(){sfx('click');show('map')});
+ $('#mapReset').addEventListener('click',confirmReset);
+ $('#winMapBtn').addEventListener('click',function(){sfx('click');show('map')});
+ $('#winAgainBtn').addEventListener('click',confirmReset);
+ $('#sndBtn').addEventListener('click',function(){
+ muted=!muted;
+ $('#sndUse').setAttribute('href',muted?'#i-voloff':'#i-vol');
+ if(!muted)sfx('click')});
+show('title');
+tweenXP();
+})();
+</script>
+</body>
+</html>
