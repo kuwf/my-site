@@ -120,7 +120,7 @@ input{user-select:text;-webkit-user-select:text}
 .wd.pr{color:var(--pron)}
 #srow{cursor:pointer}
 .arm{color:var(--soft);font-weight:600;font-size:19px;margin-top:2px}
-.thint{display:flex;align-items:center;justify-content:center;gap:6px;color:#b08a4a;font-weight:700;font-size:13.5px;margin-top:10px;cursor:pointer}
+.thint{display:flex;align-items:center;justify-content:center;gap:6px;color:#b08a4a;font-weight:700;font-size:13.5px;margin-top:10px}
 .thint svg{width:16px;height:16px;flex:none}
 .cb{display:flex;justify-content:center;gap:12px;margin-top:12px;flex-wrap:wrap}
 .spk{display:flex;align-items:center;gap:9px;background:#fff6db;border:2.5px solid var(--adj);border-radius:16px;padding:10px 20px;font-family:inherit;font-weight:800;font-size:16.5px;color:#9a6208;cursor:pointer;box-shadow:0 4px 0 #decf9f}
@@ -259,7 +259,6 @@ input{user-select:text;-webkit-user-select:text}
 'use strict';
 var $=function(s){return document.querySelector(s)},$$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
 function R(a,b){return a+Math.random()*(b-a)}
-/* خلط عشوائي — لمنع تكرار موضع الجواب */
 function shz(a){var b=a.slice(),i,j,t;for(i=b.length-1;i>0;i--){j=Math.floor(Math.random()*(i+1));t=b[i];b[i]=b[j];b[j]=t}return b}
 
 var CAT='<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="112" rx="30" ry="6" fill="rgba(74,52,24,.15)"/><circle cx="60" cy="64" r="38" fill="#ffd43b" stroke="#8a5a00" stroke-width="3.5"/><path d="M30 48 Q60 10 90 48 Z" fill="#ff6b6b" stroke="#c92a2a" stroke-width="3"/><rect x="24" y="44" width="72" height="10" rx="5" fill="#ff6b6b" stroke="#c92a2a" stroke-width="3"/><circle cx="60" cy="32" r="6" fill="#ffd43b" stroke="#b8860b" stroke-width="2.5"/><g class="eye"><circle cx="46" cy="62" r="6.5" fill="#4a3418"/><circle cx="48" cy="60" r="2.2" fill="#fff"/></g><g class="eye"><circle cx="74" cy="62" r="6.5" fill="#4a3418"/><circle cx="76" cy="60" r="2.2" fill="#fff"/></g><polygon points="56,72 64,72 60,78" fill="#f783ac" stroke="#c9445c" stroke-width="1.5"/><path d="M60 78 q-5 6 -10 2 M60 78 q5 6 10 2" fill="none" stroke="#8a5a00" stroke-width="2.5" stroke-linecap="round"/><path d="M22 64 L36 66 M22 74 L36 75 M98 64 L84 66 M98 74 L84 75" fill="none" stroke="#8a5a00" stroke-width="2.5" stroke-linecap="round"/><ellipse cx="36" cy="74" rx="6" ry="4" fill="#ffb3a7" opacity=".8"/><ellipse cx="84" cy="74" rx="6" ry="4" fill="#ffb3a7" opacity=".8"/></svg>';
@@ -282,26 +281,50 @@ var KEY='pw8';
 function ld(){try{var d=JSON.parse(localStorage.getItem(KEY));if(d&&typeof d==='object'&&d.done)S=Object.assign(S,d);}catch(e){}}
 function sv(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 
+/* نطق الحروف: صيغة صغيرة (تُنطق باسم الحرف)، وحروف العلة بكلمات مضمونة */
+var LTXT={a:'ay',e:'ee',i:'eye',o:'oh',u:'you'};
+function ltxt(l){l=String(l).toLowerCase();return LTXT[l]||l}
+
 var AUTO=null;
 function autoSay(fn,ms){clearTimeout(AUTO);AUTO=setTimeout(function(){AUTO=null;fn()},ms)}
 function noAuto(){clearTimeout(AUTO);AUTO=null}
 function stopSpeak(){noAuto();try{speechSynthesis.cancel()}catch(e){}}
+function mkU(t,r){
+ var u=new SpeechSynthesisUtterance(t);
+ u.lang=(VF&&/^en/i.test(VF.lang))?VF.lang:'en-US';
+ if(VF)u.voice=VF;
+ u.rate=r||.72;u.pitch=1.04;
+ return u;
+}
 function speak(t,rate){
  rate=(rate===undefined)?.7:rate;
  if(S.muted||!('speechSynthesis' in window))return;
  try{
   t=String(t).trim();if(!t)return;
-  if(/^[a-z]$/i.test(t))t=t.toUpperCase();
+  if(/^[a-z]$/i.test(t))t=ltxt(t);
   noAuto();
   try{if(speechSynthesis.speaking||speechSynthesis.pending)speechSynthesis.cancel()}catch(e){}
-  var u=new SpeechSynthesisUtterance(t);
-  u.lang=(VF&&/^en/i.test(VF.lang))?VF.lang:'en-US';
-  if(VF)u.voice=VF;
-  u.rate=rate;u.pitch=1.04;
+  var u=mkU(t,rate);
   setTimeout(function(){try{speechSynthesis.speak(u)}catch(e){}},50);
  }catch(e){}
 }
-function sayL(l){speak(String(l).toUpperCase(),.8)}
+/* نطق متتالٍ: كل جزء جملة مستقلة — حتى يُقرأ الحرف المعزول باسمه الصحيح
+   مثال: "B" ثم "is for Ball" — نمط تعليمي كلاسيكي */
+function speakSeq(parts){
+ if(S.muted||!('speechSynthesis' in window))return;
+ noAuto();
+ try{if(speechSynthesis.speaking||speechSynthesis.pending)speechSynthesis.cancel()}catch(e){}
+ setTimeout(function(){
+  parts.forEach(function(p){
+   try{
+    var t=String(p.t);
+    if(/^[a-z]$/i.test(t))t=ltxt(t);
+    speechSynthesis.speak(mkU(t,p.r));
+   }catch(e){}
+  });
+ },50);
+}
+function sayL(l){speak(ltxt(l),.8)}
 
 var AC=null;
 function au(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();return AC}
@@ -621,7 +644,7 @@ function renderCard(i){
   h='<div class="card"><div class="en wd" style="font-size:24px;color:var(--soft)">My name is</div>'
   +'<div class="en wd" id="wds" style="font-size:33px;color:#c92a2a;cursor:pointer">'+S.name+'</div>'
   +'<div class="arm">'+c.ar+'</div>'
-  +'<div class="thint" id="tht">'+SPK+'<span>اضغَط على اسمك أو زر السَّماعة لتَسمَع النُّطق</span></div>'
+  +'<div class="thint">'+SPK+'<span>اضغَط على اسمك أو زر السَّماعة لتَسمَع النُّطق</span></div>'
   +'<div class="cb"><button class="spk spb">'+SPK+'<span>اسْتَمِع للجُملَة</span></button></div></div>';
  }else if(c.sent){
   h='<div class="card"><div class="wr" id="srow" style="margin-top:4px">'+c.sent.map(function(w){return '<span class="en cw '+CL(w)+'">'+w+'</span>'}).join('')+'</div>'
@@ -669,11 +692,11 @@ function renderCard(i){
  var s2=B.querySelector('.sp2');if(s2)s2.addEventListener('click',function(){speak(c.w,.7)});
  var sb=B.querySelector('.spb');
  if(sb)sb.addEventListener('click',function(){
-  if(c.l)speak(c.l+'. '+c.w+'. '+c.l+'.',.72);
+  if(c.l)speakSeq([{t:c.l,r:.8},{t:'is for '+c.w,r:.75}]);
   else if(c.sent)speak(c.sent.join(' '),.8);
   else if(c.me)speak('My name is '+S.name,.78);
-  else if(c.num)speak(c.w+'. '+c.w+'.',.7);
-  else speak(c.w+'. '+c.w+'.',.7);
+  else if(c.num)speakSeq([{t:c.w,r:.7},{t:c.w,r:.7}]);
+  else speakSeq([{t:c.w,r:.7},{t:c.w,r:.7}]);
  });
 }
 
