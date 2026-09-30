@@ -11,7 +11,8 @@
 html,body{margin:0;height:100%}
 body{font-family:'Baloo Bhaijaan 2',sans-serif;color:var(--ink);overflow:hidden;user-select:none;-webkit-user-select:none;background:radial-gradient(circle,#f2e3bd 7%,transparent 8%) 0 0/30px 30px,radial-gradient(circle,#f2e3bd 7%,transparent 8%) 15px 15px/30px 30px,var(--cream);touch-action:manipulation}
 input{user-select:text;-webkit-user-select:text}
-.en{direction:ltr;font-family:Andika,sans-serif}
+/* الإصلاح الجذري: isolate تجعل أي تسلسل إنجليزي داخلها يرتّب يسار→يمين دائمًا */
+.en{direction:ltr;unicode-bidi:isolate;font-family:Andika,sans-serif}
 .lz{font-family:'Lalezar','Baloo Bhaijaan 2',sans-serif;letter-spacing:.5px}
 .hide{display:none!important}
 #app{position:relative;z-index:1;max-width:560px;margin:0 auto;height:100vh;height:100dvh;display:flex;flex-direction:column}
@@ -118,7 +119,7 @@ input{user-select:text;-webkit-user-select:text}
 .wr{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
 .wd{font-family:Andika;font-weight:700;font-size:36px}
 .wd.pr{color:var(--pron)}
-#srow{cursor:pointer}
+#srow{cursor:pointer;direction:ltr}
 .arm{color:var(--soft);font-weight:600;font-size:19px;margin-top:2px}
 .thint{display:flex;align-items:center;justify-content:center;gap:6px;color:#b08a4a;font-weight:700;font-size:13.5px;margin-top:10px}
 .thint svg{width:16px;height:16px;flex:none}
@@ -281,7 +282,6 @@ var KEY='pw8';
 function ld(){try{var d=JSON.parse(localStorage.getItem(KEY));if(d&&typeof d==='object'&&d.done)S=Object.assign(S,d);}catch(e){}}
 function sv(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 
-/* نطق الحروف: صيغة صغيرة (تُنطق باسم الحرف)، وحروف العلة بكلمات مضمونة */
 var LTXT={a:'ay',e:'ee',i:'eye',o:'oh',u:'you'};
 function ltxt(l){l=String(l).toLowerCase();return LTXT[l]||l}
 
@@ -308,8 +308,6 @@ function speak(t,rate){
   setTimeout(function(){try{speechSynthesis.speak(u)}catch(e){}},50);
  }catch(e){}
 }
-/* نطق متتالٍ: كل جزء جملة مستقلة — حتى يُقرأ الحرف المعزول باسمه الصحيح
-   مثال: "B" ثم "is for Ball" — نمط تعليمي كلاسيكي */
 function speakSeq(parts){
  if(S.muted||!('speechSynthesis' in window))return;
  noAuto();
@@ -377,7 +375,7 @@ var LS=[
  {t:'build',w:'egg',p:'🥚',ar:'بَيْضَة'}]},
 {z:1,t:'عَائِلات الكَلِمَات',en:'Word Families: -at / -un',
  in:'محطة البناء! نركّب الكلمات حرفًا حرفًا مثل عربات القطار — بدِّل الحرف الأول فقط وستحصل على كلمة جديدة!',
- c:[{rule:1,ti:'عائلة الكلمة',bo:'كلمات كثيرة تنتهي بنفس الحروف:<br><span class="en cw vw">c</span><span class="en cw x">at</span> · <span class="en cw vw">h</span><span class="en cw x">at</span> · <span class="en cw vw">b</span><span class="en cw x">at</span><br>كل ما تحتاجه: أن تبدل الحرف الأول!'},
+ c:[{rule:1,ti:'عائلة الكلمة',bo:'كلمات كثيرة تنتهي بنفس الحروف:<br><span class="en"><span class="cw vw">c</span><span class="cw x">at</span> · <span class="cw vw">h</span><span class="cw x">at</span> · <span class="cw vw">b</span><span class="cw x">at</span></span><br>كل ما تحتاجه: أن تبدل الحرف الأول!'},
  {w:'cat',p:'🐱',ar:'قِطّ'},{w:'hat',p:'👒',ar:'قُبَّعَة'},{w:'bat',p:'🦇',ar:'خُفَّاش'},{w:'sun',p:'☀️',ar:'شَمْس'},{w:'run',p:'🏃',ar:'يَجري'},{w:'bun',p:'🥯',ar:'كُعْكَة'}],
  q:[{t:'build',w:'hat',p:'👒',ar:'قُبَّعَة'},
  {t:'hear',say:'bat',lb:'انصُت جيدًا واختَر الكلمة الصحيحة (الثلاث متشابهات!)',op:['bat','cat','hat'],an:'bat',k:'W'},
@@ -423,7 +421,7 @@ var LS=[
  {t:'build',w:'red',ar:'أَحْمَر'}]},
 {z:3,t:'الصِّفَات',en:'Adjectives: big small happy...',
  in:'محطة الأوصاف يا {n}! الصفات كلمات تصف الأشياء — لونها برتقالي دائمًا. لاحظ الأضداد: كبير/صغير، سعيد/حزين!',
- c:[{rule:1,ti:'الصِّفَات',bo:'الصفة كلمة تصف الاسم وتخبرنا كيف هو.<br>لونها دائمًا <span class="cw adj">برتقاليّ</span>!<br>مثال: <span class="en"><span class="cw x">a</span> <span class="cw adj">big</span> <span class="cw n">ball</span></span>'},
+ c:[{rule:1,ti:'الصِّفَات',bo:'الصفة كلمة تصف الاسم وتخبرنا كيف هو.<br>لونها دائمًا <span class="cw adj">برتقليّ</span>!<br>مثال: <span class="en"><span class="cw x">a</span> <span class="cw adj">big</span> <span class="cw n">ball</span></span>'},
  {w:'big',p:'🐘',ar:'كَبِير'},{w:'small',p:'🐭',ar:'صَغِير'},{w:'happy',p:'😊',ar:'سَعِيد'},{w:'sad',p:'😢',ar:'حَزِين'},{w:'hot',p:'🔥',ar:'حَارّ'},{w:'cold',p:'❄️',ar:'بَارِد'},{w:'fast',p:'🐇',ar:'سَرِيع'},{w:'slow',p:'🐢',ar:'بَطِيء'}],
  q:[{t:'pic',w:'happy',say:'happy',ar:'سَعِيد',lb:'اسْتَمِع جَيِّدًا ثمَّ اختر الصُّورَة الصَّحِيحَة',op:['😊','😢','🔥'],an:'😊'},
  {t:'pick',p:'🐘',say:'big',lb:'اسْمَع الكَلمة ثم اختر كتابتها',op:['big','small','hot'],an:'big'},
@@ -464,7 +462,7 @@ var LS=[
  {t:'hear',say:'student',lb:'انصُت واختَر الكَلِمَة الصَّحِيحَة',op:['student','family','orange'],an:'student',k:'W'}]},
 {z:5,t:'الضَّمَائِر',en:'Pronouns: I you he she it we they',
  in:'الخط البنفسجي يبدأ! الضمائر كلمات سحرية تحل مكان الاسم — لونها ورديّ دائمًا، تابعها جيدًا يا {n}!',
- c:[{rule:1,ti:'الضَّمَائِر',bo:'الضمير يحلُّ مكان الاسم حتى لا نكرره.<br>بدل «Omar» نقول <span class="cw pr en">he</span>، وبدل «Sara» نقول <span class="cw pr en">she</span>.<br>هذه هي الضمائر السبعة:<br><span class="cw pr en">I · you · he · she · it · we · they</span>'},
+ c:[{rule:1,ti:'الضَّمَائِر',bo:'الضمير يحلُّ مكان الاسم حتى لا نكرره.<br>بدل «Omar» نقول <span class="en cw pr">he</span>، وبدل «Sara» نقول <span class="en cw pr">she</span>.<br>هذه هي الضمائر السبعة:<br><span class="en cw pr">I · you · he · she · it · we · they</span>'},
  {w:'I',p:'🙋',ar:'أَنَا',pr:1},{w:'You',p:'👉',ar:'أَنْتَ / أَنْتِ',pr:1},{w:'He',p:'👦',ar:'هُوَ',pr:1},{w:'She',p:'👧',ar:'هِيَ',pr:1},{w:'It',p:'⚽',ar:'هُوَ / هِيَ (لِغَيْر العَاقِل)',pr:1},{w:'We',p:'👫',ar:'نَحْنُ',pr:1},{w:'They',p:'👥',ar:'هُمْ / هُنَّ',pr:1}],
  q:[{t:'pick',p:'👧',say:'she',lb:'اسْمَع الكَلمة ثم اختر الضمير المناسب للصورة',op:['she','he','it'],an:'she'},
  {t:'hear',say:'we',lb:'انصُت واختَر الضمير الصَّحِيح',op:['we','they','he'],an:'we',k:'W'},
