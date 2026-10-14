@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opinion Essay – Quick Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #f5f0e8; font-family: 'Patrick Hand', cursive; min-height: 100vh; padding: 0 0 50px; }
+
+header { background: #2c3e6b; color: white; text-align: center; padding: 22px 16px 18px; }
+header h1 { font-size: clamp(18px, 4vw, 26px); font-weight: 900; }
+header p { font-family: 'Tajawal', sans-serif; font-size: 13px; opacity: .75; margin-top: 4px; }
+
+.page { max-width: 700px; margin: 0 auto; padding: 24px 14px; }
+
+.row { display: flex; align-items: stretch; margin-bottom: 10px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+.tag { display: flex; align-items: center; justify-content: center; writing-mode: vertical-rl; text-orientation: mixed; padding: 10px 9px; font-family: 'Tajawal', sans-serif; font-size: 11px; font-weight: 900; letter-spacing: 1.5px; color: white; min-width: 34px; flex-shrink: 0; }
+.tag.intro-tag { background: #2c3e6b; }
+.tag.body-tag  { background: #2d7a5f; }
+.tag.conc-tag  { background: #7b3fa0; }
+.content { flex: 1; background: white; padding: 13px 16px; direction: ltr; text-align: left; }
+.sent { font-size: 16px; line-height: 1.7; color: #1a1a2e; margin-bottom: 3px; }
+.blank { display: inline-block; border-bottom: 2px dashed #e74c3c; min-width: 100px; color: #e74c3c; font-style: italic; }
+.kw   { color: #2c3e6b; font-weight: 900; }
+.kw-p { color: #7b3fa0; font-weight: 900; }
+.hint { font-family: 'Tajawal', sans-serif; font-size: 12px; color: #aaa; margin-top: 2px; }
+.also-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; direction: ltr; }
+.also-pill { background: #eaf7f1; border: 1.5px solid #2d7a5f; color: #2d7a5f; border-radius: 20px; padding: 3px 12px; font-size: 13.5px; font-weight: 700; white-space: nowrap; }
+.also-sep { font-size: 12px; color: #ccc; }
+.rnum { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: #2d7a5f; color: white; border-radius: 50%; font-size: 12px; font-weight: 900; margin-left: 6px; flex-shrink: 0; vertical-align: middle; }
+.choice-row { display: inline-flex; gap: 6px; margin: 0 4px; vertical-align: middle; }
+.chip { padding: 2px 12px; border-radius: 20px; font-size: 14px; font-weight: 700; border: 2px solid; }
+.chip.agree    { color: #2d7a5f; border-color: #2d7a5f; background: #eaf7f1; }
+.chip.disagree { color: #c0392b; border-color: #c0392b; background: #fdecea; }
+.divider { text-align: center; font-family: 'Tajawal', sans-serif; font-size: 12px; color: #bbb; margin: 14px 0 10px; display: flex; align-items: center; gap: 8px; }
+.divider::before, .divider::after { content:''; flex:1; height:1px; background:#ddd; }
+
+/* topic */
+.topic-section { margin-top: 32px; }
+.topic-title { background: #2c3e6b; color: white; border-radius: 12px 12px 0 0; padding: 13px 18px; font-family: 'Tajawal', sans-serif; font-weight: 900; font-size: 15px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.topic-title .ten { font-family: 'Patrick Hand', cursive; font-size: 13px; opacity: .8; font-weight: 400; }
+.topic-body { background: white; border-radius: 0 0 12px 12px; overflow: hidden; box-shadow: 0 3px 12px rgba(0,0,0,.08); }
+.rg { display: grid; grid-template-columns: 1fr 1fr; direction: ltr; }
+.rc { padding: 14px 16px; }
+.rc:first-child { border-right: 1px solid #f0f0f0; }
+.rc h4 { font-family: 'Tajawal', sans-serif; font-size: 12px; font-weight: 900; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid; }
+.rc.ac h4 { color: #2d7a5f; border-color: #2d7a5f; }
+.rc.dc h4 { color: #c0392b; border-color: #c0392b; }
+.ri { font-size: 13px; line-height: 1.5; color: #333; margin-bottom: 8px; }
+.ri .en { display: block; font-weight: 700; }
+.ri .ar { display: block; font-family: 'Tajawal', sans-serif; font-size: 11px; color: #999; direction: rtl; text-align: right; }
+
+/* toggle */
+.ex-toggle { width: 100%; background: #f4f6ff; border: none; border-top: 1px solid #e8ecff; padding: 11px 16px; font-family: 'Tajawal', sans-serif; font-size: 13px; font-weight: 700; color: #2c3e6b; cursor: pointer; text-align: right; direction: rtl; display: flex; align-items: center; gap: 8px; transition: background .2s; }
+.ex-toggle:hover { background: #e5eaff; }
+.ex-toggle .arr { transition: transform .2s; font-size: 11px; }
+.ex-toggle.open .arr { transform: rotate(180deg); }
+.ex-box { display: none; padding: 16px; background: #f9fbff; border-top: 1px dashed #c5d5f5; direction: ltr; text-align: left; }
+.ex-box.open { display: block; }
+.ex-label { font-family: 'Tajawal', sans-serif; font-size: 11px; font-weight: 900; color: #2c3e6b; letter-spacing: 1px; margin-bottom: 8px; direction: rtl; text-align: right; }
+.ex-para { font-size: 15px; line-height: 2.1; color: #1a1a2e; }
+.ei { color: #2c3e6b; font-weight: 700; }
+.eb1 { color: #2d7a5f; font-weight: 700; }
+.eb2 { color: #1a6e35; }
+.eb3 { color: #0d5228; }
+.ec  { color: #7b3fa0; font-weight: 700; }
+
+@media (max-width: 500px) {
+  .rg { grid-template-columns: 1fr; }
+  .rc:first-child { border-right: none; border-bottom: 1px solid #f0f0f0; }
+  .tag { writing-mode: horizontal-tb; min-width: unset; padding: 8px 10px; font-size: 10px; }
+}
+@media print {
+  body { background: white; }
+  .ex-box { display: block !important; }
+  .ex-toggle { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Opinion Essay — Quick Sheet</h1>
+  <p>استخدم هذه الورقة في كل سؤال رأي</p>
+</header>
+
+<div class="page">
+
+  <!-- TEMPLATE -->
+  <div class="row">
+    <div class="tag intro-tag">INTRO</div>
+    <div class="content">
+      <div class="sent"><span class="kw">Nowadays,</span> <span class="blank">الموضوع</span> <span class="kw">has become one of the most debated topics in our life.</span></div>
+      <div class="sent" style="margin-top:6px"><span class="kw">In my opinion, I</span><span class="choice-row"><span class="chip agree">agree</span><span class="chip disagree">disagree</span></span> that <span class="blank">الموضوع</span>.</div>
+      <div class="hint">اكتب الموضوع مكان الخطوط</div>
+    </div>
+  </div>
+  <div class="divider">الأسباب — Body</div>
+  <div class="row">
+    <div class="tag body-tag">BODY</div>
+    <div class="content">
+      <div class="also-row"><span class="also-pill">First of all,</span><span class="also-sep">أو</span><span class="also-pill">To begin with,</span></div>
+      <div class="sent"><span class="rnum">1</span> <span class="blank" style="min-width:200px">السبب الأول</span></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="tag body-tag">BODY</div>
+    <div class="content">
+      <div class="also-row"><span class="also-pill">Also,</span><span class="also-sep">أو</span><span class="also-pill">Furthermore,</span></div>
+      <div class="sent"><span class="rnum">2</span> <span class="blank" style="min-width:200px">السبب الثاني</span></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="tag body-tag">BODY</div>
+    <div class="content">
+      <div class="also-row"><span class="also-pill">Also,</span><span class="also-sep">أو</span><span class="also-pill">In addition,</span></div>
+      <div class="sent"><span class="rnum">3</span> <span class="blank" style="min-width:200px">السبب الثالث</span></div>
+    </div>
+  </div>
+  <div class="divider">الخاتمة — Conclusion</div>
+  <div class="row">
+    <div class="tag conc-tag">CONC</div>
+    <div class="content">
+      <div class="sent"><span class="kw-p">In conclusion, that's why I</span><span class="choice-row"><span class="chip agree">agree</span><span class="chip disagree">disagree</span></span> <span class="kw-p">that</span> <span class="blank">الموضوع</span>.</div>
+      <div class="hint">كرر نفس اختيارك والموضوع من المقدمة</div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 1 ── -->
+  <div class="topic-section">
+    <div class="topic-title">📱 التكنولوجيا مفيدة <span class="ten">— Technology is useful</span></div>
+    <div class="topic-body">
+      <div class="rg">
+        <div class="rc ac">
+          <h4>✅ Agree — أوافق</h4>
+          <div class="ri"><span class="en">· Mobile phones help us communicate fast.</span><span class="ar">الهواتف تساعدنا نتواصل بسرعة</span></div>
+          <div class="ri"><span class="en">· The internet helps us learn easily.</span><span class="ar">الإنترنت يساعدنا نتعلم بسهولة</span></div>
+          <div class="ri"><span class="en">· Technology saves us a lot of time.</span><span class="ar">التكنولوجيا توفر وقتاً كبيراً</span></div>
+          <div class="ri"><span class="en">· Cars and trains help us travel fast.</span><span class="ar">السيارات والقطارات تساعدنا نسافر بسرعة</span></div>
+        </div>
+        <div class="rc dc">
+          <h4>❌ Disagree — لا أوافق</h4>
+          <div class="ri"><span class="en">· People spend too much time on phones.</span><span class="ar">الناس يقضون وقتاً طويلاً على الهاتف</span></div>
+          <div class="ri"><span class="en">· It makes students lazy.</span><span class="ar">تجعل الطلاب كسالى</span></div>
+          <div class="ri"><span class="en">· Social media causes many problems.</span><span class="ar">السوشيال ميديا تسبب مشاكل كثيرة</span></div>
+          <div class="ri"><span class="en">· Technology makes people less active.</span><span class="ar">التكنولوجيا تجعل الناس أقل نشاطاً</span></div>
+        </div>
+      </div>
+      <button class="ex-toggle" onclick="tog(this)"><span class="arr">▼</span> مثال كامل — Full Example</button>
+      <div class="ex-box">
+        <div class="ex-label">✅ AGREE EXAMPLE</div>
+        <div class="ex-para">
+          <span class="ei">Nowadays, technology has become one of the most debated topics in our life. In my opinion, I agree that technology is very useful.</span>
+          <span class="eb1"> First of all, mobile phones help us communicate with our family and friends fast.</span>
+          <span class="eb2"> Furthermore, the internet helps us learn new things easily.</span>
+          <span class="eb3"> In addition, technology saves us a lot of time every day.</span>
+          <span style="color:#084018;"> Moreover, cars and trains help us travel quickly from place to place.</span>
+          <span class="ec"> In conclusion, that's why I agree that technology makes our lives better.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 2 ── -->
+  <div class="topic-section">
+    <div class="topic-title">📚 الواجبات المنزلية كثيرة <span class="ten">— Students have too much homework</span></div>
+    <div class="topic-body">
+      <div class="rg">
+        <div class="rc ac">
+          <h4>✅ Agree — أوافق</h4>
+          <div class="ri"><span class="en">· Students are very tired after school.</span><span class="ar">الطلاب متعبون جداً بعد المدرسة</span></div>
+          <div class="ri"><span class="en">· They need time to rest and play.</span><span class="ar">يحتاجون وقتاً للراحة واللعب</span></div>
+          <div class="ri"><span class="en">· Too much homework makes them stressed.</span><span class="ar">كثرة الواجبات تجعلهم متوترين</span></div>
+          <div class="ri"><span class="en">· They can prepare topics instead.</span><span class="ar">يمكنهم التحضير للموضوع بدلاً منها</span></div>
+        </div>
+        <div class="rc dc">
+          <h4>❌ Disagree — لا أوافق</h4>
+          <div class="ri"><span class="en">· Homework helps students revise lessons.</span><span class="ar">الواجبات تساعد على المراجعة</span></div>
+          <div class="ri"><span class="en">· It teaches them to be responsible.</span><span class="ar">تعلمهم أن يكونوا مسؤولين</span></div>
+          <div class="ri"><span class="en">· Practice makes students stronger.</span><span class="ar">التمرين يجعل الطلاب أقوى</span></div>
+          <div class="ri"><span class="en">· Homework improves their skills.</span><span class="ar">الواجبات تطور مهاراتهم</span></div>
+        </div>
+      </div>
+      <button class="ex-toggle" onclick="tog(this)"><span class="arr">▼</span> مثال كامل — Full Example</button>
+      <div class="ex-box">
+        <div class="ex-label">✅ AGREE EXAMPLE</div>
+        <div class="ex-para">
+          <span class="ei">Nowadays, homework has become one of the most debated topics in our life. In my opinion, I agree that students have too much homework.</span>
+          <span class="eb1"> First of all, students are very tired after a long school day.</span>
+          <span class="eb2"> Furthermore, they need time to rest and play to stay healthy.</span>
+          <span class="eb3"> In addition, too much homework makes them feel stressed and unhappy.</span>
+          <span style="color:#084018;"> Moreover, students can prepare their topics instead of doing too much homework.</span>
+          <span class="ec"> In conclusion, that's why I agree that students should have less homework.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 3 ── -->
+  <div class="topic-section">
+    <div class="topic-title">⚽ الرياضة مهمة للصحة <span class="ten">— Sport is important for health</span></div>
+    <div class="topic-body">
+      <div class="rg">
+        <div class="rc ac">
+          <h4>✅ Agree — أوافق</h4>
+          <div class="ri"><span class="en">· Sport keeps our body healthy and strong.</span><span class="ar">الرياضة تبقي أجسامنا صحية وقوية</span></div>
+          <div class="ri"><span class="en">· It helps us reduce stress.</span><span class="ar">تساعدنا على تقليل التوتر</span></div>
+          <div class="ri"><span class="en">· Playing sport teaches us teamwork.</span><span class="ar">تعلمنا العمل الجماعي</span></div>
+          <div class="ri"><span class="en">· Sport helps us focus better at school.</span><span class="ar">الرياضة تساعدنا على التركيز في المدرسة</span></div>
+        </div>
+        <div class="rc dc">
+          <h4>❌ Disagree — لا أوافق</h4>
+          <div class="ri"><span class="en">· Sport can cause injuries.</span><span class="ar">الرياضة قد تسبب إصابات</span></div>
+          <div class="ri"><span class="en">· Students need more time for studying.</span><span class="ar">الطلاب يحتاجون وقتاً أكثر للدراسة</span></div>
+          <div class="ri"><span class="en">· Not every student likes sport.</span><span class="ar">ليس كل طالب يحب الرياضة</span></div>
+          <div class="ri"><span class="en">· Some sports are very expensive.</span><span class="ar">بعض الرياضات مكلفة جداً</span></div>
+        </div>
+      </div>
+      <button class="ex-toggle" onclick="tog(this)"><span class="arr">▼</span> مثال كامل — Full Example</button>
+      <div class="ex-box">
+        <div class="ex-label">✅ AGREE EXAMPLE</div>
+        <div class="ex-para">
+          <span class="ei">Nowadays, sport has become one of the most debated topics in our life. In my opinion, I agree that sport is very important for our health.</span>
+          <span class="eb1"> First of all, sport keeps our body healthy and strong.</span>
+          <span class="eb2"> Also, it helps us reduce stress and feel happy.</span>
+          <span class="eb3"> In addition, playing sport teaches us teamwork and respect.</span>
+          <span style="color:#084018;"> Moreover, sport helps students focus better at school.</span>
+          <span class="ec"> In conclusion, that's why I agree that everyone should do sport every day.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 4 ── -->
+  <div class="topic-section">
+    <div class="topic-title">🌿 يجب حماية البيئة <span class="ten">— We should protect the environment</span></div>
+    <div class="topic-body">
+      <div class="rg">
+        <div class="rc ac">
+          <h4>✅ Agree — أوافق</h4>
+          <div class="ri"><span class="en">· Pollution harms animals and plants.</span><span class="ar">التلوث يضر الحيوانات والنباتات</span></div>
+          <div class="ri"><span class="en">· We need clean air and water to live.</span><span class="ar">نحتاج هواء وماء نظيفاً للحياة</span></div>
+          <div class="ri"><span class="en">· Future generations need a clean world.</span><span class="ar">الأجيال القادمة تحتاج عالماً نظيفاً</span></div>
+          <div class="ri"><span class="en">· Planting trees makes our world better.</span><span class="ar">زراعة الأشجار تجعل عالمنا أفضل</span></div>
+        </div>
+        <div class="rc dc">
+          <h4>❌ Disagree — لا أوافق</h4>
+          <div class="ri"><span class="en">· Factories are important for the economy.</span><span class="ar">المصانع مهمة للاقتصاد</span></div>
+          <div class="ri"><span class="en">· Some pollution is unavoidable.</span><span class="ar">بعض التلوث لا يمكن تجنبه</span></div>
+          <div class="ri"><span class="en">· Going green costs a lot of money.</span><span class="ar">التحول للبيئة النظيفة يكلف كثيراً</span></div>
+          <div class="ri"><span class="en">· People have other urgent problems.</span><span class="ar">لدى الناس مشاكل أخرى أكثر إلحاحاً</span></div>
+        </div>
+      </div>
+      <button class="ex-toggle" onclick="tog(this)"><span class="arr">▼</span> مثال كامل — Full Example</button>
+      <div class="ex-box">
+        <div class="ex-label">✅ AGREE EXAMPLE</div>
+        <div class="ex-para">
+          <span class="ei">Nowadays, protecting the environment has become one of the most debated topics in our life. In my opinion, I agree that we should protect the environment.</span>
+          <span class="eb1"> First of all, pollution harms animals, plants, and all living things.</span>
+          <span class="eb2"> Furthermore, we need clean air and clean water to stay healthy.</span>
+          <span class="eb3"> In addition, future generations deserve to live in a clean and beautiful world.</span>
+          <span style="color:#084018;"> Moreover, planting trees and recycling can make our environment better.</span>
+          <span class="ec"> In conclusion, that's why I agree that protecting the environment is everyone's responsibility.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 5 ── -->
+  <div class="topic-section">
+    <div class="topic-title">💻 التعليم الإلكتروني أفضل <span class="ten">— Online learning is better</span></div>
+    <div class="topic-body">
+      <div class="rg">
+        <div class="rc ac">
+          <h4>✅ Agree — أوافق</h4>
+          <div class="ri"><span class="en">· Students can learn from anywhere.</span><span class="ar">الطلاب يتعلمون من أي مكان</span></div>
+          <div class="ri"><span class="en">· They can study at their own speed.</span><span class="ar">يدرسون بالسرعة التي تناسبهم</span></div>
+          <div class="ri"><span class="en">· It saves time and travel costs.</span><span class="ar">يوفر الوقت وتكاليف التنقل</span></div>
+          <div class="ri"><span class="en">· They can rewatch lessons anytime.</span><span class="ar">يمكنهم إعادة مشاهدة الدرس في أي وقت</span></div>
+        </div>
+        <div class="rc dc">
+          <h4>❌ Disagree — لا أوافق</h4>
+          <div class="ri"><span class="en">· Students miss important social skills.</span><span class="ar">الطلاب يفقدون المهارات الاجتماعية</span></div>
+          <div class="ri"><span class="en">· It is hard to focus at home.</span><span class="ar">من الصعب التركيز في البيت</span></div>
+          <div class="ri"><span class="en">· Not all students have internet access.</span><span class="ar">ليس كل الطلاب لديهم إنترنت</span></div>
+          <div class="ri"><span class="en">· School activities cannot be done online.</span><span class="ar">الأنشطة المدرسية لا يمكن عملها أونلاين</span></div>
+        </div>
+      </div>
+      <button class="ex-toggle" onclick="tog(this)"><span class="arr">▼</span> مثال كامل — Full Example</button>
+      <div class="ex-box">
+        <div class="ex-label">❌ DISAGREE EXAMPLE</div>
+        <div class="ex-para">
+          <span class="ei">Nowadays, online learning has become one of the most debated topics in our life. In my opinion, I disagree that online learning is better than school.</span>
+          <span class="eb1"> First of all, students miss important social skills when they study at home.</span>
+          <span class="eb2"> Also, it is very hard to focus and study well at home.</span>
+          <span class="eb3"> In addition, not all students have a good internet connection.</span>
+          <span style="color:#084018;"> Moreover, school gives students the chance to do activities and work together.</span>
+          <span class="ec"> In conclusion, that's why I disagree that online learning can replace school.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 6 ── -->
+  <div class="topic-section">
+    <div class="topic-title">🥗 يجب أن نأكل صحياً <span class="ten">— We should eat healthy food</span></div>
+    <div class="topic-body">
+      <div class="rg">
+        <div class="rc ac">
+          <h4>✅ Agree — أوافق</h4>
+          <div class="ri"><span class="en">· Healthy food gives us energy.</span><span class="ar">الطعام الصحي يعطينا طاقة</span></div>
+          <div class="ri"><span class="en">· It helps us grow strong and tall.</span><span class="ar">يساعدنا على النمو والطول</span></div>
+          <div class="ri"><span class="en">· Junk food causes many diseases.</span><span class="ar">الأكل السريع يسبب أمراضاً كثيرة</span></div>
+          <div class="ri"><span class="en">· Healthy food helps us concentrate better.</span><span class="ar">الطعام الصحي يساعدنا على التركيز أكثر</span></div>
+        </div>
+        <div class="rc dc">
+          <h4>❌ Disagree — لا أوافق</h4>
+          <div class="ri"><span class="en">· Healthy food is expensive.</span><span class="ar">الطعام الصحي غالي الثمن</span></div>
+          <div class="ri"><span class="en">· Fast food is quick and easy.</span><span class="ar">الأكل السريع سريع وسهل</span></div>
+          <div class="ri"><span class="en">· People should choose what they like.</span><span class="ar">الناس يجب أن يختاروا ما يحبون</span></div>
+          <div class="ri"><span class="en">· Not everyone has time to cook.</span><span class="ar">ليس لدى الجميع وقت للطبخ</span></div>
+        </div>
+      </div>
+      <button class="ex-toggle" onclick="tog(this)"><span class="arr">▼</span> مثال كامل — Full Example</button>
+      <div class="ex-box">
+        <div class="ex-label">✅ AGREE EXAMPLE</div>
+        <div class="ex-para">
+          <span class="ei">Nowadays, healthy food has become one of the most debated topics in our life. In my opinion, I agree that we should eat healthy food every day.</span>
+          <span class="eb1"> First of all, healthy food gives our body the energy it needs.</span>
+          <span class="eb2"> Furthermore, it helps children grow strong and tall.</span>
+          <span class="eb3"> In addition, eating junk food causes many serious diseases like diabetes.</span>
+          <span style="color:#084018;"> Moreover, eating healthy food helps us concentrate better at school.</span>
+          <span class="ec"> In conclusion, that's why I agree that eating healthy food is very important for our lives.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 7 ── -->
+  <div class="topic-section">
+    <div class="topic-title">🎉 التجمع مع العائلة والأصدقاء في العيد أفضل <span class="ten">— Gathering with family and friends during Eid is better than texting or calling</span></div>
+    <div class="topic-body">
+      <div class="rg">
+        <div class="rc ac">
+          <h4>✅ Agree — أوافق</h4>
+          <div class="ri"><span class="en">· Meeting in person makes us feel happy and loved.</span><span class="ar">اللقاء الشخصي يجعلنا نشعر بالسعادة والمحبة</span></div>
+          <div class="ri"><span class="en">· We can share food and special moments together.</span><span class="ar">نتشارك الطعام واللحظات الخاصة معاً</span></div>
+          <div class="ri"><span class="en">· Face-to-face gatherings strengthen family bonds.</span><span class="ar">التجمعات تقوي روابط العائلة</span></div>
+          <div class="ri"><span class="en">· Children enjoy playing together during Eid.</span><span class="ar">الأطفال يستمتعون باللعب معاً في العيد</span></div>
+        </div>
+        <div class="rc dc">
+          <h4>❌ Disagree — لا أوافق</h4>
+          <div class="ri"><span class="en">· Some family members live far away.</span><span class="ar">بعض أفراد العائلة يعيشون بعيداً</span></div>
+          <div class="ri"><span class="en">· Texting and calling are quick and easy.</span><span class="ar">الرسائل والمكالمات سريعة وسهلة</span></div>
+          <div class="ri"><span class="en">· Travel during Eid is expensive and tiring.</span><span class="ar">السفر في العيد مكلف ومتعب</span></div>
+          <div class="ri"><span class="en">· Video calls let us see everyone's faces.</span><span class="ar">مكالمات الفيديو تتيح لنا رؤية وجوه الجميع</span></div>
+        </div>
+      </div>
+      <button class="ex-toggle" onclick="tog(this)"><span class="arr">▼</span> مثال كامل — Full Example</button>
+      <div class="ex-box">
+        <div class="ex-label">✅ AGREE EXAMPLE</div>
+        <div class="ex-para">
+          <span class="ei">Nowadays, gathering with family during Eid has become one of the most debated topics in our life. In my opinion, I agree that meeting in person is better than texting or calling.</span>
+          <span class="eb1"> First of all, meeting in person makes us feel happy and truly loved.</span>
+          <span class="eb2"> Furthermore, we can share special food and enjoy beautiful moments together.</span>
+          <span class="eb3"> In addition, face-to-face gatherings make family bonds stronger.</span>
+          <span style="color:#084018;"> Moreover, children love to play and celebrate with their cousins during Eid.</span>
+          <span class="ec"> In conclusion, that's why I agree that gathering with family during Eid is much better than texting or calling.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 8 ── -->
+  <div class="topic-section">
+    <div class="topic-title">🤫 يمكن للناس التواصل بدون كلام <span class="ten">— People can communicate without words</span></div>
+    <div class="topic-body">
+      <div class="rg">
+        <div class="rc ac">
+          <h4>✅ Agree — أوافق</h4>
+          <div class="ri"><span class="en">· Body language shows how we feel.</span><span class="ar">لغة الجسد تظهر مشاعرنا</span></div>
+          <div class="ri"><span class="en">· Facial expressions like smiling send clear messages.</span><span class="ar">تعابير الوجه كالابتسامة ترسل رسائل واضحة</span></div>
+          <div class="ri"><span class="en">· Eye contact shows interest and respect.</span><span class="ar">التواصل البصري يظهر الاهتمام والاحترام</span></div>
+          <div class="ri"><span class="en">· Gestures and signs are used all over the world.</span><span class="ar">الإيماءات والإشارات تُستخدم في كل العالم</span></div>
+        </div>
+        <div class="rc dc">
+          <h4>❌ Disagree — لا أوافق</h4>
+          <div class="ri"><span class="en">· Words are clearer and more accurate.</span><span class="ar">الكلمات أوضح وأكثر دقة</span></div>
+          <div class="ri"><span class="en">· Body language can be misunderstood easily.</span><span class="ar">لغة الجسد يمكن أن تُفهم بشكل خاطئ</span></div>
+          <div class="ri"><span class="en">· Different cultures have different gestures.</span><span class="ar">الثقافات المختلفة لها إيماءات مختلفة</span></div>
+          <div class="ri"><span class="en">· Complex ideas are hard to express without words.</span><span class="ar">الأفكار المعقدة صعب التعبير عنها بدون كلام</span></div>
+        </div>
+      </div>
+      <button class="ex-toggle" onclick="tog(this)"><span class="arr">▼</span> مثال كامل — Full Example</button>
+      <div class="ex-box">
+        <div class="ex-label">✅ AGREE EXAMPLE</div>
+        <div class="ex-para">
+          <span class="ei">Nowadays, communicating without words has become one of the most debated topics in our life. In my opinion, I agree that people can communicate without words.</span>
+          <span class="eb1"> First of all, body language clearly shows how a person feels.</span>
+          <span class="eb2"> Furthermore, facial expressions like smiling or frowning send strong messages to others.</span>
+          <span class="eb3"> In addition, eye contact shows respect and interest without saying anything.</span>
+          <span style="color:#084018;"> Moreover, gestures and hand signs are understood by people all over the world.</span>
+          <span class="ec"> In conclusion, that's why I agree that people can communicate without words.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 9 ── -->
+  <div class="topic-section">
+    <div class="topic-title">💬 التواصل وجهاً لوجه هو الأفضل <span class="ten">— Chatting face to face is the best way to communicate</span></div>
+    <div class="topic-body">
+      <div class="rg">
+        <div class="rc ac">
+          <h4>✅ Agree — أوافق</h4>
+          <div class="ri"><span class="en">· We can see expressions and understand feelings better.</span><span class="ar">نرى تعابير الوجه ونفهم المشاعر بشكل أفضل</span></div>
+          <div class="ri"><span class="en">· It builds trust and strong relationships.</span><span class="ar">يبني الثقة والعلاقات القوية</span></div>
+          <div class="ri"><span class="en">· Misunderstandings are less likely face to face.</span><span class="ar">سوء الفهم أقل احتمالاً وجهاً لوجه</span></div>
+          <div class="ri"><span class="en">· It shows respect and real interest in others.</span><span class="ar">يُظهر الاحترام والاهتمام الحقيقي بالآخرين</span></div>
+        </div>
+        <div class="rc dc">
+          <h4>❌ Disagree — لا أوافق</h4>
+          <div class="ri"><span class="en">· Online chatting is faster and easier.</span><span class="ar">الدردشة الإلكترونية أسرع وأسهل</span></div>
+          <div class="ri"><span class="en">· We can reach people anywhere in the world.</span><span class="ar">نستطيع الوصول للناس في أي مكان بالعالم</span></div>
+          <div class="ri"><span class="en">· Shy people find it easier to chat online.</span><span class="ar">الخجولون يجدون التواصل الإلكتروني أسهل</span></div>
+          <div class="ri"><span class="en">· Text messages can be saved and reread.</span><span class="ar">الرسائل النصية يمكن حفظها وإعادة قراءتها</span></div>
+        </div>
+      </div>
+      <button class="ex-toggle" onclick="tog(this)"><span class="arr">▼</span> مثال كامل — Full Example</button>
+      <div class="ex-box">
+        <div class="ex-label">✅ AGREE EXAMPLE</div>
+        <div class="ex-para">
+          <span class="ei">Nowadays, the best way to communicate has become one of the most debated topics in our life. In my opinion, I agree that chatting face to face is the best way to communicate.</span>
+          <span class="eb1"> First of all, we can see expressions and understand feelings much better in person.</span>
+          <span class="eb2"> Furthermore, face-to-face conversations build trust and strong relationships.</span>
+          <span class="eb3"> In addition, misunderstandings are less likely when we talk in person.</span>
+          <span style="color:#084018;"> Moreover, it shows real respect and genuine interest in the other person.</span>
+          <span class="ec"> In conclusion, that's why I agree that face-to-face communication is the best way to connect with others.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 10 ── -->
+  <div class="topic-section">
+    <div class="topic-title">🤝 الصداقة مهمة لصحتك النفسية <span class="ten">— Friendship is important for your mental health</span></div>
+    <div class="topic-body">
+      <div class="rg">
+        <div class="rc ac">
+          <h4>✅ Agree — أوافق</h4>
+          <div class="ri"><span class="en">· Friends support us when we feel sad or stressed.</span><span class="ar">الأصدقاء يدعموننا حين نشعر بالحزن أو التوتر</span></div>
+          <div class="ri"><span class="en">· Having friends reduces feelings of loneliness.</span><span class="ar">وجود الأصدقاء يقلل الشعور بالوحدة</span></div>
+          <div class="ri"><span class="en">· Friends encourage us to be better people.</span><span class="ar">الأصدقاء يشجعوننا لنكون أشخاصاً أفضل</span></div>
+          <div class="ri"><span class="en">· Sharing problems with friends makes us feel better.</span><span class="ar">مشاركة المشاكل مع الأصدقاء تجعلنا نشعر بتحسن</span></div>
+        </div>
+        <div class="rc dc">
+          <h4>❌ Disagree — لا أوافق</h4>
+          <div class="ri"><span class="en">· Bad friends can influence us negatively.</span><span class="ar">الأصدقاء السيئون يمكن أن يؤثروا علينا سلباً</span></div>
+          <div class="ri"><span class="en">· Some people prefer to be alone.</span><span class="ar">بعض الناس يفضلون أن يكونوا وحدهم</span></div>
+          <div class="ri"><span class="en">· Friendships can sometimes cause stress.</span><span class="ar">الصداقات أحياناً تسبب توتراً</span></div>
+          <div class="ri"><span class="en">· Family support is more important than friends.</span><span class="ar">دعم العائلة أهم من دعم الأصدقاء</span></div>
+        </div>
+      </div>
+      <button class="ex-toggle" onclick="tog(this)"><span class="arr">▼</span> مثال كامل — Full Example</button>
+      <div class="ex-box">
+        <div class="ex-label">✅ AGREE EXAMPLE</div>
+        <div class="ex-para">
+          <span class="ei">Nowadays, friendship and mental health has become one of the most debated topics in our life. In my opinion, I agree that friendship is very important for our mental health.</span>
+          <span class="eb1"> First of all, friends support us when we feel sad or stressed.</span>
+          <span class="eb2"> Furthermore, having good friends reduces feelings of loneliness.</span>
+          <span class="eb3"> In addition, friends encourage us to become better people every day.</span>
+          <span style="color:#084018;"> Moreover, sharing our problems with friends helps us feel much better.</span>
+          <span class="ec"> In conclusion, that's why I agree that friendship is very important for our mental health.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 11 ── -->
+  <div class="topic-section">
+    <div class="topic-title">✈️ الدراسة في الخارج أفضل <span class="ten">— Studying abroad is better than studying in your country</span></div>
+    <div class="topic-body">
+      <div class="rg">
+        <div class="rc ac">
+          <h4>✅ Agree — أوافق</h4>
+          <div class="ri"><span class="en">· Students learn new languages and cultures.</span><span class="ar">الطلاب يتعلمون لغات وثقافات جديدة</span></div>
+          <div class="ri"><span class="en">· Foreign universities offer better opportunities.</span><span class="ar">الجامعات الأجنبية توفر فرصاً أفضل</span></div>
+          <div class="ri"><span class="en">· It builds independence and confidence.</span><span class="ar">يبني الاستقلالية والثقة بالنفس</span></div>
+          <div class="ri"><span class="en">· Students gain international work experience.</span><span class="ar">الطلاب يكتسبون خبرة عمل دولية</span></div>
+        </div>
+        <div class="rc dc">
+          <h4>❌ Disagree — لا أوافق</h4>
+          <div class="ri"><span class="en">· Studying abroad is very expensive.</span><span class="ar">الدراسة في الخارج مكلفة جداً</span></div>
+          <div class="ri"><span class="en">· Students feel homesick and lonely.</span><span class="ar">الطلاب يشعرون بالحنين للوطن والوحدة</span></div>
+          <div class="ri"><span class="en">· Local universities have good quality too.</span><span class="ar">الجامعات المحلية لديها جودة جيدة أيضاً</span></div>
+          <div class="ri"><span class="en">· Being far from family is hard for students.</span><span class="ar">البعد عن العائلة صعب على الطلاب</span></div>
+        </div>
+      </div>
+      <button class="ex-toggle" onclick="tog(this)"><span class="arr">▼</span> مثال كامل — Full Example</button>
+      <div class="ex-box">
+        <div class="ex-label">✅ AGREE EXAMPLE</div>
+        <div class="ex-para">
+          <span class="ei">Nowadays, studying abroad has become one of the most debated topics in our life. In my opinion, I agree that studying abroad is better than studying in your country.</span>
+          <span class="eb1"> First of all, students can learn new languages and experience different cultures.</span>
+          <span class="eb2"> Furthermore, foreign universities often offer better opportunities and facilities.</span>
+          <span class="eb3"> In addition, living alone abroad builds independence and self-confidence.</span>
+          <span style="color:#084018;"> Moreover, students gain international work experience that helps their future careers.</span>
+          <span class="ec"> In conclusion, that's why I agree that studying abroad is better than studying in your country.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 12 ── -->
+  <div class="topic-section">
+    <div class="topic-title">📺 الإعلانات تجعل الناس يشترون أكثر مما يحتاجون <span class="ten">— Advertisements make people buy more than what they need</span></div>
+    <div class="topic-body">
+      <div class="rg">
+        <div class="rc ac">
+          <h4>✅ Agree — أوافق</h4>
+          <div class="ri"><span class="en">· Ads use attractive images to tempt people.</span><span class="ar">الإعلانات تستخدم صوراً جذابة لإغراء الناس</span></div>
+          <div class="ri"><span class="en">· People buy things they don't really need.</span><span class="ar">الناس يشترون أشياء لا يحتاجونها فعلاً</span></div>
+          <div class="ri"><span class="en">· Ads make people waste their money.</span><span class="ar">الإعلانات تجعل الناس يهدرون أموالهم</span></div>
+          <div class="ri"><span class="en">· Social media ads target people all day.</span><span class="ar">إعلانات السوشيال ميديا تستهدف الناس طوال اليوم</span></div>
+        </div>
+        <div class="rc dc">
+          <h4>❌ Disagree — لا أوافق</h4>
+          <div class="ri"><span class="en">· Ads help people discover useful products.</span><span class="ar">الإعلانات تساعد الناس على اكتشاف منتجات مفيدة</span></div>
+          <div class="ri"><span class="en">· Smart people can control their spending.</span><span class="ar">الأشخاص الأذكياء يتحكمون في إنفاقهم</span></div>
+          <div class="ri"><span class="en">· Ads inform us about sales and discounts.</span><span class="ar">الإعلانات تخبرنا عن التخفيضات والعروض</span></div>
+          <div class="ri"><span class="en">· People make their own choices freely.</span><span class="ar">الناس يتخذون قراراتهم بحرية</span></div>
+        </div>
+      </div>
+      <button class="ex-toggle" onclick="tog(this)"><span class="arr">▼</span> مثال كامل — Full Example</button>
+      <div class="ex-box">
+        <div class="ex-label">✅ AGREE EXAMPLE</div>
+        <div class="ex-para">
+          <span class="ei">Nowadays, advertisements have become one of the most debated topics in our life. In my opinion, I agree that advertisements make people buy more than what they need.</span>
+          <span class="eb1"> First of all, ads use attractive images and words to tempt people into buying things.</span>
+          <span class="eb2"> Furthermore, people often buy products they don't really need just because they saw an ad.</span>
+          <span class="eb3"> In addition, advertisements make people waste a lot of their money.</span>
+          <span style="color:#084018;"> Moreover, social media ads target people all day long, making it hard to resist.</span>
+          <span class="ec"> In conclusion, that's why I agree that advertisements make people buy more than what they need.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 13 ── -->
+  <div class="topic-section">
+    <div class="topic-title">🛒 التسوق الإلكتروني أفضل من التسوق في المحلات <span class="ten">— Shopping online is better than shopping in stores</span></div>
+    <div class="topic-body">
+      <div class="rg">
+        <div class="rc ac">
+          <h4>✅ Agree — أوافق</h4>
+          <div class="ri"><span class="en">· We can shop anytime from home.</span><span class="ar">نستطيع التسوق في أي وقت من المنزل</span></div>
+          <div class="ri"><span class="en">· Online prices are often cheaper.</span><span class="ar">الأسعار الإلكترونية غالباً أرخص</span></div>
+          <div class="ri"><span class="en">· We can compare many products easily.</span><span class="ar">نستطيع مقارنة منتجات كثيرة بسهولة</span></div>
+          <div class="ri"><span class="en">· It saves time and travel costs.</span><span class="ar">يوفر الوقت وتكاليف التنقل</span></div>
+        </div>
+        <div class="rc dc">
+          <h4>❌ Disagree — لا أوافق</h4>
+          <div class="ri"><span class="en">· We cannot touch or try products online.</span><span class="ar">لا نستطيع لمس المنتجات أو تجربتها إلكترونياً</span></div>
+          <div class="ri"><span class="en">· Delivery can be slow and unreliable.</span><span class="ar">التوصيل قد يكون بطيئاً وغير موثوق</span></div>
+          <div class="ri"><span class="en">· Online fraud and scams are common.</span><span class="ar">الاحتيال الإلكتروني شائع</span></div>
+          <div class="ri"><span class="en">· Products may look different from the photos.</span><span class="ar">المنتجات قد تبدو مختلفة عن الصور</span></div>
+        </div>
+      </div>
+      <button class="ex-toggle" onclick="tog(this)"><span class="arr">▼</span> مثال كامل — Full Example</button>
+      <div class="ex-box">
+        <div class="ex-label">✅ AGREE EXAMPLE</div>
+        <div class="ex-para">
+          <span class="ei">Nowadays, online shopping has become one of the most debated topics in our life. In my opinion, I agree that shopping online is better than shopping in stores.</span>
+          <span class="eb1"> First of all, we can shop anytime we want without leaving our home.</span>
+          <span class="eb2"> Furthermore, online prices are often cheaper and we can find great deals easily.</span>
+          <span class="eb3"> In addition, we can compare many products in just a few seconds.</span>
+          <span style="color:#084018;"> Moreover, it saves us a lot of time and money that we would spend on travel.</span>
+          <span class="ec"> In conclusion, that's why I agree that shopping online is better than shopping in stores.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOPIC 14 ── -->
+  <div class="topic-section">
+    <div class="topic-title">🏬 مراكز التسوق أماكن رائعة للعائلة <span class="ten">— Shopping malls are great places to spend a nice time with family</span></div>
+    <div class="topic-body">
+      <div class="rg">
+        <div class="rc ac">
+          <h4>✅ Agree — أوافق</h4>
+          <div class="ri"><span class="en">· Malls have everything in one place.</span><span class="ar">المولات تحتوي على كل شيء في مكان واحد</span></div>
+          <div class="ri"><span class="en">· Families can eat, shop and have fun together.</span><span class="ar">العائلات تأكل وتتسوق وتستمتع معاً</span></div>
+          <div class="ri"><span class="en">· Malls are safe and comfortable in all weather.</span><span class="ar">المولات آمنة ومريحة في جميع الأحوال الجوية</span></div>
+          <div class="ri"><span class="en">· There are play areas and activities for children.</span><span class="ar">توجد مناطق ألعاب وأنشطة للأطفال</span></div>
+        </div>
+        <div class="rc dc">
+          <h4>❌ Disagree — لا أوافق</h4>
+          <div class="ri"><span class="en">· Malls make people spend too much money.</span><span class="ar">المولات تجعل الناس ينفقون أموالاً كثيرة</span></div>
+          <div class="ri"><span class="en">· They are usually crowded and noisy.</span><span class="ar">عادةً ما تكون مزدحمة وصاخبة</span></div>
+          <div class="ri"><span class="en">· Outdoor places are better for family time.</span><span class="ar">الأماكن المفتوحة أفضل لقضاء وقت العائلة</span></div>
+          <div class="ri"><span class="en">· Parking and traffic near malls is a problem.</span><span class="ar">الازدحام والمواقف بالقرب من المولات مشكلة</span></div>
+        </div>
+      </div>
+      <button class="ex-toggle" onclick="tog(this)"><span class="arr">▼</span> مثال كامل — Full Example</button>
+      <div class="ex-box">
+        <div class="ex-label">✅ AGREE EXAMPLE</div>
+        <div class="ex-para">
+          <span class="ei">Nowadays, shopping malls have become one of the most debated topics in our life. In my opinion, I agree that shopping malls are great places to spend a nice time with family.</span>
+          <span class="eb1"> First of all, malls have everything in one place — shops, restaurants, and entertainment.</span>
+          <span class="eb2"> Furthermore, families can eat, shop, and have fun all together in one trip.</span>
+          <span class="eb3"> In addition, malls are safe and comfortable no matter what the weather is like outside.</span>
+          <span style="color:#084018;"> Moreover, there are play areas and fun activities that children really enjoy.</span>
+          <span class="ec"> In conclusion, that's why I agree that shopping malls are great places to spend a nice time with family.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function tog(btn) {
+  const box = btn.nextElementSibling;
+  btn.classList.toggle('open');
+  box.classList.toggle('open');
+}
+</script>
+</body>
+</html>
