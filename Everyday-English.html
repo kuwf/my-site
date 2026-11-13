@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Everyday English | الإنجليزية اليومية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light dark;
+  --bg:#EEF4F4; --surface:#FFFFFF; --ink:#12292E; --muted:#56706F; --line:#D3E2E3;
+  --track:#E3ECEC; --seg:#DCE8E8; --sea:#0E6B73; --deep:#0B4F56;
+  --saffron:#F2A93B; --saffron-soft:#FDF0D9;
+  --ok:#1E8E5A; --ok-soft:#DFF3E8; --bad:#C4423A; --bad-soft:#FBE4E2;
+  --adults-bg:#E6ECFA; --adults-fg:#2A4A9E; --friends-bg:#FDEBD3; --friends-fg:#8A5200;
+  --tl:90%; --fl:38%; --h:195;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0D1B1E; --surface:#152A2E; --ink:#E7F0F0; --muted:#9DB7B7; --line:#26434A;
+    --track:#24393D; --seg:#1B3236; --deep:#0A3A40; --saffron-soft:#3B2E14;
+    --ok-soft:#153A2A; --bad-soft:#4A1F1D; --ok:#3CB57F; --bad:#E5736B;
+    --adults-bg:#22304F; --adults-fg:#B7C8F5; --friends-bg:#4A3515; --friends-fg:#F5CE93;
+    --tl:26%; --fl:58%;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Cairo,"Segoe UI",Tahoma,system-ui,sans-serif;font-size:16px;line-height:1.6}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--saffron);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding:14px 16px 56px}
+.ar{direction:rtl;text-align:right;color:var(--muted)}
+.ar-i{direction:rtl;unicode-bidi:isolate;font-weight:600;font-size:.92em;opacity:.85}
+
+/* top bar + buttons */
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:48px;margin-bottom:10px}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 14px;min-height:46px;font-weight:700;line-height:1.25}
+.btn.primary{background:var(--sea);border-color:var(--sea);color:#fff}
+.btn.toggle[aria-pressed="true"]{background:var(--saffron-soft);border-color:var(--saffron)}
+.btn.wide{display:block;width:100%;text-align:center}
+
+/* home */
+.hero{background:var(--deep);color:#fff;border-radius:22px;padding:24px 18px 20px;margin-bottom:14px}
+.hero h1{margin:0;font-size:clamp(1.9rem,7vw,2.6rem);line-height:1.1;font-weight:800}
+.hero .sub{margin:4px 0 18px;font-size:1.15rem;font-weight:600;direction:rtl;text-align:right;opacity:.9}
+.bubbles{display:grid;gap:10px}
+.bubble{display:flex;gap:10px;align-items:flex-start;max-width:92%;padding:10px 14px;border-radius:18px;border:0;text-align:left;color:#12292E}
+.bubble b{display:block;font-weight:700;line-height:1.35}
+.bubble small{display:block;direction:rtl;text-align:right;font-size:.9rem;opacity:.75}
+.bubble.a{background:#fff;border-bottom-left-radius:4px;justify-self:start}
+.bubble.b{background:var(--saffron);border-bottom-right-radius:4px;justify-self:end}
+.bubble .sp{font-size:1.2rem;line-height:1.4}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.panel p{margin:0}
+.panel .ar{margin-top:2px}
+.meter{height:7px;border-radius:99px;background:var(--track);overflow:hidden;margin-top:8px}
+.meter i{display:block;height:100%;width:var(--w);background:hsl(var(--h) 55% var(--fl));transition:width .3s}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:14px}
+.card{display:flex;gap:12px;align-items:center;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;text-align:left}
+.card:hover{border-color:hsl(var(--h) 50% 50%)}
+.tile{flex:none;width:54px;height:54px;border-radius:14px;display:grid;place-items:center;font-size:1.8rem;background:hsl(var(--h) 65% var(--tl))}
+.card .t{font-weight:700;line-height:1.25}
+.card .ar{font-size:.95rem;line-height:1.35}
+.card .n{font-size:.85rem;color:var(--muted);margin-top:4px}
+.card>div:last-child{flex:1;min-width:0}
+.foot{text-align:center;margin-top:22px}
+.link{background:none;border:0;color:var(--muted);text-decoration:underline;padding:8px;min-height:44px}
+
+/* topic */
+.thead{display:flex;gap:12px;align-items:center}
+.thead h2{margin:0;font-size:1.35rem;line-height:1.2}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--seg);padding:4px;border-radius:14px;margin:14px 0 14px}
+.seg button{border:0;background:transparent;border-radius:10px;padding:6px 4px;font-weight:700;line-height:1.25;min-height:52px}
+.seg button small{display:block;direction:rtl;font-size:.85rem;font-weight:600;opacity:.8}
+.seg button[aria-selected="true"]{background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.count{margin-inline-start:auto;font-weight:700;font-size:.95rem}
+.hint{color:var(--muted);margin:0 0 12px;font-size:.95rem}
+.hint .ar{display:block}
+
+.phrase{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.phrase.done{border-color:var(--ok)}
+.say{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--sea);color:#fff;font-size:1.1rem;line-height:1}
+.phrase .en{font-size:1.15rem;font-weight:700;line-height:1.4;text-align:left}
+.phrase .ar{margin-top:2px}
+.chip{display:inline-block;margin-top:6px;padding:0 10px;border-radius:99px;font-size:.82rem;font-weight:700}
+.chip.adults{background:var(--adults-bg);color:var(--adults-fg)}
+.chip.friends{background:var(--friends-bg);color:var(--friends-fg)}
+.tick{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:var(--surface);font-size:1.2rem;font-weight:800;color:var(--line);line-height:1}
+.tick[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
+.hide-ar .ar.mk:not(.shown),.hide-you .line.you .en.mk:not(.shown){filter:blur(7px);cursor:pointer;user-select:none;-webkit-user-select:none}
+
+/* dialogue */
+.scene{font-weight:700;margin-bottom:12px}
+.scene .ar{font-weight:600;font-size:.95rem}
+.line{display:flex;flex-direction:column;margin-bottom:12px;max-width:94%}
+.line.other{align-items:flex-start}
+.line.you{align-items:flex-end;margin-inline-start:auto}
+.who{font-size:.85rem;font-weight:700;color:var(--muted);margin:0 6px 2px}
+.msg{display:flex;gap:10px;align-items:center;padding:10px 14px 10px 10px;border-radius:18px;background:var(--surface);border:1px solid var(--line)}
+.msg .say{width:38px;height:38px;font-size:1rem}
+.msg .en{font-weight:700;line-height:1.4;text-align:left}
+.msg .ar{font-size:.95rem;line-height:1.4}
+.line.you .msg{background:var(--sea);border-color:var(--sea);color:#fff}
+.line.you .msg .ar{color:rgba(255,255,255,.85)}
+.line.you .msg .say{background:#fff;color:var(--sea)}
+.line.playing .msg{outline:3px solid var(--saffron);outline-offset:2px}
+
+/* quiz */
+.qmeta{display:flex;justify-content:space-between;gap:8px;font-weight:700;margin-bottom:10px}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 16px;margin:10px 0 14px;text-align:center}
+.qlabel{color:var(--muted);font-weight:600}
+.qmain{font-size:1.5rem;font-weight:800;line-height:1.45;margin-top:6px;color:var(--ink)}
+.say.big{width:72px;height:72px;font-size:1.8rem;margin-top:10px}
+.opt{display:flex;gap:8px;align-items:center;width:100%;text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px;font-weight:700;font-size:1.05rem;line-height:1.4;min-height:54px}
+.opt.arabic{direction:rtl;text-align:right}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.opt .m{flex:none;width:1.2em;font-weight:800}
+.fb{border-radius:14px;padding:12px 14px;margin:6px 0 12px;border:2px solid var(--line);background:var(--surface)}
+.fb.ok{border-color:var(--ok)} .fb.bad{border-color:var(--bad)}
+.fb strong{display:block;margin-bottom:4px}
+.fb .row{display:flex;gap:10px;align-items:center}
+.fb .en{font-weight:700;text-align:left}
+.score{font-size:3rem;font-weight:800;line-height:1.1;margin:6px 0}
+.review-title{font-weight:700;margin:16px 0 8px}
+.note{background:var(--saffron-soft);border:1px solid var(--saffron);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:.95rem}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ============================================================
+   المحتوى | CONTENT  — عدّل هنا فقط لإضافة جمل أو مواضيع
+   To add a phrase:  ['English', 'العربية']            (any person)
+                     ['English', 'العربية', 'adults']   (مع الكبار)
+                     ['English', 'العربية', 'friends']  (مع الأصدقاء)
+   Dialogue lines:   ['you' | 'other', 'English', 'العربية']
+   ============================================================ */
+const TOPICS = [
+ { id:'polite', icon:'🙏', hue:195, en:'Polite words & starting a talk', ar:'الكلمات المهذبة وبدء الحديث',
+   phrases:[
+    ['Excuse me, sir.','لو سمحت يا سيدي.','adults'],
+    ['Excuse me, can I ask you something?','لو سمحت، هل يمكنني أن أسألك سؤالاً؟'],
+    ['Could you help me, please?','هل يمكنك مساعدتي من فضلك؟','adults'],
+    ['Hey, can you help me?','مرحباً، هل تستطيع مساعدتي؟','friends'],
+    ['Thank you very much.','شكراً جزيلاً.'],
+    ["You're welcome.",'عفواً، على الرحب والسعة.'],
+    ["I'm sorry.",'أنا آسف.'],
+    ["Pardon? I didn't understand.",'عفواً؟ لم أفهم.'],
+    ['Could you repeat that, please?','هل يمكنك إعادة ذلك من فضلك؟'],
+    ['Could you speak more slowly, please?','هل يمكنك التحدث ببطء أكثر من فضلك؟'],
+    ['No problem.','لا مشكلة.']
+   ],
+   dlg:{ scene:['Asking a stranger for the time','تسأل شخصاً غريباً عن الوقت'], other:['Stranger','شخص غريب'], lines:[
+    ['you','Excuse me, sir. Can I ask you something?','لو سمحت يا سيدي، هل يمكنني أن أسألك سؤالاً؟'],
+    ['other','Of course. How can I help you?','بالطبع. كيف يمكنني مساعدتك؟'],
+    ['you','Could you tell me the time, please?','هل يمكنك أن تخبرني بالوقت من فضلك؟'],
+    ['other',"Sure. It's four o'clock.",'بالتأكيد. الساعة الرابعة.'],
+    ['you','Thank you very much.','شكراً جزيلاً.'],
+    ['other',"You're welcome.",'عفواً.']
+   ]}},
+
+ { id:'greetings', icon:'👋', hue:38, en:'Greetings & meeting people', ar:'التحية والتعارف',
+   phrases:[
+    ['Hello! How are you?','مرحباً! كيف حالك؟'],
+    ["I'm fine, thank you. And you?",'أنا بخير، شكراً. وأنت؟'],
+    ['Good morning.','صباح الخير.'],
+    ['Good evening.','مساء الخير.'],
+    ["My name is Ahmed. What's your name?",'اسمي أحمد. ما اسمك؟'],
+    ['Nice to meet you.','تشرفت بمعرفتك.'],
+    ['Where are you from?','من أين أنت؟'],
+    ["I'm from Oman.",'أنا من عُمان.'],
+    ["Hey! What's up?",'أهلاً! ما الأخبار؟','friends'],
+    ['See you tomorrow.','أراك غداً.'],
+    ['Goodbye! Take care.','مع السلامة! اعتنِ بنفسك.']
+   ],
+   dlg:{ scene:['Meeting a new classmate','تقابل زميلاً جديداً'], other:['New classmate','زميل جديد'], lines:[
+    ['other',"Hi! I'm Sam. What's your name?",'أهلاً! أنا سام. ما اسمك؟'],
+    ['you','Hello, Sam. My name is Ahmed. Nice to meet you.','مرحباً يا سام. اسمي أحمد. تشرفت بمعرفتك.'],
+    ['other','Nice to meet you too. Where are you from?','وأنا أيضاً. من أين أنت؟'],
+    ['you',"I'm from Oman. And you?",'أنا من عُمان. وأنت؟'],
+    ['other',"I'm from Egypt. See you tomorrow!",'أنا من مصر. أراك غداً!'],
+    ['you','See you! Take care.','أراك! اعتنِ بنفسك.']
+   ]}},
+
+ { id:'home', icon:'🏠', hue:18, en:'At home', ar:'في البيت',
+   phrases:[
+    ['Good morning, Mom.','صباح الخير يا أمي.'],
+    ["I'm hungry. Is breakfast ready?",'أنا جائع. هل الفطور جاهز؟'],
+    ['Can I have some water, please?','هل يمكنني شرب بعض الماء من فضلك؟'],
+    ['Can I help you?','هل أستطيع مساعدتك؟'],
+    ["I'm going to my room to study.",'سأذهب إلى غرفتي لأدرس.'],
+    ['Can I watch TV for a little while?','هل يمكنني مشاهدة التلفاز قليلاً؟'],
+    ["I'm going out. I'll be back at six.",'سأخرج. سأعود في السادسة.'],
+    ['Can you turn off the light, please?','هل يمكنك إطفاء الضوء من فضلك؟'],
+    ['Dinner was delicious. Thank you!','كان العشاء لذيذاً. شكراً لك!'],
+    ['Good night. See you in the morning.','تصبح على خير. أراك في الصباح.']
+   ],
+   dlg:{ scene:['Breakfast with Mom','الفطور مع أمك'], other:['Mom','أمي'], lines:[
+    ['other','Good morning! Did you sleep well?','صباح الخير! هل نمت جيداً؟'],
+    ['you',"Yes, thank you. I'm hungry. Is breakfast ready?",'نعم، شكراً. أنا جائع. هل الفطور جاهز؟'],
+    ['other','Yes. Come and sit down.','نعم. تعال واجلس.'],
+    ['you','Can I help you, Mom?','هل أستطيع مساعدتك يا أمي؟'],
+    ['other','Yes, please. Can you bring the water?','نعم من فضلك. هل يمكنك إحضار الماء؟'],
+    ['you','Of course! Here you are.','بالطبع! تفضلي.']
+   ]}},
+
+ { id:'school', icon:'🏫', hue:220, en:'At school', ar:'في المدرسة',
+   phrases:[
+    ['May I come in, please?','هل يمكنني الدخول من فضلك؟'],
+    ['May I go to the bathroom, please?','هل يمكنني الذهاب إلى الحمام من فضلك؟'],
+    ["I don't understand. Could you explain again?",'لا أفهم. هل يمكنك الشرح مرة أخرى؟'],
+    ['How do you say this in English?','كيف تقول هذا بالإنجليزية؟'],
+    ['What does this word mean?','ماذا تعني هذه الكلمة؟'],
+    ['Can I borrow your pen?','هل يمكنني استعارة قلمك؟','friends'],
+    ["I forgot my homework. I'm sorry.",'نسيت واجبي. أنا آسف.','adults'],
+    ['Can you help me with this question?','هل يمكنك مساعدتي في هذا السؤال؟'],
+    ['What time is the break?','متى وقت الفسحة؟'],
+    ["I'm sorry I'm late.",'آسف على تأخري.','adults']
+   ],
+   dlg:{ scene:['Arriving late to class','الوصول متأخراً إلى الحصة'], other:['Teacher','المعلم'], lines:[
+    ['you','Excuse me, teacher. May I come in?','لو سمحت يا أستاذ، هل يمكنني الدخول؟'],
+    ['other','Yes, come in. Why are you late?','نعم، ادخل. لماذا تأخرت؟'],
+    ['you',"I'm sorry. The bus was late.",'أنا آسف. تأخرت الحافلة.'],
+    ['other','OK. Sit down, please.','حسناً. اجلس من فضلك.'],
+    ['you',"Teacher, I don't understand. Could you explain again?",'يا أستاذ، لم أفهم. هل يمكنك الشرح مرة أخرى؟'],
+    ['other',"Of course. Let's look at it together.",'بالطبع. لننظر إليه معاً.']
+   ]}},
+
+ { id:'shop', icon:'🛒', hue:145, en:'At the shop & market', ar:'في المحل والسوق',
+   phrases:[
+    ['How much is this?','كم سعر هذا؟'],
+    ["That's a bit expensive. Can you make it cheaper?",'هذا غالٍ قليلاً. هل يمكنك تخفيض السعر؟'],
+    ['Do you have this in a bigger size?','هل لديك هذا بمقاس أكبر؟'],
+    ["I'm just looking, thank you.",'أنا أتفرج فقط، شكراً.'],
+    ["I'll take this one.",'سآخذ هذا.'],
+    ['Can I pay by card?','هل يمكنني الدفع بالبطاقة؟'],
+    ['Here you are.','تفضل. (عندما تعطي المال)'],
+    ['Can I have a bag, please?','هل يمكنني الحصول على كيس من فضلك؟'],
+    ['Could I have the receipt, please?','هل يمكنني الحصول على الإيصال من فضلك؟'],
+    ['Where can I find the milk?','أين يمكنني أن أجد الحليب؟']
+   ],
+   dlg:{ scene:['Buying a shirt','شراء قميص'], other:['Shopkeeper','البائع'], lines:[
+    ['other','Hello. Can I help you?','مرحباً. هل أستطيع مساعدتك؟'],
+    ['you','Yes, please. How much is this shirt?','نعم من فضلك. كم سعر هذا القميص؟'],
+    ['other',"It's ten rials.",'عشرة ريالات.'],
+    ['you',"That's a bit expensive. Can you make it cheaper?",'هذا غالٍ قليلاً. هل يمكنك تخفيض السعر؟'],
+    ['other','OK. Eight rials for you.','حسناً. ثمانية ريالات لك.'],
+    ['you',"Great. I'll take it. Can I pay by card?",'ممتاز. سآخذه. هل يمكنني الدفع بالبطاقة؟'],
+    ['other','Of course.','بالطبع.']
+   ]}},
+
+ { id:'restaurant', icon:'🍽️', hue:350, en:'At a restaurant', ar:'في المطعم',
+   phrases:[
+    ['A table for two, please.','طاولة لشخصين من فضلك.'],
+    ['Can I see the menu, please?','هل يمكنني رؤية قائمة الطعام من فضلك؟'],
+    ["I'd like a chicken sandwich, please.",'أودّ ساندويتش دجاج من فضلك.'],
+    ['What do you recommend?','ماذا تنصحني أن آخذ؟'],
+    ['No ice, please.','بدون ثلج من فضلك.'],
+    ['Not spicy, please.','بدون حار من فضلك.'],
+    ['Could we have some more water, please?','هل يمكن أن نحصل على مزيد من الماء من فضلك؟'],
+    ["It's delicious!",'إنه لذيذ!'],
+    ['Can I have the bill, please?','هل يمكنني الحصول على الفاتورة من فضلك؟'],
+    ['Takeaway, please.','للأخذ معي من فضلك.']
+   ],
+   dlg:{ scene:['Ordering lunch','طلب الغداء'], other:['Waiter','النادل'], lines:[
+    ['other','Welcome. Are you ready to order?','أهلاً بك. هل أنت جاهز للطلب؟'],
+    ['you',"Yes. I'd like a chicken sandwich, please.",'نعم. أودّ ساندويتش دجاج من فضلك.'],
+    ['other','Anything to drink?','هل تريد شيئاً للشرب؟'],
+    ['you','An orange juice, please. No ice.','عصير برتقال من فضلك. بدون ثلج.'],
+    ['other','Sure. Here you are.','حاضر. تفضل.'],
+    ['you','Can I have the bill, please?','هل يمكنني الحصول على الفاتورة من فضلك؟'],
+    ['other','Of course.','بالطبع.'],
+    ['you','Thank you. It was delicious!','شكراً. كان لذيذاً!']
+   ]}},
+
+ { id:'directions', icon:'🧭', hue:265, en:'Help & directions', ar:'طلب المساعدة والاتجاهات',
+   phrases:[
+    ['Excuse me, where is the bus stop?','لو سمحت، أين موقف الحافلة؟'],
+    ['Is it far from here?','هل هو بعيد من هنا؟'],
+    ['Go straight.','سِر إلى الأمام مباشرة.'],
+    ['Turn left.','انعطف يساراً.'],
+    ['Turn right.','انعطف يميناً.'],
+    ["It's next to the bank.",'إنه بجانب البنك.'],
+    ['How long does it take?','كم يستغرق ذلك من الوقت؟'],
+    ["I'm lost. Can you help me?",'أنا تائه. هل يمكنك مساعدتي؟'],
+    ['Can you show me on the map?','هل يمكنك أن تريني على الخريطة؟'],
+    ['Please call my father.','من فضلك اتصل بوالدي.']
+   ],
+   dlg:{ scene:['Finding the post office','البحث عن مكتب البريد'], other:['Passer-by','شخص في الطريق'], lines:[
+    ['you','Excuse me, where is the post office?','لو سمحت، أين مكتب البريد؟'],
+    ['other','Go straight, then turn left.','سِر مباشرة ثم انعطف يساراً.'],
+    ['you','Is it far from here?','هل هو بعيد من هنا؟'],
+    ['other',"No, it's five minutes on foot.",'لا، إنه على بعد خمس دقائق مشياً.'],
+    ['you','Thank you very much for your help.','شكراً جزيلاً على مساعدتك.'],
+    ['other',"You're welcome.",'عفواً.']
+   ]}},
+
+ { id:'phone', icon:'📱', hue:300, en:'On the phone', ar:'على الهاتف',
+   phrases:[
+    ['Hello, this is Ahmed speaking.','مرحباً، معك أحمد.'],
+    ['Can I speak to Ali, please?','هل يمكنني التحدث مع علي من فضلك؟'],
+    ['Hold on, please.','انتظر لحظة من فضلك.'],
+    ["He's not here right now.",'إنه ليس هنا الآن.'],
+    ['Can I leave a message?','هل يمكنني ترك رسالة؟'],
+    ["I can't hear you. Can you speak louder?",'لا أستطيع سماعك. هل يمكنك رفع صوتك؟'],
+    ["I'll call you back later.",'سأتصل بك لاحقاً.'],
+    ['Sorry, wrong number.','آسف، رقم خاطئ.'],
+    ['Can you send me a message?','هل يمكنك إرسال رسالة لي؟'],
+    ['Thanks for calling. Bye!','شكراً على اتصالك. مع السلامة!']
+   ],
+   dlg:{ scene:["Calling a friend's house",'الاتصال ببيت صديقك'], other:["Ali's father",'والد علي'], lines:[
+    ['you','Hello, this is Ahmed speaking. Can I speak to Ali, please?','مرحباً، معك أحمد. هل يمكنني التحدث مع علي من فضلك؟'],
+    ['other',"Hello, Ahmed. He's not here right now.",'مرحباً يا أحمد. إنه ليس هنا الآن.'],
+    ['you','Can I leave a message?','هل يمكنني ترك رسالة؟'],
+    ['other','Of course.','بالطبع.'],
+    ['you',"Please tell him I'll call back later.",'من فضلك أخبره أنني سأتصل لاحقاً.'],
+    ['other','OK, I will. Goodbye.','حسناً، سأخبره. مع السلامة.'],
+    ['you','Thank you. Goodbye!','شكراً. مع السلامة!']
+   ]}},
+
+ { id:'health', icon:'🩺', hue:170, en:'Feelings & health', ar:'المشاعر والصحة',
+   phrases:[
+    ['I feel tired.','أشعر بالتعب.'],
+    ['I have a headache.','عندي صداع.'],
+    ["I don't feel well.",'لا أشعر أنني بخير.'],
+    ['I need to see a doctor.','أحتاج إلى مراجعة الطبيب.'],
+    ["What's wrong?",'ما المشكلة؟'],
+    ['Are you OK?','هل أنت بخير؟'],
+    ["I'm very happy today!",'أنا سعيد جداً اليوم!'],
+    ["I'm worried about the exam.",'أنا قلق بشأن الاختبار.'],
+    ["I'm bored.",'أشعر بالملل.'],
+    ['Get well soon.','أتمنى لك الشفاء العاجل.']
+   ],
+   dlg:{ scene:['Feeling unwell at school','الشعور بتوعك في المدرسة'], other:['Friend','صديق'], lines:[
+    ['other','Are you OK? You look tired.','هل أنت بخير؟ تبدو متعباً.'],
+    ['you',"I don't feel well. I have a headache.",'لا أشعر أنني بخير. عندي صداع.'],
+    ['other',"I'm sorry to hear that. Do you need a doctor?",'آسف لسماع ذلك. هل تحتاج إلى طبيب؟'],
+    ['you','Yes, I think so.','نعم، أظن ذلك.'],
+    ['other',"Let's go to the nurse. Get well soon!",'لنذهب إلى الممرضة. أتمنى لك الشفاء العاجل!'],
+    ['you','Thank you for your help.','شكراً على مساعدتك.']
+   ]}},
+
+ { id:'transport', icon:'🚌', hue:75, en:'Transport: bus & taxi', ar:'المواصلات: الحافلة والتاكسي',
+   phrases:[
+    ['Does this bus go to Sohar?','هل تذهب هذه الحافلة إلى صحار؟'],
+    ['How much is the ticket?','كم سعر التذكرة؟'],
+    ['What time does the bus leave?','متى تغادر الحافلة؟'],
+    ['Could you stop here, please?','هل يمكنك التوقف هنا من فضلك؟'],
+    ['Is this seat free?','هل هذا المقعد فارغ؟'],
+    ['I missed the bus.','فاتتني الحافلة.'],
+    ['Taxi, please. Take me to the airport.','من فضلك، خذني إلى المطار.'],
+    ['How much is it to the mall?','كم الأجرة إلى المجمع التجاري؟'],
+    ['Could you wait here for me, please?','هل يمكنك الانتظار هنا من أجلي من فضلك؟'],
+    ['Please fasten your seat belt.','من فضلك اربط حزام الأمان.']
+   ],
+   dlg:{ scene:['Taking a taxi','ركوب التاكسي'], other:['Taxi driver','سائق التاكسي'], lines:[
+    ['you','Excuse me, are you free?','لو سمحت، هل أنت متاح؟'],
+    ['other','Yes. Where to?','نعم. إلى أين؟'],
+    ['you','To the bus station, please.','إلى محطة الحافلات من فضلك.'],
+    ['other','OK. Please fasten your seat belt.','حسناً. من فضلك اربط حزام الأمان.'],
+    ['you','How long does it take?','كم يستغرق ذلك من الوقت؟'],
+    ['other','About fifteen minutes.','حوالي خمس عشرة دقيقة.'],
+    ['you','Could you stop here, please?','هل يمكنك التوقف هنا من فضلك؟'],
+    ['other',"Sure. That's three rials.",'حاضر. الأجرة ثلاثة ريالات.'],
+    ['you','Here you are. Thank you.','تفضل. شكراً لك.']
+   ]}},
+
+ { id:'travel', icon:'✈️', hue:330, en:'Travel: airport & hotel', ar:'السفر: المطار والفندق',
+   phrases:[
+    ['Where is the check-in desk?','أين مكتب إنهاء إجراءات السفر؟'],
+    ['Here is my passport.','هذا جواز سفري.'],
+    ['I have one suitcase.','معي حقيبة واحدة.'],
+    ['Which gate is it?','أي بوابة هي؟'],
+    ['What time does the flight leave?','متى تقلع الرحلة؟'],
+    ['The flight is delayed.','الرحلة متأخرة.'],
+    ["I'm here on holiday.",'أنا هنا في إجازة.'],
+    ['I have a reservation.','لدي حجز.'],
+    ["I'd like to check in, please.",'أودّ تسجيل الوصول من فضلك.'],
+    ['What time is check-out?','متى موعد تسليم الغرفة؟'],
+    ['Is breakfast included?','هل الفطور مشمول؟'],
+    ["What's the Wi-Fi password?",'ما كلمة سر الواي فاي؟']
+   ],
+   dlg:{ scene:['Checking in at a hotel','تسجيل الوصول في فندق'], other:['Receptionist','موظف الاستقبال'], lines:[
+    ['you','Good evening. I have a reservation.','مساء الخير. لدي حجز.'],
+    ['other','Welcome. Can I have your passport, please?','أهلاً بك. هل يمكنني الحصول على جواز سفرك من فضلك؟'],
+    ['you','Here you are.','تفضل.'],
+    ['other','Thank you. Your room is on the third floor.','شكراً. غرفتك في الطابق الثالث.'],
+    ['you','Is breakfast included?','هل الفطور مشمول؟'],
+    ['other','Yes, from seven to ten.','نعم، من السابعة إلى العاشرة.'],
+    ['you',"What's the Wi-Fi password?",'ما كلمة سر الواي فاي؟'],
+    ['other',"It's on this card.",'إنها على هذه البطاقة.'],
+    ['you','Thank you very much.','شكراً جزيلاً.']
+   ]}}
+];
+
+/* ============================================================
+   البرنامج | PROGRAM — لا حاجة لتعديل ما بعد هذا السطر
+   ============================================================ */
+TOPICS.forEach(t=>{
+  t.phrases = t.phrases.map(p=>({en:p[0], ar:p[1], who:p[2]||'', topic:t.id, key:t.id+'|'+p[0]}));
+  t.dlg.lines = t.dlg.lines.map(l=>({s:l[0], en:l[1], ar:l[2]}));
+});
+const ALL = TOPICS.flatMap(t=>t.phrases);
+const byId = id => TOPICS.find(t=>t.id===id);
+
+const KEY='everyday-english-known-v1', PREF='everyday-english-slow';
+const CAN = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+const state = {view:'home', topic:null, tab:'phrases', slow:false, known:new Set(), quiz:null};
+
+try{ state.known=new Set(JSON.parse(localStorage.getItem(KEY)||'[]')); state.slow=localStorage.getItem(PREF)==='1'; }catch(e){}
+const saveKnown=()=>{ try{localStorage.setItem(KEY,JSON.stringify([...state.known]))}catch(e){} };
+
+/* ---------- helpers ---------- */
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const bi  = (en,ar) => `<span>${en}</span> <span class="ar-i" dir="rtl">${ar}</span>`;
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; };
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+const countKnown = list => list.filter(p=>state.known.has(p.key)).length;
+
+/* ---------- voice ---------- */
+let voice=null, voiceFemale=false;
+const FEMALE=/female|zira|hazel|susan|samantha|karen|moira|tessa|serena|fiona|victoria|catherine|libby|sonia|jenny|aria|ava|emma|amy|joanna|ivy|kendra|kimberly|salli|nicole|olivia|natasha|heather|allison|zoe|google us english/i;
+const MALE=/\bmale\b|david|mark|george|daniel|james|alex|fred|ryan|guy|thomas|oliver|arthur|rishi|liam|brian|eric|aaron|roger/i;
+function pickVoice(){
+  if(!CAN) return;
+  const en=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang));
+  const f=en.filter(v=>FEMALE.test(v.name)&&!MALE.test(v.name));
+  const gb=v=>/en[-_]GB/i.test(v.lang);
+  voice = f.find(gb) || f[0] || en.find(v=>gb(v)&&!MALE.test(v.name)) || en.find(v=>!MALE.test(v.name)) || en[0] || null;
+  voiceFemale = !!(voice && f.includes(voice));
+}
+if(CAN){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+
+function say(text){
+  return new Promise(res=>{
+    if(!CAN){res();return;}
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang=(voice&&voice.lang)||'en-GB';
+    if(voice) u.voice=voice;
+    u.rate = state.slow ? 0.62 : 0.9;
+    u.pitch = voiceFemale ? 1.05 : 1.3;   /* higher pitch = girl voice if the device has no female voice */
+    u.onend=u.onerror=()=>res();
+    speechSynthesis.speak(u);
+  });
+}
+let playToken=0;
+function markLine(i){
+  document.querySelectorAll('.line.playing').forEach(x=>x.classList.remove('playing'));
+  if(i===null) return;
+  const el=document.getElementById('l'+i);
+  if(el){ el.classList.add('playing'); el.scrollIntoView({block:'nearest'}); }
+}
+function setPlayBtn(playing){
+  const b=document.getElementById('playbtn');
+  if(b) b.innerHTML = playing ? '■ '+bi('Stop','إيقاف') : '▶ '+bi('Play all','تشغيل الكل');
+}
+function stopAll(){ playToken++; if(CAN) speechSynthesis.cancel(); markLine(null); setPlayBtn(false); }
+async function playAll(){
+  const t=byId(state.topic), lines=t.dlg.lines, my=++playToken;
+  setPlayBtn(true);
+  for(let i=0;i<lines.length;i++){
+    if(my!==playToken) return;
+    markLine(i);
+    await say(lines[i].en);
+    if(my!==playToken) return;
+    await sleep(350);
+  }
+  if(my===playToken){ markLine(null); setPlayBtn(false); }
+}
+
+/* ---------- views ---------- */
+function topBar(){
+  const back = state.view==='home' ? '<span></span>' : `<button class="btn" data-act="back">← ${bi('Back','رجوع')}</button>`;
+  const slow = CAN ? `<button class="btn toggle" data-act="slow" aria-pressed="${state.slow}">🐢 ${bi('Slow voice','صوت بطيء')}</button>` : '';
+  return `<div class="top">${back}${slow}</div>`;
+}
+
+function bubble(cls,en,ar,icon){
+  const inner=`<span class="sp" aria-hidden="true">${icon}</span><span><b dir="ltr">${esc(en)}</b><small dir="rtl">${esc(ar)}</small></span>`;
+  return CAN ? `<button class="bubble ${cls}" data-act="say" data-say="${esc(en)}">${inner}</button>` : `<div class="bubble ${cls}">${inner}</div>`;
+}
+
+function homeHTML(){
+  const total=ALL.length, got=countKnown(ALL);
+  const cards=TOPICS.map(t=>{
+    const n=countKnown(t.phrases), tot=t.phrases.length;
+    return `<button class="card" style="--h:${t.hue}" data-act="open" data-id="${t.id}">
+      <div class="tile" aria-hidden="true">${t.icon}</div>
+      <div><div class="t" dir="ltr">${esc(t.en)}</div><div class="ar" dir="rtl">${esc(t.ar)}</div>
+      <div class="meter"><i style="--w:${Math.round(n/tot*100)}%"></i></div>
+      <div class="n">${n} / ${tot}</div></div></button>`;
+  }).join('');
+  return `
+  <section class="hero">
+    <h1>Everyday English</h1>
+    <div class="sub">الإنجليزية في حياتك اليومية</div>
+    <div class="bubbles">
+      ${bubble('a','Excuse me, sir. Could you help me, please?','لو سمحت يا سيدي، هل يمكنك مساعدتي؟','🔊')}
+      ${bubble('b','Of course. How can I help you?','بالطبع. كيف يمكنني مساعدتك؟','🔊')}
+    </div>
+  </section>
+  <div class="panel">
+    <p><b>${bi(`You know ${got} of ${total} phrases`,`حفظت ${got} من ${total} جملة`)}</b></p>
+    <div class="meter"><i style="--w:${Math.round(got/total*100)}%;--h:195"></i></div>
+  </div>
+  <div class="panel">
+    <p dir="ltr">Listen, say it out loud, then tick ✓ when you know it.</p>
+    <p class="ar" dir="rtl">استمع، ثم قلها بصوت عالٍ، ثم علّم ✓ عندما تحفظها.</p>
+  </div>
+  ${CAN?'':`<div class="note" dir="ltr">Your browser cannot play voices. Open this file in Chrome or Edge. <span class="ar-i" dir="rtl">متصفحك لا يدعم الصوت. افتح الملف في Chrome أو Edge.</span></div>`}
+  <button class="btn primary wide" data-act="quiz" data-id="all">📝 ${bi('Mixed quiz (10 questions)','اختبار شامل (١٠ أسئلة)')}</button>
+  <div class="grid">${cards}</div>
+  <div class="foot"><button class="link" data-act="reset">${bi('Reset my progress','إعادة ضبط التقدم')}</button></div>`;
+}
+
+function countHTML(t){
+  const n=countKnown(t.phrases), tot=t.phrases.length;
+  return bi(`${n} of ${tot} learned`,`حفظت ${n} من ${tot}`);
+}
+
+function phraseHTML(p){
+  const k=state.known.has(p.key);
+  const chip = p.who==='adults' ? '<span class="chip adults">مع الكبار</span>' : p.who==='friends' ? '<span class="chip friends">مع الأصدقاء</span>' : '';
+  return `<div class="phrase${k?' done':''}">
+    ${CAN?`<button class="say" data-act="say" data-say="${esc(p.en)}" aria-label="Listen: ${esc(p.en)}">🔊</button>`:'<span></span>'}
+    <div><div class="en" dir="ltr">${esc(p.en)}</div><div class="ar mk" dir="rtl">${esc(p.ar)}</div>${chip}</div>
+    <button class="tick" data-act="know" data-key="${esc(p.key)}" aria-pressed="${k}" aria-label="I know this phrase">✓</button>
+  </div>`;
+}
+
+function topicHTML(){
+  const t=byId(state.topic);
+  const tabs=[['phrases','Phrases','جُمل'],['dialogue','Conversation','حوار'],['quiz','Quiz','اختبار']]
+    .map(([id,en,ar])=>`<button role="tab" data-act="tab" data-tab="${id}" aria-selected="${state.tab===id}">${en}<small dir="rtl">${ar}</small></button>`).join('');
+  let body='';
+  if(state.tab==='phrases'){
+    body=`<div class="tools">
+        <button class="btn toggle" data-act="hidear" aria-pressed="false">${bi('Hide Arabic','أخفِ العربي')}</button>
+        <span class="count" id="tcount">${countHTML(t)}</span></div>
+      <p class="hint" dir="ltr">Tap 🔊 to listen. Say it out loud. Tick ✓ when you know it.<span class="ar" dir="rtl">اضغط 🔊 للاستماع، قلها بصوت عالٍ، ثم علّم ✓ عندما تحفظها.</span></p>
+      <div id="plist">${t.phrases.map(phraseHTML).join('')}</div>`;
+  } else if(state.tab==='dialogue'){
+    const d=t.dlg;
+    body=`<div class="scene" dir="ltr">${esc(d.scene[0])}<div class="ar" dir="rtl">${esc(d.scene[1])}</div></div>
+      <div class="tools">
+        ${CAN?`<button class="btn primary" id="playbtn" data-act="playall">▶ ${bi('Play all','تشغيل الكل')}</button>`:''}
+        <button class="btn toggle" data-act="hideyou" aria-pressed="false">${bi('Practise your part','تدرّب على دورك')}</button></div>
+      <div id="dlg">${d.lines.map((l,i)=>{
+        const you=l.s==='you';
+        const who = you ? bi('You','أنت') : bi(esc(d.other[0]),esc(d.other[1]));
+        return `<div class="line ${you?'you':'other'}" id="l${i}"><div class="who">${who}</div>
+          <div class="msg">${CAN?`<button class="say" data-act="say" data-say="${esc(l.en)}" aria-label="Listen">🔊</button>`:''}
+          <div><div class="en mk" dir="ltr">${esc(l.en)}</div><div class="ar" dir="rtl">${esc(l.ar)}</div></div></div></div>`;
+      }).join('')}</div>`;
+  } else {
+    body=`<div class="qcard"><div class="qmain">📝</div>
+      <p><b>${bi('Test yourself','اختبر نفسك')}</b></p>
+      <p class="ar" style="text-align:center">${bi('6 questions about this topic','٦ أسئلة عن هذا الموضوع')}</p>
+      <button class="btn primary wide" style="margin-top:14px" data-act="quiz" data-id="${t.id}">${bi('Start the quiz','ابدأ الاختبار')}</button></div>`;
+  }
+  return `<div class="thead" style="--h:${t.hue}"><div class="tile" aria-hidden="true">${t.icon}</div>
+      <div><h2 dir="ltr">${esc(t.en)}</h2><div class="ar" dir="rtl">${esc(t.ar)}</div></div></div>
+    <div class="seg" role="tablist">${tabs}</div>${body}`;
+}
+
+/* ---------- quiz ---------- */
+function startQuiz(id){
+  const pool = id==='all' ? ALL : byId(id).phrases;
+  const n = id==='all' ? 10 : 6;
+  const picks = shuffle(pool).slice(0,n);
+  const qs = picks.map((p,i)=>({
+    p, listen: CAN && i%2===1,
+    opts: shuffle([p, ...shuffle(pool.filter(x=>x.en!==p.en && x.ar!==p.ar)).slice(0,3)])
+  }));
+  state.quiz={id, qs, i:0, score:0, picked:null, missed:[], done:false, hue: id==='all'?195:byId(id).hue};
+  state.view='quiz'; render();
+  autoPlayQuestion();
+}
+function autoPlayQuestion(){
+  const q=state.quiz; if(!q||q.done) return;
+  const it=q.qs[q.i];
+  if(it.listen && q.picked===null) setTimeout(()=>say(it.p.en),250);
+}
+function quizHTML(){
+  const q=state.quiz;
+  if(q.done) return resultHTML();
+  const it=q.qs[q.i], n=q.qs.length, answered=q.picked!==null;
+  const prompt = it.listen
+    ? `<div class="qlabel">${bi('Listen. What does it mean?','استمع. ماذا تعني؟')}</div>
+       <button class="say big" data-act="say" data-say="${esc(it.p.en)}" aria-label="Play the sentence">🔊</button>`
+    : `<div class="qlabel">${bi('How do you say this in English?','كيف تقولها بالإنجليزية؟')}</div>
+       <div class="qmain" dir="rtl">${esc(it.p.ar)}</div>`;
+  const opts=it.opts.map((o,idx)=>{
+    let cls='opt'+(it.listen?' arabic':''), mark='', dis=answered?'disabled':'';
+    if(answered){
+      if(o===it.p){cls+=' right';mark='✓';}
+      else if(idx===q.picked){cls+=' wrong';mark='✗';}
+    }
+    return `<button class="${cls}" ${dis} data-act="answer" data-i="${idx}"><span class="m" aria-hidden="true">${mark}</span><span>${esc(it.listen?o.ar:o.en)}</span></button>`;
+  }).join('');
+  let fb='';
+  if(answered){
+    const ok=it.opts[q.picked]===it.p, last=q.i===n-1;
+    fb=`<div class="fb ${ok?'ok':'bad'}" role="status" id="fb">
+        <strong>${ok?bi('Correct!','أحسنت!'):bi('Not quite. The answer is:','ليس تماماً. الإجابة هي:')}</strong>
+        <div class="row">${CAN?`<button class="say" data-act="say" data-say="${esc(it.p.en)}" aria-label="Listen">🔊</button>`:''}
+        <div><div class="en" dir="ltr">${esc(it.p.en)}</div><div class="ar" dir="rtl">${esc(it.p.ar)}</div></div></div></div>
+      <button class="btn primary wide" data-act="next">${last?bi('See my result','شاهد النتيجة'):bi('Next','التالي')}</button>`;
+  }
+  return `<div style="--h:${q.hue}">
+    <div class="qmeta"><span>${bi(`Question ${q.i+1} of ${n}`,`السؤال ${q.i+1} من ${n}`)}</span></div>
+    <div class="meter" style="margin:0 0 4px"><i style="--w:${Math.round((q.i+(answered?1:0))/n*100)}%"></i></div>
+    <div class="qcard">${prompt}</div>${opts}${fb}</div>`;
+}
+function resultHTML(){
+  const q=state.quiz, n=q.qs.length, r=q.score/n;
+  const msg = r>=0.8 ? bi('Excellent! You are ready to use these phrases.','ممتاز! أنت جاهز لاستخدام هذه الجمل.')
+            : r>=0.5 ? bi('Good job. Practise the missed phrases again.','عمل جيد. راجع الجمل التي أخطأت فيها.')
+            : bi('Keep going. Listen again, then try once more.','واصل المحاولة. استمع مرة أخرى ثم حاول من جديد.');
+  const review = q.missed.length ? `<div class="review-title">${bi('Practise these','راجع هذه الجمل')}</div>`+q.missed.map(p=>`<div class="phrase" style="grid-template-columns:auto 1fr">
+      ${CAN?`<button class="say" data-act="say" data-say="${esc(p.en)}" aria-label="Listen: ${esc(p.en)}">🔊</button>`:'<span></span>'}
+      <div><div class="en" dir="ltr">${esc(p.en)}</div><div class="ar" dir="rtl">${esc(p.ar)}</div></div></div>`).join('') : '';
+  return `<div class="qcard"><div class="qlabel">${bi('Your score','نتيجتك')}</div>
+      <div class="score">${q.score} / ${n}</div><p>${msg}</p></div>${review}
+    <button class="btn primary wide" data-act="retry" style="margin-top:12px">${bi('Try again','حاول مرة أخرى')}</button>
+    <button class="btn wide" data-act="back" style="margin-top:8px">${bi('Back','رجوع')}</button>`;
+}
+
+/* ---------- render + events ---------- */
+function render(keepScroll){
+  stopAll();
+  const y=window.scrollY;
+  const body = state.view==='home' ? homeHTML() : state.view==='topic' ? topicHTML() : quizHTML();
+  document.getElementById('app').innerHTML = topBar()+body;
+  window.scrollTo(0, keepScroll ? y : 0);
+}
+
+document.addEventListener('click', e=>{
+  const mk=e.target.closest('.mk');
+  if(mk && mk.matches('.hide-ar .ar.mk:not(.shown), .hide-you .line.you .en.mk:not(.shown)')){ mk.classList.add('shown'); return; }
+  const el=e.target.closest('[data-act]'); if(!el) return;
+  const a=el.dataset.act;
+
+  if(a==='open'){ state.topic=el.dataset.id; state.tab='phrases'; state.view='topic'; render(); }
+  else if(a==='back'){
+    if(state.view==='quiz'){ state.view = (state.quiz.id!=='all') ? 'topic' : 'home'; if(state.view==='topic') state.topic=state.quiz.id; }
+    else state.view='home';
+    render();
+  }
+  else if(a==='tab'){ state.tab=el.dataset.tab; render(); }
+  else if(a==='say'){ stopAll(); say(el.dataset.say); }
+  else if(a==='know'){
+    const key=el.dataset.key;
+    if(state.known.has(key)) state.known.delete(key); else state.known.add(key);
+    saveKnown();
+    const on=state.known.has(key);
+    el.setAttribute('aria-pressed',on);
+    el.closest('.phrase').classList.toggle('done',on);
+    const c=document.getElementById('tcount'); if(c) c.innerHTML=countHTML(byId(state.topic));
+  }
+  else if(a==='hidear'){
+    const list=document.getElementById('plist');
+    const on=list.classList.toggle('hide-ar');
+    list.querySelectorAll('.mk.shown').forEach(x=>x.classList.remove('shown'));
+    el.setAttribute('aria-pressed',on);
+    el.innerHTML = on ? bi('Show Arabic','أظهر العربي') : bi('Hide Arabic','أخفِ العربي');
+  }
+  else if(a==='hideyou'){
+    const d=document.getElementById('dlg');
+    const on=d.classList.toggle('hide-you');
+    d.querySelectorAll('.mk.shown').forEach(x=>x.classList.remove('shown'));
+    el.setAttribute('aria-pressed',on);
+    el.innerHTML = on ? bi('Show my lines','أظهر جُملي') : bi('Practise your part','تدرّب على دورك');
+  }
+  else if(a==='playall'){
+    const b=document.getElementById('playbtn');
+    if(b && b.textContent.trim().startsWith('■')) stopAll(); else playAll();
+  }
+  else if(a==='slow'){
+    state.slow=!state.slow; el.setAttribute('aria-pressed',state.slow);
+    try{localStorage.setItem(PREF,state.slow?'1':'0')}catch(err){}
+  }
+  else if(a==='quiz'){ startQuiz(el.dataset.id); }
+  else if(a==='answer'){
+    const q=state.quiz; if(q.picked!==null) return;
+    const it=q.qs[q.i]; q.picked=+el.dataset.i;
+    if(it.opts[q.picked]===it.p) q.score++; else q.missed.push(it.p);
+    render(true);
+    const fb=document.getElementById('fb'); if(fb) fb.scrollIntoView({block:'nearest'});
+    if(!it.listen) say(it.p.en);
+  }
+  else if(a==='next'){
+    const q=state.quiz; q.i++; q.picked=null;
+    if(q.i>=q.qs.length) q.done=true;
+    render(); autoPlayQuestion();
+  }
+  else if(a==='retry'){ startQuiz(state.quiz.id); }
+  else if(a==='reset'){
+    if(confirm('Reset all progress?\nإعادة ضبط كل التقدم؟')){ state.known.clear(); saveKnown(); render(); }
+  }
+});
+
+render();
+</script>
+</body>
+</html>
