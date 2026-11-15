@@ -61,7 +61,8 @@ tfoot td.d{z-index:4}
 .dt{display:flex;gap:6px}
 .dt select{flex:1;min-width:0}
 select.mf{padding:9px;border-radius:10px;border:1px solid var(--ln);background:var(--card)}
-@media print{#app{display:none}html,body{height:auto;overflow:visible;background:#fff!important}.ov{position:static;display:block;background:none;padding:0;overflow:visible}.md{max-width:none;max-height:none;overflow:visible;padding:0;background:#fff;color:#000;-webkit-print-color-adjust:exact;print-color-adjust:exact}.md .wrap{max-height:none!important;overflow:visible!important;zoom:1!important;border:0}.md th,.md td{min-width:0;background:#fff!important;color:#000!important}.md td.ok{background:#d6f1e1!important}.md td.no{background:#fbdada!important}.row,.md textarea,.md label{display:none}tr{break-inside:avoid}thead{display:table-header-group}}
+@page{margin:0}
+@media print{#app{display:none}html,body{height:auto;overflow:visible;background:#fff!important}.ov{position:static;display:block;background:none;padding:0;overflow:visible}.md{max-width:none;max-height:none;overflow:visible;padding:16mm;background:#fff;color:#000;-webkit-print-color-adjust:exact;print-color-adjust:exact}.md .wrap{max-height:none!important;overflow:visible!important;zoom:1!important;border:0}.md th,.md td{min-width:0;background:#fff!important;color:#000!important}.md td.ok{background:#d6f1e1!important}.md td.no{background:#fbdada!important}.row,.md textarea,.md label{display:none}tr{break-inside:avoid}thead{display:table-header-group}}
 :focus-visible{outline:2px solid var(--ac);outline-offset:2px}
 </style>
 </head>
@@ -113,7 +114,29 @@ function invoice(c,s){
  const txt=['فاتورة الدروس الخصوصية','الطالب: '+s.name,'الصف: '+c.name,'الفترة: '+per,'',...ds.map(d=>'• '+f2(d)+' — '+pr+' ر.ع — '+(isP(d)?'مدفوع':'غير مدفوع')),'','عدد الحصص: '+ds.length,'الإجمالي: '+tot+' ر.ع','المدفوع: '+pd+' ر.ع','المتبقي: '+due+' ر.ع'].join('\n');
  const tbl=ds.length?'<div class="wrap" style="zoom:1;max-height:34vh"><table><thead><tr><th>التاريخ</th><th>السعر</th><th>الحالة</th></tr></thead><tbody>'+ds.map(d=>`<tr><td>${f2(d)}</td><td>${pp(d)} ر.ع</td><td class="${isP(d)?'ok':'no'}">${isP(d)?'مدفوع':'غير مدفوع'}</td></tr>`).join('')+'</tbody></table></div>':'<p class="empty">لا توجد حصص حاضرة في هذه الفترة.</p>';
  const body=`<p><b>${esc(s.name)}</b><br><span style="color:var(--mu)">${esc(c.name)} · ${per}</span></p>${tbl}<p>عدد الحصص: <b>${ds.length}</b><br>الإجمالي: <b>${tot} ر.ع</b><br>المدفوع: <b>${pd} ر.ع</b><br>المتبقي: <b class="${due?'due':'fine'}">${due} ر.ع</b></p><label>نص جاهز للإرسال (واتساب)</label><textarea id="f1" readonly>${esc(txt)}</textarea>`;
- modal('فاتورة',body,[{t:'نسخ النص',f:()=>{const ta=$('f1');ta.select();try{navigator.clipboard.writeText(txt)}catch(e){try{document.execCommand('copy')}catch(_){}}return false}},{t:'طباعة',c:'alt',f:()=>{window.print();return false}},{t:'إغلاق',c:'alt'}]);
+ const img=async()=>{
+ try{await document.fonts.load('700 28px Tajawal')}catch(e){}
+ const W=900,rh=64,H=300+(ds.length+1)*rh+300;
+ const cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d');
+ g.fillStyle='#fff';g.fillRect(0,0,W,H);g.direction='rtl';g.textBaseline='middle';
+ const F='Tajawal,system-ui,sans-serif';
+ const T=(x,y,tx,sz,col,al,w)=>{g.font=(w||'400')+' '+sz+'px '+F;g.fillStyle=col||'#12202b';g.textAlign=al||'right';g.fillText(tx,x,y)};
+ T(W-50,70,'فاتورة الدروس الخصوصية',42,'#0e7c86','right','700');
+ T(W-50,140,'الطالب: '+s.name,34,'','right','700');
+ T(W-50,195,'الصف: '+c.name+' · '+per,28,'#5d6f7a');
+ let y=250;g.fillStyle='#e6eef1';g.fillRect(40,y,W-80,rh);
+ T(W-60,y+rh/2,'التاريخ',28,'','right','700');T(330,y+rh/2,'السعر',28,'','center','700');T(140,y+rh/2,'الحالة',28,'','center','700');
+ y+=rh;
+ ds.forEach(d=>{g.fillStyle=isP(d)?'#e3f5ea':'#fdeaea';g.fillRect(40,y,W-80,rh-4);const m=y+rh/2-2;
+  T(W-60,m,f2(d),26);T(330,m,pp(d)+' ر.ع',26,'','center');T(140,m,isP(d)?'مدفوع':'غير مدفوع',26,'','center');y+=rh});
+ y+=50;
+ [['عدد الحصص: '+ds.length,'#12202b'],['الإجمالي: '+tot+' ر.ع','#12202b'],['المدفوع: '+pd+' ر.ع','#1f8a58'],['المتبقي: '+due+' ر.ع',due?'#c0392b':'#1f8a58']].forEach((r,i)=>{T(W-60,y+i*54,r[0],i===3?36:30,r[1],'right',i===3?'700':'400')});
+ const blob=await new Promise(r=>cv.toBlob(r,'image/png'));
+ const f=new File([blob],'invoice-'+today()+'.png',{type:'image/png'});
+ if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f]})}catch(e){}}
+ else{const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
+};
+ modal('فاتورة',body,[{t:'حفظ كصورة',f:()=>{img();return false}},{t:'نسخ النص',f:()=>{const ta=$('f1');ta.select();try{navigator.clipboard.writeText(txt)}catch(e){try{document.execCommand('copy')}catch(_){}}return false}},{t:'طباعة',c:'alt',f:()=>{window.print();return false}},{t:'إغلاق',c:'alt'}]);
 }
 function render(){
   let h=`<header><h1>سجل الدروس الخصوصية</h1><div class="tools"><button data-a="export">تصدير</button><button data-a="import">استيراد</button></div></header>`;
