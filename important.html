@@ -125,7 +125,7 @@ function render(){
     if(!c.students.length){h+=`<p class="empty">لا يوجد طلاب في هذا الصف. اضغط «+ طالب».</p>`}
     else{
       const dates=[...c.dates].filter(d=>!S.month||S.month==='all'||d.slice(0,7)===S.month).sort();if(S.order!=='asc')dates.reverse();
-      h+=`<div class="wrap"><table><thead><tr><th class="d">التاريخ</th>`+c.students.map(s=>`<th>${esc(s.name)}<small>${s.type==='m'?'دفع شهري':'دفع بالحصة'}${' · '+(+s.price||5)+' ر.ع للحصة'}</small><button class="x" data-a="inv" data-s="${s.id}">فاتورة</button> <button class="x" data-a="editst" data-s="${s.id}">تعديل</button></th>`).join('')+`</tr></thead><tbody>`;
+      h+=`<div class="wrap"><table><thead><tr><th class="d">التاريخ</th>`+c.students.map(s=>`<th>${esc(s.name)}<small>${s.type==='m'?'دفع شهري':'دفع بالحصة'}${' · '+(+s.price||5)+' ر.ع للحصة'}</small><button class="x" data-a="pm" data-s="${s.id}">دفع شهر</button> <button class="x" data-a="inv" data-s="${s.id}">فاتورة</button> <button class="x" data-a="editst" data-s="${s.id}">تعديل</button></th>`).join('')+`</tr></thead><tbody>`;
       dates.forEach(d=>{
         h+=`<tr><td class="d">${fmt(d)}<br><button class="pay ${c.mult&&c.mult[d]===2?'on':''}" data-a="mult" data-d="${d}">${c.mult&&c.mult[d]===2?'ساعتان ×٢':'ساعة'}</button> <button class="x" data-a="deldate" data-d="${d}" aria-label="حذف الحصة">✕</button></td>`;
         c.students.forEach(s=>{
@@ -169,6 +169,12 @@ document.addEventListener('click',e=>{
   else if(a==='adddate'){modal('حصة جديدة',`<label>تاريخ الحصة (يوم / شهر / سنة)</label>${dateForm(today())}<label>مدة الحصة</label><select id="f1"><option value="1">ساعة</option><option value="2">ساعتان (السعر ×٢)</option></select>`,[{t:'إضافة',f:()=>{const v=getDate();if(!v)return false;if(!c.dates.includes(v))c.dates.push(v);if($('f1').value==='2'){c.mult=c.mult||{};c.mult[v]=2}save();render()}},{t:'إلغاء',c:'alt'}]);return}
   else if(a==='deldate'){modal('حذف الحصة',`<p>حذف حصة ${fmt(d)} وسجلها؟</p>`,[{t:'حذف',c:'red',f:()=>{c.dates=c.dates.filter(x=>x!==d);c.students.forEach(s=>{delete c.att[d+'|'+s.id];delete c.paid[d+'|'+s.id]});save();render()}},{t:'إلغاء',c:'alt'}]);return}
   else if(a==='mult'){c.mult=c.mult||{};if(c.mult[d]===2)delete c.mult[d];else c.mult[d]=2}
+  else if(a==='pm'){const s=c.students.find(x=>x.id===sid);const ms=[...new Set(c.dates.map(d=>d.slice(0,7)))].sort().reverse();
+    if(!ms.length){modal('دفع شهر','<p class="empty">لا توجد حصص بعد.</p>',[{t:'إغلاق',c:'alt'}]);return}
+    const sel=S.month&&ms.includes(S.month)?S.month:ms[0];
+    const info=()=>{const m=$('f1').value;const ds=c.dates.filter(d=>d.slice(0,7)===m&&c.att[d+'|'+s.id]==='p');const un=ds.filter(d=>!c.paid[d+'|'+s.id]);const pr=+s.price||5;const amt=un.reduce((a,d)=>a+pr*(c.mult&&c.mult[d]===2?2:1),0);$('pmi').textContent='حصص حضرها: '+ds.length+' · غير مدفوعة: '+un.length+' · المبلغ: '+amt+' ر.ع'};
+    modal('دفع شهر كامل — '+esc(s.name),'<label>الشهر</label><select id="f1">'+ms.map(m=>'<option value="'+m+'"'+(m===sel?' selected':'')+'>'+MN[+m.slice(5)-1]+' '+m.slice(0,4)+'</option>').join('')+'</select><p id="pmi"></p><p style="color:var(--mu);font-size:13px">يُعلَّم فقط ما حضره الطالب من حصص ذلك الشهر.</p>',[{t:'تعليم الشهر مدفوعًا',f:()=>{const m=$('f1').value;c.dates.filter(d=>d.slice(0,7)===m&&c.att[d+'|'+s.id]==='p').forEach(d=>{c.paid[d+'|'+s.id]=1});save();render()}},{t:'إلغاء الدفع للشهر',c:'alt',f:()=>{const m=$('f1').value;c.dates.filter(d=>d.slice(0,7)===m).forEach(d=>{delete c.paid[d+'|'+s.id]});save();render()}},{t:'إغلاق',c:'alt'}]);
+    $('f1').onchange=info;info();return}
   else if(a==='inv'){invoice(c,c.students.find(x=>x.id===sid));return}
   else if(a==='sort'){S.order=S.order==='asc'?'desc':'asc'}
   else if(a==='zm'){S.size=Math.max(.7,+((S.size||1)-.1).toFixed(2))}
